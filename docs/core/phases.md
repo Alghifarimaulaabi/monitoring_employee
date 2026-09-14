@@ -9,10 +9,10 @@
 
 
 ## Phase 2: Bouquet Submission & Client Compression (Milestone 2)
-- [ ] Build employee upload form (Camera capture, Date, Location, Flower count).
-- [ ] Integrate client-side canvas compression (`browser-image-compression`).
-- [ ] Implement Next.js Server Action to pipe files into Supabase Storage.
-- [ ] Add toast feedback and basic submission history list.
+- [x] Build employee upload form (Camera capture, Date, Location, Flower count).
+- [x] Integrate client-side canvas compression (`browser-image-compression` / HTML5 Canvas).
+- [x] Implement Next.js Server Action to pipe files into Supabase Storage.
+- [x] Add toast feedback and basic submission history list.
 
 ## Phase 3: Daily Task Management (Milestone 3)
 - [ ] Build Owner Task management view (create task, assign to employee, set date).

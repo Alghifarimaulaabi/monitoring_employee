@@ -15,8 +15,9 @@ const pool = new Pool({
     rejectUnauthorized: false,
   },
   keepAlive: true,
-  connectionTimeoutMillis: 10000,
-  idleTimeoutMillis: 20000,
+  max: 10,
+  connectionTimeoutMillis: 30000,
+  idleTimeoutMillis: 60000,
 });
 
 const adapter = new PrismaPg(pool);
