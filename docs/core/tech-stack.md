@@ -13,9 +13,9 @@ This document locks the technical stack. Agents must not suggest or use alternat
 ## 2. Backend, Database & Storage
 * **Backend Runtime:** Next.js Server Actions & API Route Handlers on Node.js.
 * **Database:** PostgreSQL via Supabase.
-* **ORM / Database Client:** `@supabase/supabase-js` or Prisma / Drizzle ORM (Supabase native client preferred for lightweight serverless footprint).
-* **Authentication:** Supabase Auth (Email + Password strategy with custom User Metadata / Profiles table).
-* **File Storage:** Supabase Storage (Bucket: `bouquet-photos`, S3-compatible, persistent CDN URLs).
+* **ORM / Database Client:** `@supabase/supabase-js` or Prisma ORM (Supabase native client preferred for lightweight serverless footprint).
+* **Authentication:** Better Auth (Email + Password strategy with custom User Metadata / Profiles table).
+* **File Storage:** Cloudinary Storage (Bucket: `bouquet-photos`, S3-compatible, persistent CDN URLs).
 
 ## 3. PDF Generation & Utilities
 * **PDF Engine:** `@react-pdf/renderer` (Declarative React components generating precise A4 print layouts server-side).
@@ -24,4 +24,4 @@ This document locks the technical stack. Agents must not suggest or use alternat
 
 ## 4. Hosting & Infrastructure
 * **Hosting Platform:** Vercel (Edge Middleware + Serverless Functions).
-* **Database & Storage Host:** Supabase Cloud (Free Tier: 500MB DB, 1GB Storage, 2GB Bandwidth).
+* **Database & Storage Host:** Cloudinary (Free Tier: 500MB DB, 1GB Storage, 2GB Bandwidth).

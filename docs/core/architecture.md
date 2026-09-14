@@ -4,8 +4,8 @@
 B-Tracker is built as a single, unified full-stack application using **Next.js (App Router)** hosted on Vercel, paired with **Supabase** for PostgreSQL database, authentication, and binary object storage.
 
 ```
-+-------------------------------------------------------------------------------+
-|                                CLIENT DEVICES                                 |
+
+|                                CLIENT +-------------------------------------------------------------------------------+DEVICES                                 |
 |                                                                               |
 |   [ Mobile Browser (Field Employee) ]          [ Desktop/Tablet Browser (Owner) ]
 |         - Native Camera / Gallery                     - Task Management       |

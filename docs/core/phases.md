@@ -1,7 +1,7 @@
 # Development Phases & Roadmap
 
 ## Phase 1: Environment & Authentication Setup (Milestone 1)
-- [ ] Initialize Next.js 14 project with TypeScript & Tailwind CSS.
+- [ x ] Initialize Next.js 14 project with TypeScript & Tailwind CSS.
 - [ ] Set up Supabase project (PostgreSQL + Supabase Auth + Storage).
 - [ ] Execute database DDL (`profiles`, `bouquet_posts`, `tasks`) and configure RLS.
 - [ ] Implement login page and session middleware for role guards (`/employee/*` vs `/owner/*`).
