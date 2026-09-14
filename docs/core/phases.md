@@ -1,11 +1,12 @@
 # Development Phases & Roadmap
 
 ## Phase 1: Environment & Authentication Setup (Milestone 1)
-- [ x ] Initialize Next.js 14 project with TypeScript & Tailwind CSS.
-- [ ] Set up Supabase project (PostgreSQL + Supabase Auth + Storage).
-- [ ] Execute database DDL (`profiles`, `bouquet_posts`, `tasks`) and configure RLS.
-- [ ] Implement login page and session middleware for role guards (`/employee/*` vs `/owner/*`).
-- [ ] Implement manual employee creation in owner admin panel.
+- [x] Initialize Next.js 16 project with TypeScript & Tailwind CSS v4.
+- [x] Set up Supabase project (PostgreSQL + Better Auth + Supabase Storage).
+- [x] Execute database schema (`users`, `sessions`, `accounts`, `verifications`, `bouquet_posts`, `tasks`) via Prisma.
+- [x] Implement login page and session middleware for role guards (`/employee/*` vs `/owner/*`).
+- [x] Implement manual employee creation in owner admin panel.
+
 
 ## Phase 2: Bouquet Submission & Client Compression (Milestone 2)
 - [ ] Build employee upload form (Camera capture, Date, Location, Flower count).

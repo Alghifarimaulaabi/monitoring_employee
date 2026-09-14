@@ -17,16 +17,16 @@ All foundational design and technical decisions live in `./docs/core/`. **Do NOT
 
 | Document | Purpose & Scope | Agent Reading Priority |
 | :--- | :--- | :---: |
-| [`core/Architecture.md`](./core/Architecture.md) | High-level system architecture, client/server workflows, image processing pipeline, PDF generation engine. | **Critical (P0)** |
-| [`core/Tech-Stack.md`](./core/Tech-Stack.md) | Canonical tech stack (framework, database, styling, libraries, runtime). No external dependencies beyond this list. | **Critical (P0)** |
-| [`core/Environment.md`](./core/Environment.md) | Environment variables, local setup, secrets handling, production keys. | **High (P1)** |
-| [`core/Config.md`](./core/Config.md) | App-wide constant configurations, file upload thresholds, compression specs, PDF layout dimensions. | **High (P1)** |
-| [`core/Database.md`](./core/Database.md) | Canonical relational schema, PostgreSQL DDL, indices, foreign keys, Row Level Security (RLS) policies. | **Critical (P0)** |
-| [`core/Requirement.md`](./core/Requirement.md) | Product scope, functional requirements, persona definitions, edge cases, failure states. | **High (P1)** |
-| [`core/Feature.md`](./core/Feature.md) | Granular breakdown per module (Auth, Bouquet, Tasks, PDF Export, Bulk Storage Cleanup). | **High (P1)** |
-| [`core/API-Contract.md`](./core/API-Contract.md) | Next.js Server Actions & API routes definitions, payload schemas, response formats, HTTP status codes. | **Critical (P0)** |
-| [`core/Design.md`](./core/Design.md) | UI/UX specifications, responsive mobile/desktop layout guidelines, design tokens, PDF visual layout standard. | **Medium (P2)** |
-| [`core/Phase.md`](./core/Phase.md) | Development roadmap, MVP checklist, v2 backlog, operational milestone sign-offs. | **Medium (P2)** |
+| [`core/architecture.md`](./core/architecture.md) | High-level system architecture, client/server workflows, image processing pipeline, PDF generation engine. | **Critical (P0)** |
+| [`core/tech-stack.md`](./core/tech-stack.md) | Canonical tech stack (framework, database, styling, libraries, runtime). No external dependencies beyond this list. | **Critical (P0)** |
+| [`core/environment.md`](./core/environment.md) | Environment variables, local setup, secrets handling, production keys. | **High (P1)** |
+| [`core/config.md`](./core/config.md) | App-wide constant configurations, file upload thresholds, compression specs, PDF layout dimensions. | **High (P1)** |
+| [`core/database.md`](./core/database.md) | Canonical relational schema, PostgreSQL DDL, indices, foreign keys, Row Level Security (RLS) policies. | **Critical (P0)** |
+| [`core/requirement.md`](./core/requirement.md) | Product scope, functional requirements, persona definitions, edge cases, failure states. | **High (P1)** |
+| [`core/feature.md`](./core/feature.md) | Granular breakdown per module (Auth, Bouquet, Tasks, PDF Export, Bulk Storage Cleanup). | **High (P1)** |
+| [`core/api-contract.md`](./core/api-contract.md) | Next.js Server Actions & API routes definitions, payload schemas, response formats, HTTP status codes. | **Critical (P0)** |
+| [`core/nextjs-structure-best-practices.md`](./core/nextjs-structure-best-practices.md) | Next.js architecture guidelines, security, and project directory structure. | **Medium (P2)** |
+| [`core/phases.md`](./core/phases.md) | Development roadmap, MVP checklist, v2 backlog, operational milestone sign-offs. | **Medium (P2)** |
 
 ---
 
