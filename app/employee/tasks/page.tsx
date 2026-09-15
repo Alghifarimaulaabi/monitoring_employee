@@ -53,7 +53,7 @@ export default async function TasksPage() {
         </div>
         <h1 className="text-xl font-bold">Halo, {session.user.name}!</h1>
         <p className="text-xs text-rose-100 mt-1">
-          Berikut adalah checklist tugas operasional lapangan yang harus Anda selesaikan hari ini.
+          Daftar checklist tugas harian operasional toko (menyiram tanaman, menyapu, kebersihan, dll.) yang harus Anda selesaikan hari ini.
         </p>
       </div>
 

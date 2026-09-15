@@ -54,7 +54,7 @@ export default async function OwnerTasksPage() {
             Manajemen Penugasan Harian
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            Buat, delegasikan, dan pantau penyelesaian tugas harian staf operasional lapangan.
+            Buat, delegasikan, dan pantau tugas harian toko (seperti menyiram tanaman, menyapu, kebersihan, & operasional toko).
           </p>
         </div>
 

@@ -24,7 +24,7 @@ export default function OwnerHeader({ userName, userEmail }: OwnerHeaderProps) {
   const navItems = [
     { href: "/owner/employees", label: "Karyawan", icon: Users },
     { href: "/owner/bouquets", label: "Galeri Buket", icon: Flower2 },
-    { href: "/owner/tasks", label: "Penugasan", icon: CheckSquare },
+    { href: "/owner/tasks", label: "Tugas Harian", icon: CheckSquare },
   ];
 
   return (

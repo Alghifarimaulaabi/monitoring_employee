@@ -22,9 +22,9 @@ export default function EmployeeNav({ userName, userEmail }: EmployeeNavProps) {
   };
 
   const navItems = [
-    { href: "/employee/tasks", label: "Tugas", icon: CheckSquare },
-    { href: "/employee/submit", label: "Lapor Buket", icon: Camera },
-    { href: "/employee/history", label: "Riwayat", icon: History },
+    { href: "/employee/tasks", label: "Tugas Harian", icon: CheckSquare },
+    { href: "/employee/submit", label: "Foto Buket", icon: Camera },
+    { href: "/employee/history", label: "Riwayat Buket", icon: History },
   ];
 
   return (

@@ -91,8 +91,8 @@ export default function CreateTaskForm({ employees }: CreateTaskFormProps) {
                 <CheckSquare className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-gray-900 leading-tight">Form Penugasan Harian</h2>
-                <p className="text-xs text-gray-500">Delegasikan tugas operasional kepada staf lapangan</p>
+                <h2 className="text-base font-bold text-gray-900 leading-tight">Form Penugasan Harian Toko</h2>
+                <p className="text-xs text-gray-500">Tugas operasional harian (seperti menyiram tanaman, menyapu, kebersihan, dll.)</p>
               </div>
             </div>
             <button
@@ -128,7 +128,7 @@ export default function CreateTaskForm({ employees }: CreateTaskFormProps) {
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Contoh: Pemasangan 3 buket di Kafe Mawar"
+                placeholder="Contoh: Menyiram tanaman & semprot daun anggrek"
                 className="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
               />
             </div>
@@ -192,7 +192,7 @@ export default function CreateTaskForm({ employees }: CreateTaskFormProps) {
                   rows={2}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Detail lokasi, PIC penerima buket, atau instruksi tata letak..."
+                  placeholder="Contoh: Siram pot tanaman depan toko, sapu & pel lantai kasir, buang sampah sebelum shift berakhir..."
                   className="w-full pl-9 pr-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all resize-none"
                 />
               </div>

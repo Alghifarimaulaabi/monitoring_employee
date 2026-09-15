@@ -2,8 +2,7 @@
 
 import { useState, useOptimistic, useTransition } from "react";
 import { toggleTaskStatusAction } from "@/lib/actions/task";
-import { CheckCircle2, Circle, AlertCircle, Sparkles, Camera, CheckSquare } from "lucide-react";
-import Link from "next/link";
+import { CheckCircle2, Circle, AlertCircle, Sparkles, CheckSquare } from "lucide-react";
 
 export interface EmployeeTaskItem {
   id: string;
@@ -127,24 +126,16 @@ export default function EmployeeTaskChecklist({ tasks: initialTasks }: EmployeeT
 
       {/* Celebration Banner when all complete */}
       {isAllComplete && (
-        <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-3xl p-5 shadow-sm flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl">
-              🎉
-            </div>
-            <div>
-              <h3 className="text-sm font-bold leading-tight">Luar biasa, semua tugas selesai!</h3>
-              <p className="text-xs text-emerald-100 mt-0.5">
-                Jangan lupa laporkan foto bukti pemasangan buket hari ini.
-              </p>
-            </div>
+        <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-3xl p-5 shadow-sm flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl flex-shrink-0">
+            🎉
           </div>
-          <Link
-            href="/employee/submit"
-            className="flex-shrink-0 px-3 py-2 bg-white text-emerald-700 text-xs font-bold rounded-xl shadow-xs hover:bg-emerald-50 transition-colors"
-          >
-            Lapor Buket
-          </Link>
+          <div>
+            <h3 className="text-sm font-bold leading-tight">Luar biasa, semua tugas selesai!</h3>
+            <p className="text-xs text-emerald-100 mt-0.5">
+              Semua checklist tugas operasional toko hari ini telah tuntas dikerjakan.
+            </p>
+          </div>
         </div>
       )}
 
@@ -185,24 +176,13 @@ export default function EmployeeTaskChecklist({ tasks: initialTasks }: EmployeeT
             <CheckSquare className="w-6 h-6" />
           </div>
           <h3 className="text-sm font-bold text-gray-900">
-            {totalCount === 0 ? "Belum Ada Tugas Hari Ini" : "Tidak ada tugas dengan filter ini"}
+            {totalCount === 0 ? "Belum Ada Tugas Operasional Hari Ini" : "Tidak ada tugas dengan filter ini"}
           </h3>
           <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
             {totalCount === 0
-              ? "Tugas baru dari Owner akan langsung muncul di sini secara real-time."
+              ? "Tugas operasional harian (seperti menyiram tanaman, menyapu, kebersihan, dll.) dari Owner akan muncul di sini."
               : "Ubah filter di atas untuk melihat penugasan lainnya."}
           </p>
-          {totalCount === 0 && (
-            <div className="mt-6">
-              <Link
-                href="/employee/submit"
-                className="inline-flex items-center justify-center px-4 py-2.5 bg-rose-600 hover:bg-rose-700 active:scale-[0.99] text-white text-xs font-semibold rounded-xl shadow-xs transition-colors gap-2"
-              >
-                <Camera className="w-4 h-4" />
-                <span>Lapor Buket Sekarang</span>
-              </Link>
-            </div>
-          )}
         </div>
       ) : (
         <div className="space-y-2.5">
