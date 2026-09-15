@@ -17,7 +17,10 @@ export default async function OwnerLayout({
     redirect("/login");
   }
 
-  if (session.user.role !== "OWNER") {
+  const isOwner =
+    session.user.role === "OWNER" || session.user.role === "admin";
+
+  if (!isOwner) {
     redirect("/employee/tasks");
   }
 

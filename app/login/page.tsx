@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Lock, Mail, AlertCircle, Loader2 } from "lucide-react";
@@ -14,6 +14,20 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { data: session, isPending } = authClient.useSession();
+
+  useEffect(() => {
+    if (!isPending && session?.user) {
+      if (callbackUrl) {
+        router.replace(callbackUrl);
+      } else if (session.user.role === "OWNER" || session.user.role === "admin") {
+        router.replace("/owner/employees");
+      } else {
+        router.replace("/employee/tasks");
+      }
+    }
+  }, [session, isPending, callbackUrl, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -12,7 +12,10 @@ export default async function RootPage() {
     redirect("/login");
   }
 
-  if (session.user.role === "OWNER") {
+  const isOwner =
+    session.user.role === "OWNER" || session.user.role === "admin";
+
+  if (isOwner) {
     redirect("/owner/employees");
   }
 
