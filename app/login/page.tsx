@@ -1,12 +1,26 @@
 "use client";
 
 import { Suspense, useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Lock, Mail, AlertCircle, Loader2 } from "lucide-react";
 
+function getRedirectTarget(role?: string | null, callbackUrl?: string | null): string {
+  const isOwner = role === "OWNER" || role === "admin";
+
+  if (callbackUrl) {
+    if (isOwner && callbackUrl.startsWith("/owner")) {
+      return callbackUrl;
+    }
+    if (!isOwner && callbackUrl.startsWith("/employee")) {
+      return callbackUrl;
+    }
+  }
+
+  return isOwner ? "/owner/employees" : "/employee/tasks";
+}
+
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
@@ -19,15 +33,10 @@ function LoginForm() {
 
   useEffect(() => {
     if (!isPending && session?.user) {
-      if (callbackUrl) {
-        router.replace(callbackUrl);
-      } else if (session.user.role === "OWNER" || session.user.role === "admin") {
-        router.replace("/owner/employees");
-      } else {
-        router.replace("/employee/tasks");
-      }
+      const target = getRedirectTarget(session.user.role, callbackUrl);
+      window.location.href = target;
     }
-  }, [session, isPending, callbackUrl, router]);
+  }, [session, isPending, callbackUrl]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,16 +57,10 @@ function LoginForm() {
 
       // Check current session to get role and redirect immediately
       const sessionRes = await authClient.getSession();
-      const role = sessionRes.data?.user?.role;
+      const role = sessionRes.data?.user?.role || (res.data as { user?: { role?: string } })?.user?.role;
+      const target = getRedirectTarget(role, callbackUrl);
 
-      if (callbackUrl) {
-        router.push(callbackUrl);
-      } else if (role === "OWNER" || role === "admin") {
-        router.push("/owner/employees");
-      } else {
-        router.push("/employee/tasks");
-      }
-      router.refresh();
+      window.location.href = target;
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan saat masuk.";
       setError(msg);

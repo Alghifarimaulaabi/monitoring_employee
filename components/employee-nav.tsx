@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { CheckSquare, Camera, History, LogOut } from "lucide-react";
 
@@ -12,12 +12,13 @@ interface EmployeeNavProps {
 
 export default function EmployeeNav({ userName, userEmail }: EmployeeNavProps) {
   const pathname = usePathname();
-  const router = useRouter();
 
   const handleLogout = async () => {
-    await authClient.signOut();
-    router.push("/login");
-    router.refresh();
+    try {
+      await authClient.signOut();
+    } finally {
+      window.location.href = "/login";
+    }
   };
 
   const navItems = [

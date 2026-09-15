@@ -17,6 +17,13 @@ export default async function EmployeeLayout({
     redirect("/login");
   }
 
+  const isOwner =
+    session.user.role === "OWNER" || session.user.role === "admin";
+
+  if (isOwner) {
+    redirect("/owner/employees");
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col pb-20">
       <EmployeeNav
