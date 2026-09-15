@@ -4,20 +4,28 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/app/generated/prisma/client";
 
 const rawConnectionString =
-  process.env.DIRECT_URL || process.env.DATABASE_URL || "";
+  process.env.DATABASE_URL ||
+  process.env.DIRECT_URL ||
+  "postgresql://postgres:postgres@localhost:5432/postgres";
 
-const parsedUrl = new URL(rawConnectionString);
-parsedUrl.searchParams.delete("sslmode");
+let connectionString = rawConnectionString;
+try {
+  const parsedUrl = new URL(rawConnectionString);
+  parsedUrl.searchParams.delete("sslmode");
+  connectionString = parsedUrl.toString();
+} catch {
+  // Safe fallback if URL parsing fails
+}
 
 const pool = new Pool({
-  connectionString: parsedUrl.toString(),
+  connectionString,
   ssl: {
     rejectUnauthorized: false,
   },
   keepAlive: true,
-  max: 10,
-  connectionTimeoutMillis: 30000,
-  idleTimeoutMillis: 60000,
+  max: process.env.NODE_ENV === "production" ? 1 : 10,
+  connectionTimeoutMillis: 10000,
+  idleTimeoutMillis: 20000,
 });
 
 const adapter = new PrismaPg(pool);

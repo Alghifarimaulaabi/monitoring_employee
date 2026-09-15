@@ -15,9 +15,9 @@
 - [x] Add toast feedback and basic submission history list.
 
 ## Phase 3: Daily Task Management (Milestone 3)
-- [ ] Build Owner Task management view (create task, assign to employee, set date).
-- [ ] Build Employee daily checklist view (filter tasks for `today`, checkbox status toggle).
-- [ ] Optimistic UI state updates for checklist clicks.
+- [x] Build Owner Task management view (create task, assign to employee, set date).
+- [x] Build Employee daily checklist view (filter tasks for `today`, checkbox status toggle).
+- [x] Optimistic UI state updates for checklist clicks.
 
 ## Phase 4: Bouquet Gallery, Monthly Filter & PDF Export (Milestone 4)
 - [ ] Build Owner bouquet visual gallery with Month/Year dropdown filter.
