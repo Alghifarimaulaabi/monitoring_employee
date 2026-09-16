@@ -20,11 +20,12 @@ model User {
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 
-  sessions      Session[]
-  accounts      Account[]
-  bouquetPosts  BouquetPost[]
-  assignedTasks Task[]       @relation("AssignedTasks")
-  createdTasks  Task[]       @relation("CreatedTasks")
+  sessions       Session[]
+  accounts       Account[]
+  bouquetPosts   BouquetPost[]
+  bouquetPeriods BouquetPeriod[] @relation("UserBouquetPeriods")
+  assignedTasks  Task[]          @relation("AssignedTasks")
+  createdTasks   Task[]          @relation("CreatedTasks")
 
   @@map("users")
 }
@@ -75,21 +76,41 @@ model Verification {
 }
 
 model BouquetPost {
-  id           String   @id @default(uuid())
+  id           String         @id @default(uuid())
   userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  user         User           @relation(fields: [userId], references: [id], onDelete: Restrict)
+  periodId     String?
+  period       BouquetPeriod? @relation(fields: [periodId], references: [id], onDelete: SetNull)
   imageUrl     String
   storagePath  String
-  installDate  DateTime @db.Date
+  installDate  DateTime       @db.Date
   locationName String
   flowerCount  Int
-  isArchived   Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  isArchived   Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 
   @@index([installDate])
   @@index([userId])
+  @@index([periodId])
   @@map("bouquet_posts")
+}
+
+model BouquetPeriod {
+  id          String        @id @default(uuid())
+  title       String
+  startDate   DateTime      @db.Date
+  endDate     DateTime      @db.Date
+  createdById String
+  createdBy   User          @relation("UserBouquetPeriods", fields: [createdById], references: [id], onDelete: Cascade)
+  posts       BouquetPost[]
+  isArchived  Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([startDate, endDate])
+  @@index([createdById])
+  @@map("bouquet_periods")
 }
 
 model Task {

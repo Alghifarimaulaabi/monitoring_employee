@@ -43,6 +43,11 @@ export type Verification = Prisma.VerificationModel
  */
 export type BouquetPost = Prisma.BouquetPostModel
 /**
+ * Model BouquetPeriod
+ * 
+ */
+export type BouquetPeriod = Prisma.BouquetPeriodModel
+/**
  * Model Task
  * 
  */

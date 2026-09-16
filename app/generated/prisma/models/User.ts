@@ -233,6 +233,7 @@ export type UserWhereInput = {
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   bouquetPosts?: Prisma.BouquetPostListRelationFilter
+  bouquetPeriods?: Prisma.BouquetPeriodListRelationFilter
   assignedTasks?: Prisma.TaskListRelationFilter
   createdTasks?: Prisma.TaskListRelationFilter
 }
@@ -252,6 +253,7 @@ export type UserOrderByWithRelationInput = {
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   bouquetPosts?: Prisma.BouquetPostOrderByRelationAggregateInput
+  bouquetPeriods?: Prisma.BouquetPeriodOrderByRelationAggregateInput
   assignedTasks?: Prisma.TaskOrderByRelationAggregateInput
   createdTasks?: Prisma.TaskOrderByRelationAggregateInput
 }
@@ -274,6 +276,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   bouquetPosts?: Prisma.BouquetPostListRelationFilter
+  bouquetPeriods?: Prisma.BouquetPeriodListRelationFilter
   assignedTasks?: Prisma.TaskListRelationFilter
   createdTasks?: Prisma.TaskListRelationFilter
 }, "id" | "email">
@@ -327,6 +330,7 @@ export type UserCreateInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   bouquetPosts?: Prisma.BouquetPostCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
 }
@@ -346,6 +350,7 @@ export type UserUncheckedCreateInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   bouquetPosts?: Prisma.BouquetPostUncheckedCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
 }
@@ -365,6 +370,7 @@ export type UserUpdateInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   bouquetPosts?: Prisma.BouquetPostUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
 }
@@ -384,6 +390,7 @@ export type UserUncheckedUpdateInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   bouquetPosts?: Prisma.BouquetPostUncheckedUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
 }
@@ -543,6 +550,20 @@ export type UserUpdateOneRequiredWithoutBouquetPostsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBouquetPostsInput, Prisma.UserUpdateWithoutBouquetPostsInput>, Prisma.UserUncheckedUpdateWithoutBouquetPostsInput>
 }
 
+export type UserCreateNestedOneWithoutBouquetPeriodsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBouquetPeriodsInput, Prisma.UserUncheckedCreateWithoutBouquetPeriodsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBouquetPeriodsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutBouquetPeriodsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBouquetPeriodsInput, Prisma.UserUncheckedCreateWithoutBouquetPeriodsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBouquetPeriodsInput
+  upsert?: Prisma.UserUpsertWithoutBouquetPeriodsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBouquetPeriodsInput, Prisma.UserUpdateWithoutBouquetPeriodsInput>, Prisma.UserUncheckedUpdateWithoutBouquetPeriodsInput>
+}
+
 export type UserCreateNestedOneWithoutAssignedTasksInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutAssignedTasksInput, Prisma.UserUncheckedCreateWithoutAssignedTasksInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignedTasksInput
@@ -585,6 +606,7 @@ export type UserCreateWithoutSessionsInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   bouquetPosts?: Prisma.BouquetPostCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
 }
@@ -603,6 +625,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   bouquetPosts?: Prisma.BouquetPostUncheckedCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
 }
@@ -637,6 +660,7 @@ export type UserUpdateWithoutSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   bouquetPosts?: Prisma.BouquetPostUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
 }
@@ -655,6 +679,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   bouquetPosts?: Prisma.BouquetPostUncheckedUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
 }
@@ -673,6 +698,7 @@ export type UserCreateWithoutAccountsInput = {
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   bouquetPosts?: Prisma.BouquetPostCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
 }
@@ -691,6 +717,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   bouquetPosts?: Prisma.BouquetPostUncheckedCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
 }
@@ -725,6 +752,7 @@ export type UserUpdateWithoutAccountsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   bouquetPosts?: Prisma.BouquetPostUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
 }
@@ -743,6 +771,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   bouquetPosts?: Prisma.BouquetPostUncheckedUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
 }
@@ -761,6 +790,7 @@ export type UserCreateWithoutBouquetPostsInput = {
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
 }
@@ -779,6 +809,7 @@ export type UserUncheckedCreateWithoutBouquetPostsInput = {
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
 }
@@ -813,6 +844,7 @@ export type UserUpdateWithoutBouquetPostsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
 }
@@ -831,6 +863,99 @@ export type UserUncheckedUpdateWithoutBouquetPostsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutBouquetPeriodsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  bouquetPosts?: Prisma.BouquetPostCreateNestedManyWithoutUserInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutBouquetPeriodsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  bouquetPosts?: Prisma.BouquetPostUncheckedCreateNestedManyWithoutUserInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutBouquetPeriodsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBouquetPeriodsInput, Prisma.UserUncheckedCreateWithoutBouquetPeriodsInput>
+}
+
+export type UserUpsertWithoutBouquetPeriodsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBouquetPeriodsInput, Prisma.UserUncheckedUpdateWithoutBouquetPeriodsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBouquetPeriodsInput, Prisma.UserUncheckedCreateWithoutBouquetPeriodsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBouquetPeriodsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBouquetPeriodsInput, Prisma.UserUncheckedUpdateWithoutBouquetPeriodsInput>
+}
+
+export type UserUpdateWithoutBouquetPeriodsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  bouquetPosts?: Prisma.BouquetPostUpdateManyWithoutUserNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBouquetPeriodsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  bouquetPosts?: Prisma.BouquetPostUncheckedUpdateManyWithoutUserNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
 }
@@ -850,6 +975,7 @@ export type UserCreateWithoutAssignedTasksInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   bouquetPosts?: Prisma.BouquetPostCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
 }
 
@@ -868,6 +994,7 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   bouquetPosts?: Prisma.BouquetPostUncheckedCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -891,6 +1018,7 @@ export type UserCreateWithoutCreatedTasksInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   bouquetPosts?: Prisma.BouquetPostCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
 }
 
@@ -909,6 +1037,7 @@ export type UserUncheckedCreateWithoutCreatedTasksInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   bouquetPosts?: Prisma.BouquetPostUncheckedCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
 }
 
@@ -943,6 +1072,7 @@ export type UserUpdateWithoutAssignedTasksInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   bouquetPosts?: Prisma.BouquetPostUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -961,6 +1091,7 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   bouquetPosts?: Prisma.BouquetPostUncheckedUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -990,6 +1121,7 @@ export type UserUpdateWithoutCreatedTasksInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   bouquetPosts?: Prisma.BouquetPostUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
 }
 
@@ -1008,6 +1140,7 @@ export type UserUncheckedUpdateWithoutCreatedTasksInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   bouquetPosts?: Prisma.BouquetPostUncheckedUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
 }
 
@@ -1020,6 +1153,7 @@ export type UserCountOutputType = {
   sessions: number
   accounts: number
   bouquetPosts: number
+  bouquetPeriods: number
   assignedTasks: number
   createdTasks: number
 }
@@ -1028,6 +1162,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   bouquetPosts?: boolean | UserCountOutputTypeCountBouquetPostsArgs
+  bouquetPeriods?: boolean | UserCountOutputTypeCountBouquetPeriodsArgs
   assignedTasks?: boolean | UserCountOutputTypeCountAssignedTasksArgs
   createdTasks?: boolean | UserCountOutputTypeCountCreatedTasksArgs
 }
@@ -1066,6 +1201,13 @@ export type UserCountOutputTypeCountBouquetPostsArgs<ExtArgs extends runtime.Typ
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountBouquetPeriodsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BouquetPeriodWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountAssignedTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TaskWhereInput
 }
@@ -1093,6 +1235,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   bouquetPosts?: boolean | Prisma.User$bouquetPostsArgs<ExtArgs>
+  bouquetPeriods?: boolean | Prisma.User$bouquetPeriodsArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.User$assignedTasksArgs<ExtArgs>
   createdTasks?: boolean | Prisma.User$createdTasksArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1145,6 +1288,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   bouquetPosts?: boolean | Prisma.User$bouquetPostsArgs<ExtArgs>
+  bouquetPeriods?: boolean | Prisma.User$bouquetPeriodsArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.User$assignedTasksArgs<ExtArgs>
   createdTasks?: boolean | Prisma.User$createdTasksArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1158,6 +1302,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     accounts: Prisma.$AccountPayload<ExtArgs>[]
     bouquetPosts: Prisma.$BouquetPostPayload<ExtArgs>[]
+    bouquetPeriods: Prisma.$BouquetPeriodPayload<ExtArgs>[]
     assignedTasks: Prisma.$TaskPayload<ExtArgs>[]
     createdTasks: Prisma.$TaskPayload<ExtArgs>[]
   }
@@ -1570,6 +1715,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bouquetPosts<T extends Prisma.User$bouquetPostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bouquetPostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BouquetPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bouquetPeriods<T extends Prisma.User$bouquetPeriodsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bouquetPeriodsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BouquetPeriodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedTasks<T extends Prisma.User$assignedTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdTasks<T extends Prisma.User$createdTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2074,6 +2220,30 @@ export type User$bouquetPostsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.BouquetPostScalarFieldEnum | Prisma.BouquetPostScalarFieldEnum[]
+}
+
+/**
+ * User.bouquetPeriods
+ */
+export type User$bouquetPeriodsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BouquetPeriod
+   */
+  select?: Prisma.BouquetPeriodSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BouquetPeriod
+   */
+  omit?: Prisma.BouquetPeriodOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BouquetPeriodInclude<ExtArgs> | null
+  where?: Prisma.BouquetPeriodWhereInput
+  orderBy?: Prisma.BouquetPeriodOrderByWithRelationInput | Prisma.BouquetPeriodOrderByWithRelationInput[]
+  cursor?: Prisma.BouquetPeriodWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BouquetPeriodScalarFieldEnum | Prisma.BouquetPeriodScalarFieldEnum[]
 }
 
 /**

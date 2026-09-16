@@ -1,13 +1,18 @@
-import BouquetSubmitForm from "@/components/bouquet-submit-form";
+import { getBouquetPeriodsAction } from "@/lib/actions/bouquet";
+import EmployeeBouquetPeriodsView from "@/components/employee-bouquet-periods-view";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Lapor Pemasangan Buket - B-Tracker",
+  title: "Foto Buket - B-Tracker",
 };
 
-export default function SubmitBouquetPage() {
+export default async function SubmitBouquetPage() {
+  const result = await getBouquetPeriodsAction();
+
   return (
     <div className="py-2">
-      <BouquetSubmitForm />
+      <EmployeeBouquetPeriodsView initialPeriods={result.periods} />
     </div>
   );
 }

@@ -37,6 +37,7 @@ export type BouquetPostSumAggregateOutputType = {
 export type BouquetPostMinAggregateOutputType = {
   id: string | null
   userId: string | null
+  periodId: string | null
   imageUrl: string | null
   storagePath: string | null
   installDate: Date | null
@@ -50,6 +51,7 @@ export type BouquetPostMinAggregateOutputType = {
 export type BouquetPostMaxAggregateOutputType = {
   id: string | null
   userId: string | null
+  periodId: string | null
   imageUrl: string | null
   storagePath: string | null
   installDate: Date | null
@@ -63,6 +65,7 @@ export type BouquetPostMaxAggregateOutputType = {
 export type BouquetPostCountAggregateOutputType = {
   id: number
   userId: number
+  periodId: number
   imageUrl: number
   storagePath: number
   installDate: number
@@ -86,6 +89,7 @@ export type BouquetPostSumAggregateInputType = {
 export type BouquetPostMinAggregateInputType = {
   id?: true
   userId?: true
+  periodId?: true
   imageUrl?: true
   storagePath?: true
   installDate?: true
@@ -99,6 +103,7 @@ export type BouquetPostMinAggregateInputType = {
 export type BouquetPostMaxAggregateInputType = {
   id?: true
   userId?: true
+  periodId?: true
   imageUrl?: true
   storagePath?: true
   installDate?: true
@@ -112,6 +117,7 @@ export type BouquetPostMaxAggregateInputType = {
 export type BouquetPostCountAggregateInputType = {
   id?: true
   userId?: true
+  periodId?: true
   imageUrl?: true
   storagePath?: true
   installDate?: true
@@ -212,6 +218,7 @@ export type BouquetPostGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type BouquetPostGroupByOutputType = {
   id: string
   userId: string
+  periodId: string | null
   imageUrl: string
   storagePath: string
   installDate: Date
@@ -248,6 +255,7 @@ export type BouquetPostWhereInput = {
   NOT?: Prisma.BouquetPostWhereInput | Prisma.BouquetPostWhereInput[]
   id?: Prisma.StringFilter<"BouquetPost"> | string
   userId?: Prisma.StringFilter<"BouquetPost"> | string
+  periodId?: Prisma.StringNullableFilter<"BouquetPost"> | string | null
   imageUrl?: Prisma.StringFilter<"BouquetPost"> | string
   storagePath?: Prisma.StringFilter<"BouquetPost"> | string
   installDate?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
@@ -257,11 +265,13 @@ export type BouquetPostWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  period?: Prisma.XOR<Prisma.BouquetPeriodNullableScalarRelationFilter, Prisma.BouquetPeriodWhereInput> | null
 }
 
 export type BouquetPostOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  periodId?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
   installDate?: Prisma.SortOrder
@@ -271,6 +281,7 @@ export type BouquetPostOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  period?: Prisma.BouquetPeriodOrderByWithRelationInput
 }
 
 export type BouquetPostWhereUniqueInput = Prisma.AtLeast<{
@@ -279,6 +290,7 @@ export type BouquetPostWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.BouquetPostWhereInput[]
   NOT?: Prisma.BouquetPostWhereInput | Prisma.BouquetPostWhereInput[]
   userId?: Prisma.StringFilter<"BouquetPost"> | string
+  periodId?: Prisma.StringNullableFilter<"BouquetPost"> | string | null
   imageUrl?: Prisma.StringFilter<"BouquetPost"> | string
   storagePath?: Prisma.StringFilter<"BouquetPost"> | string
   installDate?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
@@ -288,11 +300,13 @@ export type BouquetPostWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  period?: Prisma.XOR<Prisma.BouquetPeriodNullableScalarRelationFilter, Prisma.BouquetPeriodWhereInput> | null
 }, "id">
 
 export type BouquetPostOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  periodId?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
   installDate?: Prisma.SortOrder
@@ -314,6 +328,7 @@ export type BouquetPostScalarWhereWithAggregatesInput = {
   NOT?: Prisma.BouquetPostScalarWhereWithAggregatesInput | Prisma.BouquetPostScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"BouquetPost"> | string
   userId?: Prisma.StringWithAggregatesFilter<"BouquetPost"> | string
+  periodId?: Prisma.StringNullableWithAggregatesFilter<"BouquetPost"> | string | null
   imageUrl?: Prisma.StringWithAggregatesFilter<"BouquetPost"> | string
   storagePath?: Prisma.StringWithAggregatesFilter<"BouquetPost"> | string
   installDate?: Prisma.DateTimeWithAggregatesFilter<"BouquetPost"> | Date | string
@@ -335,11 +350,13 @@ export type BouquetPostCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutBouquetPostsInput
+  period?: Prisma.BouquetPeriodCreateNestedOneWithoutPostsInput
 }
 
 export type BouquetPostUncheckedCreateInput = {
   id?: string
   userId: string
+  periodId?: string | null
   imageUrl: string
   storagePath: string
   installDate: Date | string
@@ -361,11 +378,13 @@ export type BouquetPostUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutBouquetPostsNestedInput
+  period?: Prisma.BouquetPeriodUpdateOneWithoutPostsNestedInput
 }
 
 export type BouquetPostUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  periodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -379,6 +398,7 @@ export type BouquetPostUncheckedUpdateInput = {
 export type BouquetPostCreateManyInput = {
   id?: string
   userId: string
+  periodId?: string | null
   imageUrl: string
   storagePath: string
   installDate: Date | string
@@ -404,6 +424,7 @@ export type BouquetPostUpdateManyMutationInput = {
 export type BouquetPostUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  periodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -427,6 +448,7 @@ export type BouquetPostOrderByRelationAggregateInput = {
 export type BouquetPostCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  periodId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
   installDate?: Prisma.SortOrder
@@ -444,6 +466,7 @@ export type BouquetPostAvgOrderByAggregateInput = {
 export type BouquetPostMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  periodId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
   installDate?: Prisma.SortOrder
@@ -457,6 +480,7 @@ export type BouquetPostMaxOrderByAggregateInput = {
 export type BouquetPostMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  periodId?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
   installDate?: Prisma.SortOrder
@@ -521,6 +545,48 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type BouquetPostCreateNestedManyWithoutPeriodInput = {
+  create?: Prisma.XOR<Prisma.BouquetPostCreateWithoutPeriodInput, Prisma.BouquetPostUncheckedCreateWithoutPeriodInput> | Prisma.BouquetPostCreateWithoutPeriodInput[] | Prisma.BouquetPostUncheckedCreateWithoutPeriodInput[]
+  connectOrCreate?: Prisma.BouquetPostCreateOrConnectWithoutPeriodInput | Prisma.BouquetPostCreateOrConnectWithoutPeriodInput[]
+  createMany?: Prisma.BouquetPostCreateManyPeriodInputEnvelope
+  connect?: Prisma.BouquetPostWhereUniqueInput | Prisma.BouquetPostWhereUniqueInput[]
+}
+
+export type BouquetPostUncheckedCreateNestedManyWithoutPeriodInput = {
+  create?: Prisma.XOR<Prisma.BouquetPostCreateWithoutPeriodInput, Prisma.BouquetPostUncheckedCreateWithoutPeriodInput> | Prisma.BouquetPostCreateWithoutPeriodInput[] | Prisma.BouquetPostUncheckedCreateWithoutPeriodInput[]
+  connectOrCreate?: Prisma.BouquetPostCreateOrConnectWithoutPeriodInput | Prisma.BouquetPostCreateOrConnectWithoutPeriodInput[]
+  createMany?: Prisma.BouquetPostCreateManyPeriodInputEnvelope
+  connect?: Prisma.BouquetPostWhereUniqueInput | Prisma.BouquetPostWhereUniqueInput[]
+}
+
+export type BouquetPostUpdateManyWithoutPeriodNestedInput = {
+  create?: Prisma.XOR<Prisma.BouquetPostCreateWithoutPeriodInput, Prisma.BouquetPostUncheckedCreateWithoutPeriodInput> | Prisma.BouquetPostCreateWithoutPeriodInput[] | Prisma.BouquetPostUncheckedCreateWithoutPeriodInput[]
+  connectOrCreate?: Prisma.BouquetPostCreateOrConnectWithoutPeriodInput | Prisma.BouquetPostCreateOrConnectWithoutPeriodInput[]
+  upsert?: Prisma.BouquetPostUpsertWithWhereUniqueWithoutPeriodInput | Prisma.BouquetPostUpsertWithWhereUniqueWithoutPeriodInput[]
+  createMany?: Prisma.BouquetPostCreateManyPeriodInputEnvelope
+  set?: Prisma.BouquetPostWhereUniqueInput | Prisma.BouquetPostWhereUniqueInput[]
+  disconnect?: Prisma.BouquetPostWhereUniqueInput | Prisma.BouquetPostWhereUniqueInput[]
+  delete?: Prisma.BouquetPostWhereUniqueInput | Prisma.BouquetPostWhereUniqueInput[]
+  connect?: Prisma.BouquetPostWhereUniqueInput | Prisma.BouquetPostWhereUniqueInput[]
+  update?: Prisma.BouquetPostUpdateWithWhereUniqueWithoutPeriodInput | Prisma.BouquetPostUpdateWithWhereUniqueWithoutPeriodInput[]
+  updateMany?: Prisma.BouquetPostUpdateManyWithWhereWithoutPeriodInput | Prisma.BouquetPostUpdateManyWithWhereWithoutPeriodInput[]
+  deleteMany?: Prisma.BouquetPostScalarWhereInput | Prisma.BouquetPostScalarWhereInput[]
+}
+
+export type BouquetPostUncheckedUpdateManyWithoutPeriodNestedInput = {
+  create?: Prisma.XOR<Prisma.BouquetPostCreateWithoutPeriodInput, Prisma.BouquetPostUncheckedCreateWithoutPeriodInput> | Prisma.BouquetPostCreateWithoutPeriodInput[] | Prisma.BouquetPostUncheckedCreateWithoutPeriodInput[]
+  connectOrCreate?: Prisma.BouquetPostCreateOrConnectWithoutPeriodInput | Prisma.BouquetPostCreateOrConnectWithoutPeriodInput[]
+  upsert?: Prisma.BouquetPostUpsertWithWhereUniqueWithoutPeriodInput | Prisma.BouquetPostUpsertWithWhereUniqueWithoutPeriodInput[]
+  createMany?: Prisma.BouquetPostCreateManyPeriodInputEnvelope
+  set?: Prisma.BouquetPostWhereUniqueInput | Prisma.BouquetPostWhereUniqueInput[]
+  disconnect?: Prisma.BouquetPostWhereUniqueInput | Prisma.BouquetPostWhereUniqueInput[]
+  delete?: Prisma.BouquetPostWhereUniqueInput | Prisma.BouquetPostWhereUniqueInput[]
+  connect?: Prisma.BouquetPostWhereUniqueInput | Prisma.BouquetPostWhereUniqueInput[]
+  update?: Prisma.BouquetPostUpdateWithWhereUniqueWithoutPeriodInput | Prisma.BouquetPostUpdateWithWhereUniqueWithoutPeriodInput[]
+  updateMany?: Prisma.BouquetPostUpdateManyWithWhereWithoutPeriodInput | Prisma.BouquetPostUpdateManyWithWhereWithoutPeriodInput[]
+  deleteMany?: Prisma.BouquetPostScalarWhereInput | Prisma.BouquetPostScalarWhereInput[]
+}
+
 export type BouquetPostCreateWithoutUserInput = {
   id?: string
   imageUrl: string
@@ -531,10 +597,12 @@ export type BouquetPostCreateWithoutUserInput = {
   isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  period?: Prisma.BouquetPeriodCreateNestedOneWithoutPostsInput
 }
 
 export type BouquetPostUncheckedCreateWithoutUserInput = {
   id?: string
+  periodId?: string | null
   imageUrl: string
   storagePath: string
   installDate: Date | string
@@ -577,6 +645,7 @@ export type BouquetPostScalarWhereInput = {
   NOT?: Prisma.BouquetPostScalarWhereInput | Prisma.BouquetPostScalarWhereInput[]
   id?: Prisma.StringFilter<"BouquetPost"> | string
   userId?: Prisma.StringFilter<"BouquetPost"> | string
+  periodId?: Prisma.StringNullableFilter<"BouquetPost"> | string | null
   imageUrl?: Prisma.StringFilter<"BouquetPost"> | string
   storagePath?: Prisma.StringFilter<"BouquetPost"> | string
   installDate?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
@@ -587,8 +656,61 @@ export type BouquetPostScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
 }
 
+export type BouquetPostCreateWithoutPeriodInput = {
+  id?: string
+  imageUrl: string
+  storagePath: string
+  installDate: Date | string
+  locationName: string
+  flowerCount: number
+  isArchived?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutBouquetPostsInput
+}
+
+export type BouquetPostUncheckedCreateWithoutPeriodInput = {
+  id?: string
+  userId: string
+  imageUrl: string
+  storagePath: string
+  installDate: Date | string
+  locationName: string
+  flowerCount: number
+  isArchived?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type BouquetPostCreateOrConnectWithoutPeriodInput = {
+  where: Prisma.BouquetPostWhereUniqueInput
+  create: Prisma.XOR<Prisma.BouquetPostCreateWithoutPeriodInput, Prisma.BouquetPostUncheckedCreateWithoutPeriodInput>
+}
+
+export type BouquetPostCreateManyPeriodInputEnvelope = {
+  data: Prisma.BouquetPostCreateManyPeriodInput | Prisma.BouquetPostCreateManyPeriodInput[]
+  skipDuplicates?: boolean
+}
+
+export type BouquetPostUpsertWithWhereUniqueWithoutPeriodInput = {
+  where: Prisma.BouquetPostWhereUniqueInput
+  update: Prisma.XOR<Prisma.BouquetPostUpdateWithoutPeriodInput, Prisma.BouquetPostUncheckedUpdateWithoutPeriodInput>
+  create: Prisma.XOR<Prisma.BouquetPostCreateWithoutPeriodInput, Prisma.BouquetPostUncheckedCreateWithoutPeriodInput>
+}
+
+export type BouquetPostUpdateWithWhereUniqueWithoutPeriodInput = {
+  where: Prisma.BouquetPostWhereUniqueInput
+  data: Prisma.XOR<Prisma.BouquetPostUpdateWithoutPeriodInput, Prisma.BouquetPostUncheckedUpdateWithoutPeriodInput>
+}
+
+export type BouquetPostUpdateManyWithWhereWithoutPeriodInput = {
+  where: Prisma.BouquetPostScalarWhereInput
+  data: Prisma.XOR<Prisma.BouquetPostUpdateManyMutationInput, Prisma.BouquetPostUncheckedUpdateManyWithoutPeriodInput>
+}
+
 export type BouquetPostCreateManyUserInput = {
   id?: string
+  periodId?: string | null
   imageUrl: string
   storagePath: string
   installDate: Date | string
@@ -609,10 +731,12 @@ export type BouquetPostUpdateWithoutUserInput = {
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  period?: Prisma.BouquetPeriodUpdateOneWithoutPostsNestedInput
 }
 
 export type BouquetPostUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  periodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -625,6 +749,59 @@ export type BouquetPostUncheckedUpdateWithoutUserInput = {
 
 export type BouquetPostUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  periodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  storagePath?: Prisma.StringFieldUpdateOperationsInput | string
+  installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locationName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type BouquetPostCreateManyPeriodInput = {
+  id?: string
+  userId: string
+  imageUrl: string
+  storagePath: string
+  installDate: Date | string
+  locationName: string
+  flowerCount: number
+  isArchived?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type BouquetPostUpdateWithoutPeriodInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  storagePath?: Prisma.StringFieldUpdateOperationsInput | string
+  installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locationName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutBouquetPostsNestedInput
+}
+
+export type BouquetPostUncheckedUpdateWithoutPeriodInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  storagePath?: Prisma.StringFieldUpdateOperationsInput | string
+  installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  locationName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type BouquetPostUncheckedUpdateManyWithoutPeriodInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -640,6 +817,7 @@ export type BouquetPostUncheckedUpdateManyWithoutUserInput = {
 export type BouquetPostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  periodId?: boolean
   imageUrl?: boolean
   storagePath?: boolean
   installDate?: boolean
@@ -649,11 +827,13 @@ export type BouquetPostSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  period?: boolean | Prisma.BouquetPost$periodArgs<ExtArgs>
 }, ExtArgs["result"]["bouquetPost"]>
 
 export type BouquetPostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  periodId?: boolean
   imageUrl?: boolean
   storagePath?: boolean
   installDate?: boolean
@@ -663,11 +843,13 @@ export type BouquetPostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  period?: boolean | Prisma.BouquetPost$periodArgs<ExtArgs>
 }, ExtArgs["result"]["bouquetPost"]>
 
 export type BouquetPostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  periodId?: boolean
   imageUrl?: boolean
   storagePath?: boolean
   installDate?: boolean
@@ -677,11 +859,13 @@ export type BouquetPostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  period?: boolean | Prisma.BouquetPost$periodArgs<ExtArgs>
 }, ExtArgs["result"]["bouquetPost"]>
 
 export type BouquetPostSelectScalar = {
   id?: boolean
   userId?: boolean
+  periodId?: boolean
   imageUrl?: boolean
   storagePath?: boolean
   installDate?: boolean
@@ -692,25 +876,30 @@ export type BouquetPostSelectScalar = {
   updatedAt?: boolean
 }
 
-export type BouquetPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "imageUrl" | "storagePath" | "installDate" | "locationName" | "flowerCount" | "isArchived" | "createdAt" | "updatedAt", ExtArgs["result"]["bouquetPost"]>
+export type BouquetPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "periodId" | "imageUrl" | "storagePath" | "installDate" | "locationName" | "flowerCount" | "isArchived" | "createdAt" | "updatedAt", ExtArgs["result"]["bouquetPost"]>
 export type BouquetPostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  period?: boolean | Prisma.BouquetPost$periodArgs<ExtArgs>
 }
 export type BouquetPostIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  period?: boolean | Prisma.BouquetPost$periodArgs<ExtArgs>
 }
 export type BouquetPostIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  period?: boolean | Prisma.BouquetPost$periodArgs<ExtArgs>
 }
 
 export type $BouquetPostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "BouquetPost"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    period: Prisma.$BouquetPeriodPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
+    periodId: string | null
     imageUrl: string
     storagePath: string
     installDate: Date
@@ -1114,6 +1303,7 @@ readonly fields: BouquetPostFieldRefs;
 export interface Prisma__BouquetPostClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  period<T extends Prisma.BouquetPost$periodArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BouquetPost$periodArgs<ExtArgs>>): Prisma.Prisma__BouquetPeriodClient<runtime.Types.Result.GetResult<Prisma.$BouquetPeriodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1145,6 +1335,7 @@ export interface Prisma__BouquetPostClient<T, Null = never, ExtArgs extends runt
 export interface BouquetPostFieldRefs {
   readonly id: Prisma.FieldRef<"BouquetPost", 'String'>
   readonly userId: Prisma.FieldRef<"BouquetPost", 'String'>
+  readonly periodId: Prisma.FieldRef<"BouquetPost", 'String'>
   readonly imageUrl: Prisma.FieldRef<"BouquetPost", 'String'>
   readonly storagePath: Prisma.FieldRef<"BouquetPost", 'String'>
   readonly installDate: Prisma.FieldRef<"BouquetPost", 'DateTime'>
@@ -1551,6 +1742,25 @@ export type BouquetPostDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many BouquetPosts to delete.
    */
   limit?: number
+}
+
+/**
+ * BouquetPost.period
+ */
+export type BouquetPost$periodArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BouquetPeriod
+   */
+  select?: Prisma.BouquetPeriodSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BouquetPeriod
+   */
+  omit?: Prisma.BouquetPeriodOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BouquetPeriodInclude<ExtArgs> | null
+  where?: Prisma.BouquetPeriodWhereInput
 }
 
 /**

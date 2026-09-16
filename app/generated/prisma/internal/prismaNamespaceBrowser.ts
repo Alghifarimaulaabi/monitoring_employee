@@ -56,6 +56,7 @@ export const ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   BouquetPost: 'BouquetPost',
+  BouquetPeriod: 'BouquetPeriod',
   Task: 'Task'
 } as const
 
@@ -141,6 +142,7 @@ export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[k
 export const BouquetPostScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  periodId: 'periodId',
   imageUrl: 'imageUrl',
   storagePath: 'storagePath',
   installDate: 'installDate',
@@ -152,6 +154,20 @@ export const BouquetPostScalarFieldEnum = {
 } as const
 
 export type BouquetPostScalarFieldEnum = (typeof BouquetPostScalarFieldEnum)[keyof typeof BouquetPostScalarFieldEnum]
+
+
+export const BouquetPeriodScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdById: 'createdById',
+  isArchived: 'isArchived',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BouquetPeriodScalarFieldEnum = (typeof BouquetPeriodScalarFieldEnum)[keyof typeof BouquetPeriodScalarFieldEnum]
 
 
 export const TaskScalarFieldEnum = {

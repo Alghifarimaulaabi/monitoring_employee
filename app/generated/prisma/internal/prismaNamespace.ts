@@ -402,6 +402,7 @@ export const ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   BouquetPost: 'BouquetPost',
+  BouquetPeriod: 'BouquetPeriod',
   Task: 'Task'
 } as const
 
@@ -418,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "bouquetPost" | "task"
+    modelProps: "user" | "session" | "account" | "verification" | "bouquetPost" | "bouquetPeriod" | "task"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -792,6 +793,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BouquetPeriod: {
+      payload: Prisma.$BouquetPeriodPayload<ExtArgs>
+      fields: Prisma.BouquetPeriodFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BouquetPeriodFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BouquetPeriodPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BouquetPeriodFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BouquetPeriodPayload>
+        }
+        findFirst: {
+          args: Prisma.BouquetPeriodFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BouquetPeriodPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BouquetPeriodFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BouquetPeriodPayload>
+        }
+        findMany: {
+          args: Prisma.BouquetPeriodFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BouquetPeriodPayload>[]
+        }
+        create: {
+          args: Prisma.BouquetPeriodCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BouquetPeriodPayload>
+        }
+        createMany: {
+          args: Prisma.BouquetPeriodCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BouquetPeriodCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BouquetPeriodPayload>[]
+        }
+        delete: {
+          args: Prisma.BouquetPeriodDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BouquetPeriodPayload>
+        }
+        update: {
+          args: Prisma.BouquetPeriodUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BouquetPeriodPayload>
+        }
+        deleteMany: {
+          args: Prisma.BouquetPeriodDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BouquetPeriodUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BouquetPeriodUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BouquetPeriodPayload>[]
+        }
+        upsert: {
+          args: Prisma.BouquetPeriodUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BouquetPeriodPayload>
+        }
+        aggregate: {
+          args: Prisma.BouquetPeriodAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBouquetPeriod>
+        }
+        groupBy: {
+          args: Prisma.BouquetPeriodGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BouquetPeriodGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BouquetPeriodCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BouquetPeriodCountAggregateOutputType> | number
+        }
+      }
+    }
     Task: {
       payload: Prisma.$TaskPayload<ExtArgs>
       fields: Prisma.TaskFieldRefs
@@ -971,6 +1046,7 @@ export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[k
 export const BouquetPostScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  periodId: 'periodId',
   imageUrl: 'imageUrl',
   storagePath: 'storagePath',
   installDate: 'installDate',
@@ -982,6 +1058,20 @@ export const BouquetPostScalarFieldEnum = {
 } as const
 
 export type BouquetPostScalarFieldEnum = (typeof BouquetPostScalarFieldEnum)[keyof typeof BouquetPostScalarFieldEnum]
+
+
+export const BouquetPeriodScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdById: 'createdById',
+  isArchived: 'isArchived',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BouquetPeriodScalarFieldEnum = (typeof BouquetPeriodScalarFieldEnum)[keyof typeof BouquetPeriodScalarFieldEnum]
 
 
 export const TaskScalarFieldEnum = {
@@ -1248,6 +1338,7 @@ export type GlobalOmitConfig = {
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
   bouquetPost?: Prisma.BouquetPostOmit
+  bouquetPeriod?: Prisma.BouquetPeriodOmit
   task?: Prisma.TaskOmit
 }
 

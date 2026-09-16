@@ -16,10 +16,21 @@ import {
   RefreshCw,
   Sparkles,
   ArrowRight,
+  ChevronLeft,
 } from "lucide-react";
 import Link from "next/link";
 
-export default function BouquetSubmitForm() {
+interface BouquetSubmitFormProps {
+  periodId?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export default function BouquetSubmitForm({
+  periodId,
+  startDate,
+  endDate,
+}: BouquetSubmitFormProps = {}) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -106,6 +117,9 @@ export default function BouquetSubmitForm() {
       formData.append("install_date", installDate);
       formData.append("location_name", locationName.trim());
       formData.append("flower_count", countNum.toString());
+      if (periodId) {
+        formData.append("period_id", periodId);
+      }
 
       const res = await createBouquetPostAction(formData);
 
@@ -173,14 +187,29 @@ export default function BouquetSubmitForm() {
   }
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200/80 shadow-xs p-5 sm:p-7">
-      <div className="flex items-center gap-3 mb-5">
-        <div className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center">
+    <div className="bg-white rounded-3xl border border-gray-200/80 shadow-xs p-5 sm:p-7 space-y-4">
+      {/* Back Link */}
+      <div>
+        <Link
+          href="/employee/submit"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          <span>Kembali ke Kartu Buket</span>
+        </Link>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
           <Flower2 className="w-5 h-5" />
         </div>
         <div>
-          <h1 className="text-lg font-bold text-gray-900 leading-tight">Lapor Pemasangan Buket</h1>
-          <p className="text-xs text-gray-500">Ambil foto bukti pemasangan dan lengkapi detail lokasi.</p>
+          <h1 className="text-lg font-bold text-gray-900 leading-tight">Unggah Foto Buket</h1>
+          <p className="text-xs text-gray-500">
+            {startDate && endDate
+              ? `Periode: ${startDate} s/d ${endDate}`
+              : "Ambil foto bukti pemasangan dan lengkapi detail lokasi."}
+          </p>
         </div>
       </div>
 

@@ -80,10 +80,13 @@ export async function createBouquetPostAction(formData: FormData): Promise<Creat
       file.type || "image/webp"
     );
 
+    const periodIdRaw = formData.get("period_id") as string | null;
+
     // Save record to database
     const post = await prisma.bouquetPost.create({
       data: {
         userId: session.user.id,
+        periodId: periodIdRaw || undefined,
         imageUrl,
         storagePath,
         installDate: dateObj,
@@ -93,6 +96,7 @@ export async function createBouquetPostAction(formData: FormData): Promise<Creat
     });
 
     revalidatePath("/employee/history");
+    revalidatePath("/employee/submit");
     revalidatePath("/owner/bouquets");
 
     return {
@@ -361,6 +365,307 @@ export async function deleteMonthlyPhotosAction(params: {
   } catch (err: unknown) {
     console.error("[deleteMonthlyPhotosAction] Error:", err);
     const msg = err instanceof Error ? err.message : "Gagal membersihkan foto penyimpanan.";
+    return { success: false, error: msg };
+  }
+}
+
+const MONTH_NAMES_ID = [
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
+
+function formatDateIndo(date: Date): string {
+  const d = String(date.getUTCDate()).padStart(2, "0");
+  const m = MONTH_NAMES_ID[date.getUTCMonth()];
+  const y = date.getUTCFullYear();
+  return `${d} ${m} ${y}`;
+}
+
+export interface CreatePeriodResult {
+  success: boolean;
+  periodId?: string;
+  error?: string;
+}
+
+/**
+ * Creates a new bouquet period based on date range from the employee popup.
+ */
+export async function createBouquetPeriodAction(params: {
+  startDate: string; // YYYY-MM-DD
+  endDate: string; // YYYY-MM-DD
+  title?: string;
+}): Promise<CreatePeriodResult> {
+  try {
+    const headerList = await headers();
+    const session = await auth.api.getSession({
+      headers: headerList,
+    });
+
+    if (!session || !session.user) {
+      return { success: false, error: "Silakan login terlebih dahulu." };
+    }
+
+    const { startDate, endDate, title } = params;
+    if (!startDate || !endDate) {
+      return { success: false, error: "Tanggal mulai dan tanggal selesai wajib diisi." };
+    }
+
+    const [sy, sm, sd] = startDate.split("-").map(Number);
+    const [ey, em, ed] = endDate.split("-").map(Number);
+
+    const startObj = new Date(Date.UTC(sy, sm - 1, sd, 0, 0, 0, 0));
+    const endObj = new Date(Date.UTC(ey, em - 1, ed, 23, 59, 59, 999));
+
+    if (startObj > endObj) {
+      return {
+        success: false,
+        error: "Tanggal mulai tidak boleh lebih besar dari tanggal selesai.",
+      };
+    }
+
+    const computedTitle =
+      title?.trim() ||
+      `Foto Buket Tanggal ${formatDateIndo(startObj)} - ${formatDateIndo(endObj)}`;
+
+    const period = await prisma.bouquetPeriod.create({
+      data: {
+        title: computedTitle,
+        startDate: startObj,
+        endDate: endObj,
+        createdById: session.user.id,
+      },
+    });
+
+    // Automatically link unassigned posts falling into this date range
+    await prisma.bouquetPost.updateMany({
+      where: {
+        installDate: {
+          gte: startObj,
+          lte: endObj,
+        },
+        periodId: null,
+      },
+      data: {
+        periodId: period.id,
+      },
+    });
+
+    revalidatePath("/employee/submit");
+    revalidatePath("/owner/bouquets");
+
+    return { success: true, periodId: period.id };
+  } catch (err: unknown) {
+    console.error("[createBouquetPeriodAction] Error:", err);
+    const msg =
+      err instanceof Error ? err.message : "Gagal membuat kartu buket bulan ini.";
+    return { success: false, error: msg };
+  }
+}
+
+export interface SerializedBouquetPeriod {
+  id: string;
+  title: string;
+  startDate: string; // YYYY-MM-DD
+  endDate: string; // YYYY-MM-DD
+  formattedRange: string;
+  createdById: string;
+  creatorName: string;
+  totalPosts: number;
+  totalFlowers: number;
+  isArchived: boolean;
+  createdAt: string;
+  posts: Array<{
+    id: string;
+    imageUrl: string;
+    locationName: string;
+    flowerCount: number;
+    installDate: string;
+    staffName: string;
+    isArchived: boolean;
+  }>;
+}
+
+/**
+ * Retrieves all bouquet periods along with their photos for employee and owner views.
+ */
+export async function getBouquetPeriodsAction(): Promise<{
+  success: boolean;
+  periods: SerializedBouquetPeriod[];
+  error?: string;
+}> {
+  try {
+    const headerList = await headers();
+    const session = await auth.api.getSession({
+      headers: headerList,
+    });
+
+    if (!session || !session.user) {
+      return { success: false, periods: [], error: "Silakan login terlebih dahulu." };
+    }
+
+    const periods = await prisma.bouquetPeriod.findMany({
+      orderBy: {
+        startDate: "desc",
+      },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        posts: {
+          orderBy: {
+            installDate: "desc",
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const serialized: SerializedBouquetPeriod[] = periods.map((p) => {
+      const sStr = p.startDate.toISOString().split("T")[0];
+      const eStr = p.endDate.toISOString().split("T")[0];
+      const totalFlowers = p.posts.reduce(
+        (sum, post) => sum + post.flowerCount,
+        0
+      );
+
+      return {
+        id: p.id,
+        title: p.title,
+        startDate: sStr,
+        endDate: eStr,
+        formattedRange: `${formatDateIndo(p.startDate)} - ${formatDateIndo(
+          p.endDate
+        )}`,
+        createdById: p.createdById,
+        creatorName: p.createdBy.name,
+        totalPosts: p.posts.length,
+        totalFlowers,
+        isArchived: p.isArchived,
+        createdAt: p.createdAt.toISOString(),
+        posts: p.posts.map((post) => ({
+          id: post.id,
+          imageUrl: post.imageUrl,
+          locationName: post.locationName,
+          flowerCount: post.flowerCount,
+          installDate: post.installDate.toISOString().split("T")[0],
+          staffName: post.user.name,
+          isArchived: post.isArchived,
+        })),
+      };
+    });
+
+    return { success: true, periods: serialized };
+  } catch (err: unknown) {
+    console.error("[getBouquetPeriodsAction] Error:", err);
+    return {
+      success: false,
+      periods: [],
+      error: "Gagal mengambil daftar periode buket.",
+    };
+  }
+}
+
+/**
+ * Deletes all photos in a specific bouquet period.
+ * Restricted to Owner role.
+ */
+export async function deletePeriodPhotosAction(periodId: string): Promise<{
+  success: boolean;
+  deletedCount?: number;
+  error?: string;
+}> {
+  try {
+    const headerList = await headers();
+    const session = await auth.api.getSession({
+      headers: headerList,
+    });
+
+    if (!session || !session.user) {
+      return { success: false, error: "Silakan login terlebih dahulu." };
+    }
+
+    const isOwner =
+      session.user.role === "OWNER" || session.user.role === "admin";
+    if (!isOwner) {
+      return {
+        success: false,
+        error: "Akses ditolak: Hanya Owner yang dapat menghapus foto.",
+      };
+    }
+
+    const period = await prisma.bouquetPeriod.findUnique({
+      where: { id: periodId },
+      include: {
+        posts: {
+          select: {
+            id: true,
+            storagePath: true,
+          },
+        },
+      },
+    });
+
+    if (!period) {
+      return { success: false, error: "Periode buket tidak ditemukan." };
+    }
+
+    // Delete physical files from storage
+    await Promise.allSettled(
+      period.posts.map(async (p) => {
+        if (p.storagePath) {
+          try {
+            await deleteBouquetPhoto(p.storagePath);
+          } catch (e) {
+            console.warn(
+              `[deletePeriodPhotosAction] Could not delete ${p.storagePath}:`,
+              e
+            );
+          }
+        }
+      })
+    );
+
+    // Delete all post records belonging to this period
+    await prisma.bouquetPost.deleteMany({
+      where: { periodId },
+    });
+
+    // Delete the period card record
+    await prisma.bouquetPeriod.delete({
+      where: { id: periodId },
+    });
+
+    revalidatePath("/owner/bouquets");
+    revalidatePath("/employee/submit");
+
+    return { success: true, deletedCount: period.posts.length };
+  } catch (err: unknown) {
+    console.error("[deletePeriodPhotosAction] Error:", err);
+    const msg =
+      err instanceof Error
+        ? err.message
+        : "Gagal menghapus foto pada periode ini.";
     return { success: false, error: msg };
   }
 }

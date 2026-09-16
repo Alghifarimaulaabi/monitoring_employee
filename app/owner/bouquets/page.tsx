@@ -1,4 +1,7 @@
-import { getOwnerMonthlyBouquetsAction } from "@/lib/actions/bouquet";
+import {
+  getOwnerMonthlyBouquetsAction,
+  getBouquetPeriodsAction,
+} from "@/lib/actions/bouquet";
 import OwnerBouquetGallery from "@/components/owner-bouquet-gallery";
 
 export const dynamic = "force-dynamic";
@@ -12,14 +15,18 @@ export default async function OwnerBouquetsPage() {
   const currentMonth = now.getUTCMonth() + 1;
   const currentYear = now.getUTCFullYear();
 
-  const initialData = await getOwnerMonthlyBouquetsAction({
-    month: currentMonth,
-    year: currentYear,
-  });
+  const [initialMonthlyData, periodsResult] = await Promise.all([
+    getOwnerMonthlyBouquetsAction({
+      month: currentMonth,
+      year: currentYear,
+    }),
+    getBouquetPeriodsAction(),
+  ]);
 
   return (
     <OwnerBouquetGallery
-      initialData={initialData}
+      initialData={initialMonthlyData}
+      initialPeriods={periodsResult.periods}
       initialMonth={currentMonth}
       initialYear={currentYear}
     />
