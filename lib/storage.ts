@@ -111,79 +111,92 @@ export async function uploadBouquetPhoto(
 }
 
 /**
- * Permanently and physically deletes a photo from both Supabase Cloud Storage
- * and local filesystem storage to ensure storage space is fully reclaimed.
+ * Permanently and physically deletes a batch of photos in ONE single Supabase Storage request,
+ * and parallel local disk removals.
  */
-export async function deleteBouquetPhoto(
-  storagePath: string,
-  imageUrl?: string
-): Promise<boolean> {
-  let deletedFromCloud = false;
-  let deletedLocally = false;
+export async function deleteBouquetPhotosBatch(
+  items: Array<{ storagePath: string; imageUrl?: string }>
+): Promise<{ deletedCount: number }> {
+  if (!items || items.length === 0) {
+    return { deletedCount: 0 };
+  }
 
-  // 1. Delete from Supabase Cloud Storage (if configured)
-  if (supabaseAdmin) {
-    try {
-      const candidates = new Set<string>();
-      if (storagePath) {
-        candidates.add(storagePath);
-        candidates.add(storagePath.replace(/^bouquet-photos\//, ""));
-        candidates.add(storagePath.replace(/^\//, ""));
-      }
+  // 1. Collect all candidates for Supabase Storage and local disk
+  const cloudCandidates = new Set<string>();
+  const localCandidates = new Set<string>();
 
-      if (imageUrl && imageUrl.includes(bucketName)) {
+  for (const item of items) {
+    const { storagePath, imageUrl } = item;
+    if (storagePath) {
+      cloudCandidates.add(storagePath);
+      cloudCandidates.add(storagePath.replace(/^bouquet-photos\//, ""));
+      cloudCandidates.add(storagePath.replace(/^\//, ""));
+
+      localCandidates.add(path.join(process.cwd(), "public", "uploads", storagePath));
+      localCandidates.add(
+        path.join(process.cwd(), "public", "uploads", storagePath.replace(/^uploads\//, ""))
+      );
+      localCandidates.add(path.join(process.cwd(), "public", storagePath));
+      localCandidates.add(path.join(process.cwd(), "public", storagePath.replace(/^\//, "")));
+    }
+
+    if (imageUrl) {
+      if (imageUrl.includes(bucketName)) {
         const parts = imageUrl.split(`${bucketName}/`);
         if (parts[1]) {
-          candidates.add(parts[1]);
+          cloudCandidates.add(parts[1]);
         }
       }
+      if (imageUrl.startsWith("/uploads/")) {
+        localCandidates.add(path.join(process.cwd(), "public", imageUrl.replace(/^\//, "")));
+      } else if (imageUrl.startsWith("uploads/")) {
+        localCandidates.add(path.join(process.cwd(), "public", imageUrl));
+      }
+    }
+  }
 
-      const pathsToRemove = Array.from(candidates);
+  // 2. Batch delete from Supabase Cloud Storage in a single HTTP request
+  if (supabaseAdmin && cloudCandidates.size > 0) {
+    try {
+      const pathsToRemove = Array.from(cloudCandidates);
       const { data, error } = await supabaseAdmin.storage
         .from(bucketName)
         .remove(pathsToRemove);
 
       if (!error && data && data.length > 0) {
-        console.log(`[Storage] Deleted from Supabase:`, pathsToRemove);
-        deletedFromCloud = true;
+        console.log(`[Storage] Batch deleted ${data.length} files from Supabase.`);
       } else if (error) {
-        console.warn(`[Storage] Supabase removal warning:`, error.message);
+        console.warn(`[Storage] Supabase batch removal warning:`, error.message);
       }
     } catch (cloudErr) {
-      console.warn(`[Storage] Supabase delete exception:`, cloudErr);
+      console.warn(`[Storage] Supabase batch delete exception:`, cloudErr);
     }
   }
 
-  // 2. ALWAYS physically delete from local filesystem
-  const localCandidates = new Set<string>();
+  // 3. Parallel local disk deletion
+  await Promise.allSettled(
+    Array.from(localCandidates).map(async (candidatePath) => {
+      try {
+        await fs.access(candidatePath);
+        await fs.unlink(candidatePath);
+        console.log(`[Storage] Physically removed file from disk: ${candidatePath}`);
+      } catch {
+        // File doesn't exist at this candidate path, continue checking others
+      }
+    })
+  );
 
-  if (storagePath) {
-    localCandidates.add(path.join(process.cwd(), "public", "uploads", storagePath));
-    localCandidates.add(
-      path.join(process.cwd(), "public", "uploads", storagePath.replace(/^uploads\//, ""))
-    );
-    localCandidates.add(path.join(process.cwd(), "public", storagePath));
-    localCandidates.add(path.join(process.cwd(), "public", storagePath.replace(/^\//, "")));
-  }
-
-  if (imageUrl) {
-    if (imageUrl.startsWith("/uploads/")) {
-      localCandidates.add(path.join(process.cwd(), "public", imageUrl.replace(/^\//, "")));
-    } else if (imageUrl.startsWith("uploads/")) {
-      localCandidates.add(path.join(process.cwd(), "public", imageUrl));
-    }
-  }
-
-  for (const candidatePath of localCandidates) {
-    try {
-      await fs.access(candidatePath);
-      await fs.unlink(candidatePath);
-      console.log(`[Storage] Physically removed file from disk: ${candidatePath}`);
-      deletedLocally = true;
-    } catch {
-      // File doesn't exist at this candidate path, continue checking others
-    }
-  }
-
-  return deletedFromCloud || deletedLocally;
+  return { deletedCount: items.length };
 }
+
+/**
+ * Permanently and physically deletes a single photo.
+ */
+export async function deleteBouquetPhoto(
+  storagePath: string,
+  imageUrl?: string
+): Promise<boolean> {
+  const res = await deleteBouquetPhotosBatch([{ storagePath, imageUrl }]);
+  return res.deletedCount > 0;
+}
+

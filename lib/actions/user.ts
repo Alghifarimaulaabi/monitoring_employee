@@ -1,8 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
+import { auth, getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -23,10 +22,7 @@ export interface ActionResult {
 
 export async function createUserAction(data: CreateUserDTO): Promise<ActionResult> {
   try {
-    const headerList = await headers();
-    const session = await auth.api.getSession({
-      headers: headerList,
-    });
+    const session = await getServerSession();
 
     if (!session || !session.user) {
       return { success: false, error: "Silakan login terlebih dahulu" };
@@ -91,10 +87,7 @@ export async function createUserAction(data: CreateUserDTO): Promise<ActionResul
 }
 
 export async function getEmployeesAction() {
-  const headerList = await headers();
-  const session = await auth.api.getSession({
-    headers: headerList,
-  });
+  const session = await getServerSession();
 
   const isCallerOwner =
     session?.user?.role === "OWNER" || session?.user?.role === "admin";

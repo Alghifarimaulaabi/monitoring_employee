@@ -44,6 +44,7 @@ interface BouquetState {
   setIsDeletingPeriod: (isDeleting: boolean) => void;
   setIsPurgeModalOpen: (isOpen: boolean) => void;
   setIsPeriodModalOpen: (isOpen: boolean) => void;
+  removePeriod: (periodId: string) => void;
 
   // Async data fetchers
   fetchMonthlyData: (month?: number, year?: number) => Promise<void>;
@@ -79,6 +80,10 @@ export const useBouquetStore = create<BouquetState>((set, get) => ({
   setIsDeletingPeriod: (isDeletingPeriod) => set({ isDeletingPeriod }),
   setIsPurgeModalOpen: (isPurgeModalOpen) => set({ isPurgeModalOpen }),
   setIsPeriodModalOpen: (isPeriodModalOpen) => set({ isPeriodModalOpen }),
+  removePeriod: (periodId) =>
+    set((state) => ({
+      periods: state.periods.filter((p) => p.id !== periodId),
+    })),
 
   fetchMonthlyData: async (monthParam, yearParam) => {
     const month = monthParam ?? get().selectedMonth;

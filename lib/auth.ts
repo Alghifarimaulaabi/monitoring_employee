@@ -1,3 +1,5 @@
+import { cache } from "react";
+import { headers } from "next/headers";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { admin } from "better-auth/plugins";
@@ -48,4 +50,12 @@ export const auth = betterAuth({
     nextCookies(),
   ],
 });
+
+export const getServerSession = cache(async () => {
+  const headerList = await headers();
+  return auth.api.getSession({
+    headers: headerList,
+  });
+});
+
 

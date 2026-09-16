@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Calendar, MapPin, Flower2, X, ExternalLink } from "lucide-react";
+import LazyImage from "@/components/lazy-image";
 
 interface BouquetHistoryCardProps {
   post: {
@@ -32,12 +33,10 @@ export default function BouquetHistoryCard({ post }: BouquetHistoryCardProps) {
       >
         {/* Thumbnail Preview */}
         <div className="relative aspect-4/3 bg-gray-100 overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <LazyImage
             src={post.imageUrl}
             alt={post.locationName}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
+            className="group-hover:scale-105 transition-transform duration-300"
           />
           <div className="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
             <Flower2 className="w-3 h-3 text-pink-300" />

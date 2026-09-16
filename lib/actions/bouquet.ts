@@ -1,10 +1,9 @@
 "use server";
 
 import { z } from "zod";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
+import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { uploadBouquetPhoto, deleteBouquetPhoto } from "@/lib/storage";
+import { uploadBouquetPhoto, deleteBouquetPhoto, deleteBouquetPhotosBatch } from "@/lib/storage";
 import { revalidatePath } from "next/cache";
 import crypto from "node:crypto";
 
@@ -27,10 +26,7 @@ export interface CreateBouquetResult {
  */
 export async function createBouquetPostAction(formData: FormData): Promise<CreateBouquetResult> {
   try {
-    const headerList = await headers();
-    const session = await auth.api.getSession({
-      headers: headerList,
-    });
+    const session = await getServerSession();
 
     if (!session || !session.user) {
       return { success: false, error: "Silakan login terlebih dahulu." };
@@ -115,10 +111,7 @@ export async function createBouquetPostAction(formData: FormData): Promise<Creat
  * Retrieves the bouquet submission history for the logged-in employee.
  */
 export async function getEmployeeBouquetHistoryAction() {
-  const headerList = await headers();
-  const session = await auth.api.getSession({
-    headers: headerList,
-  });
+  const session = await getServerSession();
 
   if (!session || !session.user) {
     throw new Error("Unauthorized");
@@ -173,10 +166,7 @@ export async function getOwnerMonthlyBouquetsAction(params: {
   year: number;
 }): Promise<OwnerMonthlyBouquetsResult> {
   try {
-    const headerList = await headers();
-    const session = await auth.api.getSession({
-      headers: headerList,
-    });
+    const session = await getServerSession();
 
     if (!session || !session.user) {
       return {
@@ -285,10 +275,7 @@ export async function deleteMonthlyPhotosAction(params: {
   confirmToken: string;
 }): Promise<PurgePhotosResult> {
   try {
-    const headerList = await headers();
-    const session = await auth.api.getSession({
-      headers: headerList,
-    });
+    const session = await getServerSession();
 
     if (!session || !session.user) {
       return { success: false, error: "Silakan login terlebih dahulu." };
@@ -331,17 +318,9 @@ export async function deleteMonthlyPhotosAction(params: {
       };
     }
 
-    // Attempt physical deletion of each file from cloud/local storage
-    await Promise.allSettled(
-      posts.map(async (p) => {
-        if (p.storagePath || p.imageUrl) {
-          try {
-            await deleteBouquetPhoto(p.storagePath, p.imageUrl);
-          } catch (e) {
-            console.warn(`[Purge] Failed to delete storage file ${p.storagePath}:`, e);
-          }
-        }
-      })
+    // Attempt batch physical deletion from cloud/local storage
+    await deleteBouquetPhotosBatch(
+      posts.map((p) => ({ storagePath: p.storagePath, imageUrl: p.imageUrl }))
     );
 
     // Update records in database to archived state with cleared image url
@@ -407,10 +386,7 @@ export async function createBouquetPeriodAction(params: {
   title?: string;
 }): Promise<CreatePeriodResult> {
   try {
-    const headerList = await headers();
-    const session = await auth.api.getSession({
-      headers: headerList,
-    });
+    const session = await getServerSession();
 
     if (!session || !session.user) {
       return { success: false, error: "Silakan login terlebih dahulu." };
@@ -505,10 +481,7 @@ export async function getBouquetPeriodsAction(): Promise<{
   error?: string;
 }> {
   try {
-    const headerList = await headers();
-    const session = await auth.api.getSession({
-      headers: headerList,
-    });
+    const session = await getServerSession();
 
     if (!session || !session.user) {
       return { success: false, periods: [], error: "Silakan login terlebih dahulu." };
@@ -596,10 +569,7 @@ export async function getBouquetPeriodDetailAction(periodId: string): Promise<{
   error?: string;
 }> {
   try {
-    const headerList = await headers();
-    const session = await auth.api.getSession({
-      headers: headerList,
-    });
+    const session = await getServerSession();
 
     if (!session || !session.user) {
       return { success: false, error: "Silakan login terlebih dahulu." };
@@ -686,10 +656,7 @@ export async function deletePeriodPhotosAction(periodId: string): Promise<{
   error?: string;
 }> {
   try {
-    const headerList = await headers();
-    const session = await auth.api.getSession({
-      headers: headerList,
-    });
+    const session = await getServerSession();
 
     if (!session || !session.user) {
       return { success: false, error: "Silakan login terlebih dahulu." };
@@ -732,18 +699,9 @@ export async function deletePeriodPhotosAction(periodId: string): Promise<{
       },
     });
 
-    // Physically delete each file from cloud storage and local disk
-    await Promise.allSettled(
-      allPosts.map(async (p) => {
-        try {
-          await deleteBouquetPhoto(p.storagePath, p.imageUrl);
-        } catch (e) {
-          console.warn(
-            `[deletePeriodPhotosAction] Could not delete ${p.storagePath}:`,
-            e
-          );
-        }
-      })
+    // Batch physically delete all files from cloud storage and local disk
+    await deleteBouquetPhotosBatch(
+      allPosts.map((p) => ({ storagePath: p.storagePath, imageUrl: p.imageUrl }))
     );
 
     // Delete all matching post records from database

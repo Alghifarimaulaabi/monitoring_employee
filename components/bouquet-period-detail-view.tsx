@@ -25,6 +25,7 @@ import {
   deletePeriodPhotosAction,
 } from "@/lib/actions/bouquet";
 import { useUIStore } from "@/lib/stores/ui-store";
+import LazyImage from "@/components/lazy-image";
 
 interface BouquetPeriodDetailViewProps {
   period: SerializedBouquetPeriod;
@@ -282,12 +283,10 @@ export default function BouquetPeriodDetailView({
                 <div className="relative aspect-4/3 bg-gray-100 overflow-hidden">
                   {post.imageUrl && !post.isArchived ? (
                     <>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <LazyImage
                         src={post.imageUrl}
                         alt={post.locationName}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
+                        className="group-hover:scale-105 transition-transform duration-300"
                       />
                       <button
                         type="button"

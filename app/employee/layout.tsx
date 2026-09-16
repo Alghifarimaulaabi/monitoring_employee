@@ -1,6 +1,5 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { getServerSession } from "@/lib/auth";
 import EmployeeNav from "@/components/employee-nav";
 
 export default async function EmployeeLayout({
@@ -8,10 +7,7 @@ export default async function EmployeeLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const headerList = await headers();
-  const session = await auth.api.getSession({
-    headers: headerList,
-  });
+  const session = await getServerSession();
 
   if (!session || !session.user) {
     redirect("/login");

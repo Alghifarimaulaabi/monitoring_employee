@@ -35,6 +35,7 @@ import { useBouquetStore } from "@/lib/stores/bouquet-store";
 import { useUIStore } from "@/lib/stores/ui-store";
 import PurgePhotosDialog from "@/components/purge-photos-dialog";
 import EmployeePeriodModal from "@/components/employee-period-modal";
+import LazyImage from "@/components/lazy-image";
 
 const MONTH_OPTIONS = [
   { value: 1, label: "Januari" },
@@ -87,6 +88,7 @@ export default function OwnerBouquetGallery({
     setIsDeletingPeriod,
     setIsPurgeModalOpen,
     setIsPeriodModalOpen,
+    removePeriod,
     fetchMonthlyData,
     refreshAll,
   } = useBouquetStore();
@@ -206,23 +208,26 @@ export default function OwnerBouquetGallery({
   const handleExecuteDeletePeriod = async () => {
     if (!periodToDelete || isDeletingPeriod) return;
 
-    setIsDeletingPeriod(true);
+    const target = periodToDelete;
+    // Hapus kartu langsung dari tampilan UI dan tutup modal seketika (0 ms)
+    removePeriod(target.id);
+    setPeriodToDelete(null);
+
     try {
-      const res = await deletePeriodPhotosAction(periodToDelete.id);
+      const res = await deletePeriodPhotosAction(target.id);
       if (!res.success) {
         showToast("error", res.error || "Gagal menghapus foto pada kartu ini.");
+        handleRefresh();
       } else {
         showToast(
           "success",
-          `Semua foto pada ${periodToDelete.title} (${res.deletedCount} foto) berhasil dihapus.`
+          `Semua foto pada ${target.title} (${res.deletedCount} foto) berhasil dihapus.`
         );
-        setPeriodToDelete(null);
         handleRefresh();
       }
     } catch (err: unknown) {
       showToast("error", "Terjadi kegagalan saat menghapus foto.");
-    } finally {
-      setIsDeletingPeriod(false);
+      handleRefresh();
     }
   };
 
@@ -572,12 +577,10 @@ export default function OwnerBouquetGallery({
                   <div className="relative aspect-4/3 bg-gray-100 overflow-hidden">
                     {post.imageUrl && !post.isArchived ? (
                       <>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <LazyImage
                           src={post.imageUrl}
                           alt={post.locationName}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          loading="lazy"
+                          className="group-hover:scale-105 transition-transform duration-300"
                         />
                         <button
                           type="button"

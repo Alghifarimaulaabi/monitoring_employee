@@ -103,20 +103,31 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
     }
 
     setError(null);
-    setActionLoadingId(taskId);
+    const taskToDelete = tasks.find((t) => t.id === taskId);
+
+    // Hapus langsung dari UI secara optimistik (0 ms)
+    removeOwnerTask(taskId);
 
     try {
       const res = await deleteTaskAction(taskId);
       if (!res.success) {
+        // Rollback jika server gagal
+        if (taskToDelete) {
+          useTaskStore.setState((state) => ({
+            ownerTasks: [taskToDelete, ...state.ownerTasks],
+          }));
+        }
         setError(res.error || "Gagal menghapus tugas.");
-      } else {
-        removeOwnerTask(taskId);
       }
     } catch (err: unknown) {
+      // Rollback jika terjadi kesalahan jaringan
+      if (taskToDelete) {
+        useTaskStore.setState((state) => ({
+          ownerTasks: [taskToDelete, ...state.ownerTasks],
+        }));
+      }
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan.";
       setError(msg);
-    } finally {
-      setActionLoadingId(null);
     }
   };
 

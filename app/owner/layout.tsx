@@ -1,6 +1,5 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { getServerSession } from "@/lib/auth";
 import OwnerHeader from "@/components/owner-header";
 
 export default async function OwnerLayout({
@@ -8,10 +7,7 @@ export default async function OwnerLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const headerList = await headers();
-  const session = await auth.api.getSession({
-    headers: headerList,
-  });
+  const session = await getServerSession();
 
   if (!session || !session.user) {
     redirect("/login");

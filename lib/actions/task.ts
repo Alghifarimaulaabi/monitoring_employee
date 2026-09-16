@@ -1,8 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
+import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -26,10 +25,7 @@ export interface TaskActionResult {
  */
 export async function createTaskAction(data: CreateTaskDTO): Promise<TaskActionResult> {
   try {
-    const headerList = await headers();
-    const session = await auth.api.getSession({
-      headers: headerList,
-    });
+    const session = await getServerSession();
 
     if (!session || !session.user) {
       return { success: false, error: "Silakan login terlebih dahulu." };
@@ -99,10 +95,7 @@ export async function toggleTaskStatusAction(
   newStatus: "PENDING" | "COMPLETED"
 ): Promise<TaskActionResult> {
   try {
-    const headerList = await headers();
-    const session = await auth.api.getSession({
-      headers: headerList,
-    });
+    const session = await getServerSession();
 
     if (!session || !session.user) {
       return { success: false, error: "Silakan login terlebih dahulu." };
@@ -148,10 +141,7 @@ export async function toggleTaskStatusAction(
  */
 export async function deleteTaskAction(taskId: string): Promise<TaskActionResult> {
   try {
-    const headerList = await headers();
-    const session = await auth.api.getSession({
-      headers: headerList,
-    });
+    const session = await getServerSession();
 
     if (!session || !session.user) {
       return { success: false, error: "Silakan login terlebih dahulu." };
@@ -187,10 +177,7 @@ export async function getTasksForOwnerAction(filters?: {
   employeeId?: string;
   status?: string;
 }) {
-  const headerList = await headers();
-  const session = await auth.api.getSession({
-    headers: headerList,
-  });
+  const session = await getServerSession();
 
   const isOwner =
     session?.user?.role === "OWNER" || session?.user?.role === "admin";
@@ -240,10 +227,7 @@ export async function getTasksForOwnerAction(filters?: {
  * Query tasks for Employee for a specific date (defaults to today).
  */
 export async function getTodayTasksForEmployeeAction(targetDate?: string) {
-  const headerList = await headers();
-  const session = await auth.api.getSession({
-    headers: headerList,
-  });
+  const session = await getServerSession();
 
   if (!session || !session.user) {
     throw new Error("Unauthorized");

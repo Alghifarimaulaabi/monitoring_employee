@@ -1,6 +1,5 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import EmployeeTaskChecklist from "@/components/employee-task-checklist";
 import { Clock } from "lucide-react";
@@ -12,10 +11,7 @@ export const metadata = {
 };
 
 export default async function TasksPage() {
-  const headerList = await headers();
-  const session = await auth.api.getSession({
-    headers: headerList,
-  });
+  const session = await getServerSession();
 
   if (!session || !session.user) {
     redirect("/login");
