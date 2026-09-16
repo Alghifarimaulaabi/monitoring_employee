@@ -30,12 +30,13 @@
   - Displays responsive card grid with image thumbnail, date, venue name, flower count, and employee name.
   - Clicking thumbnail opens modal with full-size image.
 
-## Feature 5: Structured PDF Export (3 Items per Sheet)
-* **Description:** One-click PDF generation for documentation and client submission.
+## Feature 5: Structured PDF Export (Consolidated Monthly Report)
+* **Description:** One-click consolidated PDF generation for documentation and client submission. The export compiles all bouquet installations and photos for the entire selected month into a single downloadable PDF file (bukan export per lembar atau per item).
 * **Acceptance Criteria:**
-  - Strict pagination: Exactly 3 bouquet items per A4 sheet.
-  - Each item block displays: 4:3 image, date, location name, flower piece count, and staff name.
-  - Header displays report title, month, and export timestamp.
+  - Single action button "Export PDF (Bulan Ini)" downloads the entire month's collection of bouquet installations in one unified PDF document.
+  - Strict pagination inside document: Exactly 3 bouquet items per A4 sheet with 4:3 photo containers.
+  - Each item block displays: photo image, date, location name, flower piece count, and staff name.
+  - Header displays report title, month period, total items count, total flowers pcs, and export timestamp.
   - Footer displays page numbering: `Halaman X dari Y`.
 
 ## Feature 6: Bulk Monthly Photo Cleanup

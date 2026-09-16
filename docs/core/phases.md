@@ -20,11 +20,11 @@
 - [x] Optimistic UI state updates for checklist clicks.
 
 ## Phase 4: Bouquet Gallery, Monthly Filter & PDF Export (Milestone 4)
-- [ ] Build Owner bouquet visual gallery with Month/Year dropdown filter.
-- [ ] Implement `@react-pdf/renderer` route handler generating strictly 3 items per A4 sheet.
-- [ ] Test PDF layout rendering with varied text lengths and photo aspect ratios.
+- [x] Build Owner bouquet visual gallery with Month/Year dropdown filter and full-resolution lightbox modal.
+- [x] Implement `@react-pdf/renderer` route handler (`/api/reports/bouquet-pdf`) generating consolidated 1-month PDF report formatted strictly with 3 items per A4 sheet.
+- [x] Test PDF layout rendering with varied text lengths, metrics summary, and photo aspect ratios.
 
 ## Phase 5: Storage Purge Feature & Production Hardening (Milestone 5)
-- [ ] Implement monthly bulk photo deletion dialog with `HAPUS` text confirmation.
-- [ ] Verify Supabase Storage deletion and DB record archiving.
-- [ ] Final end-to-end testing across real mobile browsers and desktop monitors.
+- [x] Implement monthly bulk photo deletion dialog with `HAPUS` text confirmation.
+- [x] Verify storage deletion (Supabase/local fallback) and DB record archiving (`isArchived = true`, `imageUrl = ''`).
+- [x] Final end-to-end testing across real mobile browsers and desktop monitors.
