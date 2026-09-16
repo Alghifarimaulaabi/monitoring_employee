@@ -1,41 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { toggleTaskStatusAction, deleteTaskAction } from "@/lib/actions/task";
+import { useTaskStore, TaskItem } from "@/lib/stores/task-store";
 import { CheckSquare, Calendar, User, Trash2, CheckCircle2, Clock, Search, Filter, AlertCircle, Loader2 } from "lucide-react";
 
-export interface TaskItem {
-  id: string;
-  title: string;
-  description: string | null;
-  dueDate: Date | string;
-  status: string; // PENDING | COMPLETED
-  completedAt: Date | string | null;
-  createdAt: Date | string;
-  assignedTo: {
-    id: string;
-    name: string;
-    email: string;
-  };
-  createdBy: {
-    id: string;
-    name: string;
-  };
-}
+export type { TaskItem };
 
 interface OwnerTaskListProps {
   tasks: TaskItem[];
   employees: { id: string; name: string; email: string }[];
 }
 
-export default function OwnerTaskList({ tasks, employees }: OwnerTaskListProps) {
-  const [filterStatus, setFilterStatus] = useState<"ALL" | "PENDING" | "COMPLETED">("ALL");
-  const [filterEmployee, setFilterEmployee] = useState<string>("ALL");
-  const [filterDate, setFilterDate] = useState<string>("");
-  const [searchQuery, setSearchQuery] = useState("");
+export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerTaskListProps) {
+  const {
+    filterStatus,
+    filterEmployee,
+    filterDate,
+    searchQuery,
+    ownerTasks,
+    actionLoadingId,
+    error,
+    setFilterStatus,
+    setFilterEmployee,
+    setFilterDate,
+    setSearchQuery,
+    setOwnerTasks,
+    setActionLoadingId,
+    setError,
+    optimisticToggleOwnerTask,
+    removeOwnerTask,
+  } = useTaskStore();
 
-  const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  // Sync initial SSR tasks into store
+  useEffect(() => {
+    useTaskStore.setState({ ownerTasks: initialTasks });
+  }, [initialTasks]);
+
+  const tasks = ownerTasks.length > 0 ? ownerTasks : initialTasks;
 
   // Filter tasks based on controls
   const filteredTasks = tasks.filter((task) => {
@@ -76,14 +78,20 @@ export default function OwnerTaskList({ tasks, employees }: OwnerTaskListProps) 
     setActionLoadingId(task.id);
     const nextStatus = task.status === "COMPLETED" ? "PENDING" : "COMPLETED";
 
+    // Optimistic toggle via store
+    optimisticToggleOwnerTask(task.id, nextStatus);
+
     try {
       const res = await toggleTaskStatusAction(task.id, nextStatus);
       if (!res.success) {
         setError(res.error || "Gagal mengubah status tugas.");
+        // Rollback
+        optimisticToggleOwnerTask(task.id, task.status);
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan.";
       setError(msg);
+      optimisticToggleOwnerTask(task.id, task.status);
     } finally {
       setActionLoadingId(null);
     }
@@ -101,6 +109,8 @@ export default function OwnerTaskList({ tasks, employees }: OwnerTaskListProps) 
       const res = await deleteTaskAction(taskId);
       if (!res.success) {
         setError(res.error || "Gagal menghapus tugas.");
+      } else {
+        removeOwnerTask(taskId);
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan.";

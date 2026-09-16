@@ -111,25 +111,79 @@ export async function uploadBouquetPhoto(
 }
 
 /**
- * Deletes a photo from storage.
+ * Permanently and physically deletes a photo from both Supabase Cloud Storage
+ * and local filesystem storage to ensure storage space is fully reclaimed.
  */
-export async function deleteBouquetPhoto(storagePath: string): Promise<boolean> {
+export async function deleteBouquetPhoto(
+  storagePath: string,
+  imageUrl?: string
+): Promise<boolean> {
+  let deletedFromCloud = false;
+  let deletedLocally = false;
+
+  // 1. Delete from Supabase Cloud Storage (if configured)
   if (supabaseAdmin) {
     try {
-      const { error } = await supabaseAdmin.storage
+      const candidates = new Set<string>();
+      if (storagePath) {
+        candidates.add(storagePath);
+        candidates.add(storagePath.replace(/^bouquet-photos\//, ""));
+        candidates.add(storagePath.replace(/^\//, ""));
+      }
+
+      if (imageUrl && imageUrl.includes(bucketName)) {
+        const parts = imageUrl.split(`${bucketName}/`);
+        if (parts[1]) {
+          candidates.add(parts[1]);
+        }
+      }
+
+      const pathsToRemove = Array.from(candidates);
+      const { data, error } = await supabaseAdmin.storage
         .from(bucketName)
-        .remove([storagePath]);
-      if (!error) return true;
-    } catch {
-      // Continue to local cleanup
+        .remove(pathsToRemove);
+
+      if (!error && data && data.length > 0) {
+        console.log(`[Storage] Deleted from Supabase:`, pathsToRemove);
+        deletedFromCloud = true;
+      } else if (error) {
+        console.warn(`[Storage] Supabase removal warning:`, error.message);
+      }
+    } catch (cloudErr) {
+      console.warn(`[Storage] Supabase delete exception:`, cloudErr);
     }
   }
 
-  try {
-    const localDest = path.join(process.cwd(), "public", "uploads", storagePath);
-    await fs.unlink(localDest);
-    return true;
-  } catch {
-    return false;
+  // 2. ALWAYS physically delete from local filesystem
+  const localCandidates = new Set<string>();
+
+  if (storagePath) {
+    localCandidates.add(path.join(process.cwd(), "public", "uploads", storagePath));
+    localCandidates.add(
+      path.join(process.cwd(), "public", "uploads", storagePath.replace(/^uploads\//, ""))
+    );
+    localCandidates.add(path.join(process.cwd(), "public", storagePath));
+    localCandidates.add(path.join(process.cwd(), "public", storagePath.replace(/^\//, "")));
   }
+
+  if (imageUrl) {
+    if (imageUrl.startsWith("/uploads/")) {
+      localCandidates.add(path.join(process.cwd(), "public", imageUrl.replace(/^\//, "")));
+    } else if (imageUrl.startsWith("uploads/")) {
+      localCandidates.add(path.join(process.cwd(), "public", imageUrl));
+    }
+  }
+
+  for (const candidatePath of localCandidates) {
+    try {
+      await fs.access(candidatePath);
+      await fs.unlink(candidatePath);
+      console.log(`[Storage] Physically removed file from disk: ${candidatePath}`);
+      deletedLocally = true;
+    } catch {
+      // File doesn't exist at this candidate path, continue checking others
+    }
+  }
+
+  return deletedFromCloud || deletedLocally;
 }

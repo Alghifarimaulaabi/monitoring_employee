@@ -319,6 +319,7 @@ export async function deleteMonthlyPhotosAction(params: {
       select: {
         id: true,
         storagePath: true,
+        imageUrl: true,
       },
     });
 
@@ -333,9 +334,9 @@ export async function deleteMonthlyPhotosAction(params: {
     // Attempt physical deletion of each file from cloud/local storage
     await Promise.allSettled(
       posts.map(async (p) => {
-        if (p.storagePath) {
+        if (p.storagePath || p.imageUrl) {
           try {
-            await deleteBouquetPhoto(p.storagePath);
+            await deleteBouquetPhoto(p.storagePath, p.imageUrl);
           } catch (e) {
             console.warn(`[Purge] Failed to delete storage file ${p.storagePath}:`, e);
           }
@@ -616,40 +617,53 @@ export async function deletePeriodPhotosAction(periodId: string): Promise<{
 
     const period = await prisma.bouquetPeriod.findUnique({
       where: { id: periodId },
-      include: {
-        posts: {
-          select: {
-            id: true,
-            storagePath: true,
-          },
-        },
-      },
     });
 
     if (!period) {
       return { success: false, error: "Periode buket tidak ditemukan." };
     }
 
-    // Delete physical files from storage
+    // Find all posts linked to this period OR with installDate in period's date range
+    const allPosts = await prisma.bouquetPost.findMany({
+      where: {
+        OR: [
+          { periodId },
+          {
+            installDate: {
+              gte: period.startDate,
+              lte: period.endDate,
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        storagePath: true,
+        imageUrl: true,
+      },
+    });
+
+    // Physically delete each file from cloud storage and local disk
     await Promise.allSettled(
-      period.posts.map(async (p) => {
-        if (p.storagePath) {
-          try {
-            await deleteBouquetPhoto(p.storagePath);
-          } catch (e) {
-            console.warn(
-              `[deletePeriodPhotosAction] Could not delete ${p.storagePath}:`,
-              e
-            );
-          }
+      allPosts.map(async (p) => {
+        try {
+          await deleteBouquetPhoto(p.storagePath, p.imageUrl);
+        } catch (e) {
+          console.warn(
+            `[deletePeriodPhotosAction] Could not delete ${p.storagePath}:`,
+            e
+          );
         }
       })
     );
 
-    // Delete all post records belonging to this period
-    await prisma.bouquetPost.deleteMany({
-      where: { periodId },
-    });
+    // Delete all matching post records from database
+    const postIds = allPosts.map((p) => p.id);
+    if (postIds.length > 0) {
+      await prisma.bouquetPost.deleteMany({
+        where: { id: { in: postIds } },
+      });
+    }
 
     // Delete the period card record
     await prisma.bouquetPeriod.delete({
@@ -659,7 +673,7 @@ export async function deletePeriodPhotosAction(periodId: string): Promise<{
     revalidatePath("/owner/bouquets");
     revalidatePath("/employee/submit");
 
-    return { success: true, deletedCount: period.posts.length };
+    return { success: true, deletedCount: allPosts.length };
   } catch (err: unknown) {
     console.error("[deletePeriodPhotosAction] Error:", err);
     const msg =

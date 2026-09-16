@@ -1,87 +1,58 @@
 "use client";
 
-import { useState, useOptimistic, useTransition } from "react";
+import { useEffect } from "react";
 import { toggleTaskStatusAction } from "@/lib/actions/task";
+import { useTaskStore, EmployeeTaskItem } from "@/lib/stores/task-store";
 import { CheckCircle2, Circle, AlertCircle, Sparkles, CheckSquare } from "lucide-react";
 
-export interface EmployeeTaskItem {
-  id: string;
-  title: string;
-  description: string | null;
-  dueDate: Date | string;
-  status: string; // PENDING | COMPLETED
-  completedAt: Date | string | null;
-  createdAt: Date | string;
-}
+export type { EmployeeTaskItem };
 
 interface EmployeeTaskChecklistProps {
   tasks: EmployeeTaskItem[];
 }
 
 export default function EmployeeTaskChecklist({ tasks: initialTasks }: EmployeeTaskChecklistProps) {
-  const [, startTransition] = useTransition();
-  const [tasks, setTasks] = useState(initialTasks);
-  const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"ALL" | "PENDING" | "COMPLETED">("ALL");
+  const {
+    employeeTabFilter: filter,
+    setEmployeeTabFilter: setFilter,
+    employeeTasks,
+    error,
+    setError,
+    optimisticToggleEmployeeTask,
+  } = useTaskStore();
 
-  // Optimistic state for tasks
-  const [optimisticTasks, setOptimisticTasks] = useOptimistic(
-    tasks,
-    (state, { taskId, nextStatus }: { taskId: string; nextStatus: string }) =>
-      state.map((task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              status: nextStatus,
-              completedAt: nextStatus === "COMPLETED" ? new Date().toISOString() : null,
-            }
-          : task
-      )
-  );
+  useEffect(() => {
+    useTaskStore.setState({ employeeTasks: initialTasks });
+  }, [initialTasks]);
 
-  const totalCount = optimisticTasks.length;
-  const completedCount = optimisticTasks.filter((t) => t.status === "COMPLETED").length;
+  const tasks = employeeTasks.length > 0 ? employeeTasks : initialTasks;
+
+  const totalCount = tasks.length;
+  const completedCount = tasks.filter((t) => t.status === "COMPLETED").length;
   const percentComplete = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
   const isAllComplete = totalCount > 0 && completedCount === totalCount;
 
-  const handleToggle = (task: EmployeeTaskItem) => {
+  const handleToggle = async (task: EmployeeTaskItem) => {
     setError(null);
     const nextStatus = task.status === "COMPLETED" ? "PENDING" : "COMPLETED";
 
-    // 1. Optimistic update
-    startTransition(async () => {
-      setOptimisticTasks({ taskId: task.id, nextStatus });
+    // Optimistic toggle via store
+    optimisticToggleEmployeeTask(task.id, nextStatus);
 
-      try {
-        const res = await toggleTaskStatusAction(task.id, nextStatus as "PENDING" | "COMPLETED");
-        if (!res.success) {
-          setError(res.error || "Gagal mengubah status tugas.");
-          // Rollback to original tasks
-          setTasks((current) => [...current]);
-          return;
-        }
-
-        // Commit change to state
-        setTasks((current) =>
-          current.map((t) =>
-            t.id === task.id
-              ? {
-                  ...t,
-                  status: nextStatus,
-                  completedAt: nextStatus === "COMPLETED" ? new Date() : null,
-                }
-              : t
-          )
-        );
-      } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : "Terjadi kesalahan jaringan.";
-        setError(msg);
-        setTasks((current) => [...current]);
+    try {
+      const res = await toggleTaskStatusAction(task.id, nextStatus as "PENDING" | "COMPLETED");
+      if (!res.success) {
+        setError(res.error || "Gagal mengubah status tugas.");
+        // Rollback
+        optimisticToggleEmployeeTask(task.id, task.status);
       }
-    });
+    } catch {
+      setError("Terjadi kesalahan jaringan.");
+      optimisticToggleEmployeeTask(task.id, task.status);
+    }
   };
 
-  const displayedTasks = optimisticTasks.filter((task) => {
+  const displayedTasks = tasks.filter((task) => {
     if (filter === "PENDING") return task.status === "PENDING";
     if (filter === "COMPLETED") return task.status === "COMPLETED";
     return true;

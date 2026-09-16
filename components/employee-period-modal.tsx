@@ -3,11 +3,12 @@
 import React, { useState } from "react";
 import { Calendar, Plus, X, Loader2 } from "lucide-react";
 import { createBouquetPeriodAction } from "@/lib/actions/bouquet";
+import { useBouquetStore } from "@/lib/stores/bouquet-store";
 
 interface EmployeePeriodModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: (newPeriodId?: string) => void;
+  isOpen?: boolean;
+  onClose?: () => void;
+  onSuccess?: (newPeriodId?: string) => void;
 }
 
 export default function EmployeePeriodModal({
@@ -15,6 +16,10 @@ export default function EmployeePeriodModal({
   onClose,
   onSuccess,
 }: EmployeePeriodModalProps) {
+  const { isPeriodModalOpen, setIsPeriodModalOpen, fetchPeriods } = useBouquetStore();
+  const showModal = isOpen ?? isPeriodModalOpen;
+  const handleClose = onClose ?? (() => setIsPeriodModalOpen(false));
+
   const now = new Date();
   const y = now.getFullYear();
   const m = String(now.getMonth() + 1).padStart(2, "0");
@@ -28,7 +33,7 @@ export default function EmployeePeriodModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!isOpen) return null;
+  if (!showModal) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,9 +62,10 @@ export default function EmployeePeriodModal({
         return;
       }
 
+      await fetchPeriods();
       setLoading(false);
-      onSuccess(res.periodId);
-      onClose();
+      if (onSuccess) onSuccess(res.periodId);
+      handleClose();
     } catch (err: unknown) {
       setError(
         err instanceof Error
@@ -89,7 +95,7 @@ export default function EmployeePeriodModal({
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             disabled={loading}
             className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50 cursor-pointer"
           >
@@ -149,7 +155,7 @@ export default function EmployeePeriodModal({
           <div className="pt-2 flex items-center justify-end gap-2.5">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               disabled={loading}
               className="px-4 py-2 text-xs font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors disabled:opacity-50 cursor-pointer"
             >

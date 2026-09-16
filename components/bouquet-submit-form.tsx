@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { useRouter } from "next/navigation";
 import { compressImage, formatBytes, CompressionResult } from "@/lib/image/compress";
 import { createBouquetPostAction } from "@/lib/actions/bouquet";
+import { useBouquetFormStore } from "@/lib/stores/bouquet-form-store";
 import {
   Camera,
   Upload,
@@ -34,20 +35,27 @@ export default function BouquetSubmitForm({
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Form State
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [compressionMetrics, setCompressionMetrics] = useState<CompressionResult | null>(null);
-  const [isCompressing, setIsCompressing] = useState(false);
-
-  const todayStr = new Date().toISOString().split("T")[0];
-  const [installDate, setInstallDate] = useState(todayStr);
-  const [locationName, setLocationName] = useState("");
-  const [flowerCount, setFlowerCount] = useState<string>("");
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const {
+    selectedFile,
+    previewUrl,
+    compressionMetrics,
+    isCompressing,
+    installDate,
+    locationName,
+    flowerCount,
+    isSubmitting,
+    error,
+    success,
+    setFileAndPreview,
+    setIsCompressing,
+    setInstallDate,
+    setLocationName,
+    setFlowerCount,
+    setIsSubmitting,
+    setError,
+    setSuccess,
+    resetForm: storeResetForm,
+  } = useBouquetFormStore();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -59,31 +67,19 @@ export default function BouquetSubmitForm({
     try {
       // Execute client-side compression
       const result = await compressImage(file);
-      setSelectedFile(result.file);
-      setCompressionMetrics(result);
-
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
-      setPreviewUrl(URL.createObjectURL(result.file));
+      const url = URL.createObjectURL(result.file);
+      setFileAndPreview(result.file, result, url);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Gagal memproses gambar.";
       setError(msg);
-      setSelectedFile(null);
-      setCompressionMetrics(null);
-      setPreviewUrl(null);
+      setFileAndPreview(null, null, null);
     } finally {
       setIsCompressing(false);
     }
   };
 
   const handleRetake = () => {
-    setSelectedFile(null);
-    setCompressionMetrics(null);
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(null);
-    }
+    setFileAndPreview(null, null, null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
       fileInputRef.current.click();
@@ -138,17 +134,7 @@ export default function BouquetSubmitForm({
   };
 
   const resetForm = () => {
-    setSelectedFile(null);
-    setCompressionMetrics(null);
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(null);
-    }
-    setLocationName("");
-    setFlowerCount("");
-    setInstallDate(todayStr);
-    setError(null);
-    setSuccess(false);
+    storeResetForm();
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
