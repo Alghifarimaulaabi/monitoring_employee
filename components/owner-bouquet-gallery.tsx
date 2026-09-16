@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useTransition } from "react";
+import Link from "next/link";
 import {
   Flower2,
   Calendar,
@@ -22,6 +23,8 @@ import {
   Clock,
   Images,
   FolderOpen,
+  Eye,
+  Plus,
 } from "lucide-react";
 import {
   OwnerMonthlyBouquetsResult,
@@ -31,6 +34,7 @@ import {
 import { useBouquetStore } from "@/lib/stores/bouquet-store";
 import { useUIStore } from "@/lib/stores/ui-store";
 import PurgePhotosDialog from "@/components/purge-photos-dialog";
+import EmployeePeriodModal from "@/components/employee-period-modal";
 
 const MONTH_OPTIONS = [
   { value: 1, label: "Januari" },
@@ -74,6 +78,7 @@ export default function OwnerBouquetGallery({
     periodToDelete,
     isDeletingPeriod,
     isPurgeModalOpen,
+    isPeriodModalOpen,
     setSelectedMonth,
     setSelectedYear,
     setActiveTab,
@@ -81,6 +86,7 @@ export default function OwnerBouquetGallery({
     setPeriodToDelete,
     setIsDeletingPeriod,
     setIsPurgeModalOpen,
+    setIsPeriodModalOpen,
     fetchMonthlyData,
     refreshAll,
   } = useBouquetStore();
@@ -243,16 +249,47 @@ export default function OwnerBouquetGallery({
         </div>
       )}
 
-      {/* Page Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
-            Galeri Buket & Laporan Bulanan
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Inspeksi visual kartu buket, export dokumen PDF 1 bulan penuh, dan tombol hapus semua foto pada kartu.
+      {/* EMPTY STATE JIKA BELUM ADA BUKET BULAN INI */}
+      {periods.length === 0 ? (
+        <div className="bg-white rounded-3xl p-10 sm:p-16 border border-gray-200/80 shadow-xs text-center max-w-lg mx-auto my-12 animate-in fade-in">
+          <div className="w-16 h-16 bg-rose-50 text-rose-600 rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-xs">
+            <Flower2 className="w-8 h-8" />
+          </div>
+          <h2 className="text-base sm:text-lg font-bold text-gray-900 leading-snug">
+            Belum ada buket yang ditambahkan bulan ini
+          </h2>
+          <p className="text-xs text-gray-500 mt-1.5 max-w-xs mx-auto">
+            Mulai dokumentasi pemasangan buket dengan membuat kartu periode baru.
           </p>
+          <div className="mt-6">
+            <button
+              type="button"
+              onClick={() => setIsPeriodModalOpen(true)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-rose-600 to-pink-500 hover:from-rose-700 hover:to-pink-600 active:scale-[0.99] text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Tambahkan Bouquet</span>
+            </button>
+          </div>
+
+          <EmployeePeriodModal
+            isOpen={isPeriodModalOpen}
+            onClose={() => setIsPeriodModalOpen(false)}
+            onSuccess={handleRefresh}
+          />
         </div>
+      ) : (
+        <>
+          {/* Page Header */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+                Galeri Buket & Laporan Bulanan
+              </h1>
+              <p className="text-sm text-gray-500 mt-1">
+                Inspeksi visual kartu buket, export dokumen PDF 1 bulan penuh, dan tombol hapus semua foto pada kartu.
+              </p>
+            </div>
 
         {/* Action Buttons: Export PDF 1 Bulan & Purge Storage */}
         <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
@@ -420,81 +457,81 @@ export default function OwnerBouquetGallery({
         </button>
       </div>
 
-      {/* TAB 1: KARTU BUKET PERIODE (DENGAN TOMBOL HAPUS PADA TIAP CARD) */}
+      {/* TAB 1: KARTU BUKET PERIODE (GRID 1 KOLOM MOBILE, 3 KOLOM DESKTOP, BARIS BEBAS) */}
       {activeTab === "cards" && (
-        <div className="space-y-4">
-          {periods.length === 0 ? (
-            <div className="bg-white rounded-2xl p-12 border border-gray-200/80 shadow-xs text-center">
-              <div className="w-14 h-14 bg-gray-50 text-gray-400 rounded-2xl mx-auto flex items-center justify-center mb-3">
-                <FolderOpen className="w-7 h-7" />
-              </div>
-              <h3 className="text-base font-semibold text-gray-900">
-                Belum Ada Kartu Buket Periode
-              </h3>
-              <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
-                Karyawan belum membuat kartu buket periode melalui tombol &quot;Tambahkan Buket Bulan Ini&quot;.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {periods.map((period) => {
-                const [py, pm] = period.startDate.split("-").map(Number);
-                return (
-                  <div
-                    key={period.id}
-                    className="bg-white rounded-2xl border border-gray-200/80 shadow-xs hover:border-rose-300 transition-all p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-                  >
-                    {/* Cukup Judul Tanggal & Info Singkat */}
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-rose-600 shrink-0" />
-                        <h3 className="text-base font-bold text-gray-900 leading-snug">
-                          {period.title}
-                        </h3>
-                      </div>
-                      <p className="text-xs text-gray-500 pl-6">
-                        {period.totalPosts} foto terunggah • Rentang: {period.formattedRange}
-                      </p>
-                    </div>
-
-                    {/* Tombol Aksi: Tambahkan Foto, Export PDF, Hapus */}
-                    <div className="flex flex-wrap items-center gap-2 shrink-0">
-                      <a
-                        href={`/employee/submit/upload?periodId=${period.id}&startDate=${period.startDate}&endDate=${period.endDate}`}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl border border-rose-200 transition-colors"
-                        title="Tambahkan Foto Pada Bulan Ini"
-                      >
-                        <Camera className="w-3.5 h-3.5 text-rose-600" />
-                        <span>Tambahkan Foto</span>
-                      </a>
-
-                      <button
-                        type="button"
-                        onClick={() => handleDownloadPeriodPdf(period.id, period.title)}
-                        disabled={period.totalPosts === 0 || isExportingPdf}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold rounded-xl border border-gray-200 transition-colors disabled:opacity-40 cursor-pointer"
-                        title="Export PDF Laporan Periode Ini"
-                      >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>Export PDF</span>
-                      </button>
-
-                      {/* TOMBOL HAPUS: Menghapus semua foto pada bulan/kartu itu */}
-                      <button
-                        type="button"
-                        onClick={() => setPeriodToDelete(period)}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer"
-                        title="Hapus semua foto pada kartu ini dari storage"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                        <span>Hapus</span>
-                      </button>
-                    </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {periods.map((period) => (
+            <div
+              key={period.id}
+              className="bg-white rounded-2xl border border-gray-200/80 shadow-xs hover:border-rose-300 hover:shadow-sm transition-all p-4 sm:p-5 flex flex-col justify-between space-y-4"
+            >
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+                    <Calendar className="w-4 h-4" />
                   </div>
-                );
-              })}
+                  <span className="text-[11px] font-bold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-100">
+                    {period.totalPosts} Foto
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-gray-900 leading-snug">
+                    {period.title}
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Rentang: {period.formattedRange}
+                  </p>
+                </div>
+              </div>
+
+              {/* Tombol Aksi: Lihat Detail, Tambahkan Foto, Export PDF, Hapus */}
+              <div className="pt-3 border-t border-gray-100 space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    href={`/owner/bouquets/${period.id}`}
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow-2xs transition-colors"
+                    title="Lihat keseluruhan buket pada kartu ini"
+                  >
+                    <Eye className="w-3.5 h-3.5 text-rose-400" />
+                    <span>Lihat Detail</span>
+                  </Link>
+
+                  <Link
+                    href={`/employee/submit/upload?periodId=${period.id}&startDate=${period.startDate}&endDate=${period.endDate}`}
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl border border-rose-200 transition-colors"
+                    title="Tambahkan Foto Pada Periode Ini"
+                  >
+                    <Camera className="w-3.5 h-3.5 text-rose-600" />
+                    <span>Tambah Foto</span>
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleDownloadPeriodPdf(period.id, period.title)}
+                    disabled={period.totalPosts === 0 || isExportingPdf}
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold rounded-xl border border-gray-200 transition-colors disabled:opacity-40 cursor-pointer"
+                    title="Export PDF Laporan Periode Ini"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Export PDF</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setPeriodToDelete(period)}
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer"
+                    title="Hapus semua foto pada kartu ini dari storage"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Hapus</span>
+                  </button>
+                </div>
+              </div>
             </div>
-          )}
+          ))}
         </div>
       )}
 
@@ -610,6 +647,8 @@ export default function OwnerBouquetGallery({
             </div>
           )}
         </div>
+      )}
+      </>
       )}
 
       {/* DIALOG KONFIRMASI HAPUS PADA KARTU OWNER */}

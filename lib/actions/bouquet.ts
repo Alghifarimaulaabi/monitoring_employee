@@ -588,6 +588,95 @@ export async function getBouquetPeriodsAction(): Promise<{
 }
 
 /**
+ * Retrieves a single bouquet period by ID along with all its uploaded photos.
+ */
+export async function getBouquetPeriodDetailAction(periodId: string): Promise<{
+  success: boolean;
+  period?: SerializedBouquetPeriod;
+  error?: string;
+}> {
+  try {
+    const headerList = await headers();
+    const session = await auth.api.getSession({
+      headers: headerList,
+    });
+
+    if (!session || !session.user) {
+      return { success: false, error: "Silakan login terlebih dahulu." };
+    }
+
+    const period = await prisma.bouquetPeriod.findUnique({
+      where: { id: periodId },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        posts: {
+          orderBy: {
+            installDate: "desc",
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!period) {
+      return { success: false, error: "Periode buket tidak ditemukan." };
+    }
+
+    const sStr = period.startDate.toISOString().split("T")[0];
+    const eStr = period.endDate.toISOString().split("T")[0];
+    const totalFlowers = period.posts.reduce(
+      (sum, post) => sum + post.flowerCount,
+      0
+    );
+
+    const serialized: SerializedBouquetPeriod = {
+      id: period.id,
+      title: period.title,
+      startDate: sStr,
+      endDate: eStr,
+      formattedRange: `${formatDateIndo(period.startDate)} - ${formatDateIndo(
+        period.endDate
+      )}`,
+      createdById: period.createdById,
+      creatorName: period.createdBy.name,
+      totalPosts: period.posts.length,
+      totalFlowers,
+      isArchived: period.isArchived,
+      createdAt: period.createdAt.toISOString(),
+      posts: period.posts.map((post) => ({
+        id: post.id,
+        imageUrl: post.imageUrl,
+        locationName: post.locationName,
+        flowerCount: post.flowerCount,
+        installDate: post.installDate.toISOString().split("T")[0],
+        staffName: post.user.name,
+        isArchived: post.isArchived,
+      })),
+    };
+
+    return { success: true, period: serialized };
+  } catch (err: unknown) {
+    console.error("[getBouquetPeriodDetailAction] Error:", err);
+    const msg =
+      err instanceof Error ? err.message : "Gagal mengambil detail periode buket.";
+    return { success: false, error: msg };
+  }
+}
+
+/**
  * Deletes all photos in a specific bouquet period.
  * Restricted to Owner role.
  */
