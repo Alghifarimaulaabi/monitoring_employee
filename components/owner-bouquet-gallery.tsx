@@ -495,6 +495,7 @@ export default function OwnerBouquetGallery({
                 <div className="grid grid-cols-2 gap-2">
                   <Link
                     href={`/owner/bouquets/${period.id}`}
+                    prefetch={true}
                     className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow-2xs transition-colors"
                     title="Lihat keseluruhan buket pada kartu ini"
                   >
@@ -504,6 +505,7 @@ export default function OwnerBouquetGallery({
 
                   <Link
                     href={`/employee/submit/upload?periodId=${period.id}&startDate=${period.startDate}&endDate=${period.endDate}`}
+                    prefetch={true}
                     className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl border border-rose-200 transition-colors"
                     title="Tambahkan Foto Pada Periode Ini"
                   >

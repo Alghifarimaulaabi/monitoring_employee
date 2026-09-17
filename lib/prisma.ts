@@ -17,23 +17,30 @@ try {
   // Safe fallback if URL parsing fails
 }
 
-const pool = new Pool({
-  connectionString,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-  keepAlive: true,
-  max: process.env.NODE_ENV === "production" ? 1 : 10,
-  connectionTimeoutMillis: 10000,
-  idleTimeoutMillis: 20000,
-});
+const globalForPrisma = globalThis as unknown as {
+  prisma?: PrismaClient;
+  pool?: Pool;
+};
+
+const pool =
+  globalForPrisma.pool ??
+  new Pool({
+    connectionString,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+    keepAlive: true,
+    max: process.env.NODE_ENV === "production" ? 1 : 5,
+    connectionTimeoutMillis: 10000,
+    idleTimeoutMillis: 20000,
+  });
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.pool = pool;
 
 const adapter = new PrismaPg(pool);
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
-
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
+export const prisma =
+  globalForPrisma.prisma ?? new PrismaClient({ adapter });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+

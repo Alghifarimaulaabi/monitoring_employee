@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from "react";
 import { z } from "zod";
 import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -157,6 +158,101 @@ export interface OwnerMonthlyBouquetsResult {
   error?: string;
 }
 
+const cachedOwnerMonthlyBouquets = cache(
+  async (month: number, year: number): Promise<OwnerMonthlyBouquetsResult> => {
+    try {
+      const session = await getServerSession();
+
+      if (!session || !session.user) {
+        return {
+          success: false,
+          posts: [],
+          stats: { totalBouquets: 0, totalFlowers: 0, totalFlorists: 0, archivedCount: 0, activeCount: 0 },
+          error: "Silakan login terlebih dahulu.",
+        };
+      }
+
+      const isOwner = session.user.role === "OWNER" || session.user.role === "admin";
+      if (!isOwner) {
+        return {
+          success: false,
+          posts: [],
+          stats: { totalBouquets: 0, totalFlowers: 0, totalFlorists: 0, archivedCount: 0, activeCount: 0 },
+          error: "Akses ditolak: Hanya Owner yang dapat mengakses data ini.",
+        };
+      }
+
+      const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0));
+      const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
+
+      const posts = await prisma.bouquetPost.findMany({
+        where: {
+          installDate: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+        orderBy: {
+          installDate: "desc",
+        },
+      });
+
+      let totalFlowers = 0;
+      const floristsSet = new Set<string>();
+      let archivedCount = 0;
+
+      const serializedPosts = posts.map((p) => {
+        totalFlowers += p.flowerCount;
+        floristsSet.add(p.userId);
+        if (p.isArchived) archivedCount++;
+
+        return {
+          id: p.id,
+          userId: p.userId,
+          user: p.user,
+          imageUrl: p.imageUrl,
+          storagePath: p.storagePath,
+          installDate: p.installDate.toISOString().split("T")[0],
+          locationName: p.locationName,
+          flowerCount: p.flowerCount,
+          isArchived: p.isArchived,
+          createdAt: p.createdAt.toISOString(),
+        };
+      });
+
+      return {
+        success: true,
+        posts: serializedPosts,
+        stats: {
+          totalBouquets: posts.length,
+          totalFlowers,
+          totalFlorists: floristsSet.size,
+          archivedCount,
+          activeCount: posts.length - archivedCount,
+        },
+      };
+    } catch (err: unknown) {
+      console.error("[getOwnerMonthlyBouquetsAction] Error:", err);
+      const msg = err instanceof Error ? err.message : "Gagal memuat galeri buket bulanan.";
+      return {
+        success: false,
+        posts: [],
+        stats: { totalBouquets: 0, totalFlowers: 0, totalFlorists: 0, archivedCount: 0, activeCount: 0 },
+        error: msg,
+      };
+    }
+  }
+);
+
 /**
  * Retrieves all bouquet submissions for a specific month and year.
  * Restricted to Owner role.
@@ -165,97 +261,7 @@ export async function getOwnerMonthlyBouquetsAction(params: {
   month: number;
   year: number;
 }): Promise<OwnerMonthlyBouquetsResult> {
-  try {
-    const session = await getServerSession();
-
-    if (!session || !session.user) {
-      return {
-        success: false,
-        posts: [],
-        stats: { totalBouquets: 0, totalFlowers: 0, totalFlorists: 0, archivedCount: 0, activeCount: 0 },
-        error: "Silakan login terlebih dahulu.",
-      };
-    }
-
-    const isOwner = session.user.role === "OWNER" || session.user.role === "admin";
-    if (!isOwner) {
-      return {
-        success: false,
-        posts: [],
-        stats: { totalBouquets: 0, totalFlowers: 0, totalFlorists: 0, archivedCount: 0, activeCount: 0 },
-        error: "Akses ditolak: Hanya Owner yang dapat mengakses data ini.",
-      };
-    }
-
-    const { month, year } = params;
-    const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0));
-    const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
-
-    const posts = await prisma.bouquetPost.findMany({
-      where: {
-        installDate: {
-          gte: startDate,
-          lte: endDate,
-        },
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-      orderBy: {
-        installDate: "desc",
-      },
-    });
-
-    let totalFlowers = 0;
-    const floristsSet = new Set<string>();
-    let archivedCount = 0;
-
-    const serializedPosts = posts.map((p) => {
-      totalFlowers += p.flowerCount;
-      floristsSet.add(p.userId);
-      if (p.isArchived) archivedCount++;
-
-      return {
-        id: p.id,
-        userId: p.userId,
-        user: p.user,
-        imageUrl: p.imageUrl,
-        storagePath: p.storagePath,
-        installDate: p.installDate.toISOString().split("T")[0],
-        locationName: p.locationName,
-        flowerCount: p.flowerCount,
-        isArchived: p.isArchived,
-        createdAt: p.createdAt.toISOString(),
-      };
-    });
-
-    return {
-      success: true,
-      posts: serializedPosts,
-      stats: {
-        totalBouquets: posts.length,
-        totalFlowers,
-        totalFlorists: floristsSet.size,
-        archivedCount,
-        activeCount: posts.length - archivedCount,
-      },
-    };
-  } catch (err: unknown) {
-    console.error("[getOwnerMonthlyBouquetsAction] Error:", err);
-    const msg = err instanceof Error ? err.message : "Gagal memuat galeri buket bulanan.";
-    return {
-      success: false,
-      posts: [],
-      stats: { totalBouquets: 0, totalFlowers: 0, totalFlorists: 0, archivedCount: 0, activeCount: 0 },
-      error: msg,
-    };
-  }
+  return cachedOwnerMonthlyBouquets(params.month, params.year);
 }
 
 export interface PurgePhotosResult {
@@ -472,14 +478,11 @@ export interface SerializedBouquetPeriod {
   }>;
 }
 
-/**
- * Retrieves all bouquet periods along with their photos for employee and owner views.
- */
-export async function getBouquetPeriodsAction(): Promise<{
+const cachedGetBouquetPeriods = cache(async (): Promise<{
   success: boolean;
   periods: SerializedBouquetPeriod[];
   error?: string;
-}> {
+}> => {
   try {
     const session = await getServerSession();
 
@@ -500,16 +503,9 @@ export async function getBouquetPeriodsAction(): Promise<{
           },
         },
         posts: {
-          orderBy: {
-            installDate: "desc",
-          },
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
+          select: {
+            id: true,
+            flowerCount: true,
           },
         },
       },
@@ -537,15 +533,7 @@ export async function getBouquetPeriodsAction(): Promise<{
         totalFlowers,
         isArchived: p.isArchived,
         createdAt: p.createdAt.toISOString(),
-        posts: p.posts.map((post) => ({
-          id: post.id,
-          imageUrl: post.imageUrl,
-          locationName: post.locationName,
-          flowerCount: post.flowerCount,
-          installDate: post.installDate.toISOString().split("T")[0],
-          staffName: post.user.name,
-          isArchived: post.isArchived,
-        })),
+        posts: [],
       };
     });
 
@@ -558,16 +546,24 @@ export async function getBouquetPeriodsAction(): Promise<{
       error: "Gagal mengambil daftar periode buket.",
     };
   }
-}
+});
 
 /**
- * Retrieves a single bouquet period by ID along with all its uploaded photos.
+ * Retrieves all bouquet periods along with aggregate statistics for employee and owner views.
  */
-export async function getBouquetPeriodDetailAction(periodId: string): Promise<{
+export async function getBouquetPeriodsAction(): Promise<{
+  success: boolean;
+  periods: SerializedBouquetPeriod[];
+  error?: string;
+}> {
+  return cachedGetBouquetPeriods();
+}
+
+const cachedGetBouquetPeriodDetail = cache(async (periodId: string): Promise<{
   success: boolean;
   period?: SerializedBouquetPeriod;
   error?: string;
-}> {
+}> => {
   try {
     const session = await getServerSession();
 
@@ -644,6 +640,17 @@ export async function getBouquetPeriodDetailAction(periodId: string): Promise<{
       err instanceof Error ? err.message : "Gagal mengambil detail periode buket.";
     return { success: false, error: msg };
   }
+});
+
+/**
+ * Retrieves a single bouquet period by ID along with all its uploaded photos.
+ */
+export async function getBouquetPeriodDetailAction(periodId: string): Promise<{
+  success: boolean;
+  period?: SerializedBouquetPeriod;
+  error?: string;
+}> {
+  return cachedGetBouquetPeriodDetail(periodId);
 }
 
 /**

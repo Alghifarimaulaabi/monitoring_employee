@@ -54,6 +54,7 @@ export default function OwnerHeader({ userName, userEmail }: OwnerHeaderProps) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    prefetch={true}
                     className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
                       isActive
                         ? "bg-rose-50 text-rose-700"
@@ -93,6 +94,7 @@ export default function OwnerHeader({ userName, userEmail }: OwnerHeaderProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={true}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                   isActive
                     ? "bg-rose-50 text-rose-700"

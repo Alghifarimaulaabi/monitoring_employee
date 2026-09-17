@@ -65,6 +65,7 @@ export default function EmployeeNav({ userName, userEmail }: EmployeeNavProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={true}
                 className={`flex flex-col items-center justify-center gap-1 transition-colors ${
                   isActive ? "text-rose-600 font-semibold" : "text-gray-400 hover:text-gray-600"
                 }`}

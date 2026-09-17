@@ -136,6 +136,7 @@ export default function BouquetPeriodDetailView({
         <div className="flex items-center justify-between">
           <Link
             href={backUrl}
+            prefetch={true}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-xl transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -168,6 +169,7 @@ export default function BouquetPeriodDetailView({
             {/* Tambahkan Foto */}
             <Link
               href={`/employee/submit/upload?periodId=${period.id}&startDate=${period.startDate}&endDate=${period.endDate}`}
+              prefetch={true}
               className="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-xs font-bold rounded-xl shadow-xs transition-colors"
             >
               <Camera className="w-4 h-4" />
@@ -265,6 +267,7 @@ export default function BouquetPeriodDetailView({
             <div className="mt-5">
               <Link
                 href={`/employee/submit/upload?periodId=${period.id}&startDate=${period.startDate}&endDate=${period.endDate}`}
+                prefetch={true}
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors"
               >
                 <Camera className="w-4 h-4" />

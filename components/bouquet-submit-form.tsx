@@ -162,6 +162,7 @@ export default function BouquetSubmitForm({
 
           <Link
             href="/employee/history"
+            prefetch={true}
             className="w-full py-3 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium text-sm rounded-xl border border-gray-200 transition-all flex items-center justify-center gap-2"
           >
             <span>Lihat Riwayat Saya</span>
@@ -178,6 +179,7 @@ export default function BouquetSubmitForm({
       <div>
         <Link
           href="/employee/submit"
+          prefetch={true}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />

@@ -89,6 +89,7 @@ export default async function HistoryPage() {
           <div className="mt-6">
             <Link
               href="/employee/submit"
+              prefetch={true}
               className="inline-flex items-center justify-center px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-colors gap-2"
             >
               <Camera className="w-4 h-4" />
