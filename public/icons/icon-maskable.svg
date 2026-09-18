@@ -1,0 +1,66 @@
+
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradMask" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f43f5e" />
+      <stop offset="60%" stop-color="#e11d48" />
+      <stop offset="100%" stop-color="#be123c" />
+    </linearGradient>
+    <linearGradient id="petalGrad1M" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#ffe4e6" />
+    </linearGradient>
+    <linearGradient id="petalGrad2M" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fecdd3" />
+      <stop offset="100%" stop-color="#fda4af" />
+    </linearGradient>
+    <linearGradient id="stemGradM" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="wrapGradM" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff1f2" />
+      <stop offset="100%" stop-color="#ffe4e6" />
+    </linearGradient>
+  </defs>
+
+  <!-- Full bleed Background for maskable (no rx, fills completely) -->
+  <rect width="512" height="512" fill="url(#bgGradMask)" />
+
+  <!-- Scaled content in the safe area (around 70% scale centered) -->
+  <g transform="translate(64, 48) scale(0.75)">
+    <!-- Foliage -->
+    <path d="M190 230 C 140 180, 150 120, 210 150 C 230 190, 200 230, 190 230 Z" fill="url(#stemGradM)" />
+    <path d="M322 230 C 372 180, 362 120, 302 150 C 282 190, 312 230, 322 230 Z" fill="url(#stemGradM)" />
+
+    <!-- Flowers -->
+    <circle cx="210" cy="190" r="42" fill="url(#petalGrad2M)" />
+    <circle cx="210" cy="190" r="28" fill="url(#petalGrad1M)" />
+    <circle cx="210" cy="190" r="14" fill="#fb7185" />
+
+    <circle cx="302" cy="190" r="42" fill="url(#petalGrad2M)" />
+    <circle cx="302" cy="190" r="28" fill="url(#petalGrad1M)" />
+    <circle cx="302" cy="190" r="14" fill="#fb7185" />
+
+    <circle cx="256" cy="150" r="54" fill="#ffffff" />
+    <circle cx="256" cy="150" r="40" fill="url(#petalGrad2M)" />
+    <circle cx="256" cy="150" r="26" fill="url(#petalGrad1M)" />
+    <circle cx="256" cy="150" r="12" fill="#e11d48" />
+
+    <circle cx="256" cy="98" r="12" fill="#ffe4e6" />
+    <circle cx="168" cy="170" r="10" fill="#ffe4e6" />
+    <circle cx="344" cy="170" r="10" fill="#ffe4e6" />
+
+    <!-- Bouquet Paper Wrapper -->
+    <polygon points="170,220 342,220 286,390 226,390" fill="url(#wrapGradM)" stroke="#f43f5e" stroke-width="4" stroke-linejoin="round" />
+    <path d="M170 220 L 275 390" stroke="#fecdd3" stroke-width="3" />
+    <path d="M342 220 L 237 390" stroke="#fda4af" stroke-width="3" />
+
+    <!-- Bouquet Ribbon -->
+    <ellipse cx="256" cy="300" rx="36" ry="14" fill="#e11d48" />
+    <polygon points="256,302 230,350 256,338 282,350" fill="#be123c" />
+    <circle cx="256" cy="300" r="8" fill="#ffffff" />
+
+    <text x="256" y="445" text-anchor="middle" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="34" letter-spacing="4">B-TRACKER</text>
+  </g>
+</svg>

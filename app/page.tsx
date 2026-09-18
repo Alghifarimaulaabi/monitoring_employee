@@ -1,19 +1,22 @@
-import { redirect } from "next/navigation";
 import { getServerSession } from "@/lib/auth";
+import PwaInstallView from "@/components/pwa-install-view";
+
+export const dynamic = "force-dynamic";
 
 export default async function RootPage() {
-  const session = await getServerSession();
+  let userSession: { name: string | null; role: string | null } | null = null;
 
-  if (!session || !session.user) {
-    redirect("/login");
+  try {
+    const session = await getServerSession();
+    if (session?.user) {
+      userSession = {
+        name: session.user.name || null,
+        role: session.user.role || null,
+      };
+    }
+  } catch (error) {
+    console.warn("[RootPage] Failed to fetch session:", error);
   }
 
-  const isOwner =
-    session.user.role === "OWNER" || session.user.role === "admin";
-
-  if (isOwner) {
-    redirect("/owner/employees");
-  }
-
-  redirect("/employee/tasks");
+  return <PwaInstallView userSession={userSession} />;
 }
