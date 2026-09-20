@@ -16,160 +16,160 @@ const styles = StyleSheet.create({
   page: {
     size: "A4",
     orientation: "portrait",
-    paddingTop: 45,
-    paddingBottom: 50,
-    paddingHorizontal: 54,
-    fontFamily: "LiberationSans",
-    fontSize: 10,
+    paddingTop: 32,
+    paddingBottom: 28,
+    paddingHorizontal: 46,
+    fontFamily: "Roboto",
+    fontSize: 9.5,
     color: "#000000",
     backgroundColor: "#ffffff",
-    lineHeight: 1.4,
+    lineHeight: 1.35,
   },
   // Header / Kop Surat
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: 6,
   },
   logoWrapper: {
-    width: 75,
+    width: 65,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 16,
+    marginRight: 14,
   },
   logoImage: {
-    width: 60,
-    height: 60,
+    width: 48,
+    height: 48,
     objectFit: "contain",
   },
   logoFallback: {
-    width: 55,
-    height: 55,
-    borderRadius: 28,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     borderWidth: 1.5,
     borderColor: "#e11d48",
     alignItems: "center",
     justifyContent: "center",
   },
   logoFallbackText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#e11d48",
   },
   logoSubtext: {
-    fontSize: 7.5,
+    fontSize: 7,
     fontWeight: "bold",
-    marginTop: 2,
+    marginTop: 1,
     textAlign: "center",
   },
   headerTextWrapper: {
     flex: 1,
     textAlign: "center",
-    paddingRight: 50, // balances the logo on the left
+    paddingRight: 45, // balances the logo on the left
   },
   companyName: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "bold",
     letterSpacing: 0.5,
-    marginBottom: 3,
-  },
-  companyAddress: {
-    fontSize: 9,
     marginBottom: 2,
   },
-  companyContact: {
+  companyAddress: {
     fontSize: 8.5,
+    marginBottom: 1.5,
+  },
+  companyContact: {
+    fontSize: 8,
   },
   headerDivider: {
     borderBottomWidth: 2,
     borderBottomColor: "#000000",
-    marginBottom: 20,
+    marginBottom: 14,
   },
 
   // Date top right
   dateRow: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    marginBottom: 10,
+    marginBottom: 8,
   },
   dateText: {
-    fontSize: 10,
+    fontSize: 9.5,
   },
 
   // Metadata Surat (Nomor, Perihal, Lampiran)
   metaContainer: {
-    marginBottom: 20,
+    marginBottom: 14,
     flexDirection: "column",
-    gap: 3,
+    gap: 2.5,
   },
   metaRow: {
     flexDirection: "row",
   },
   metaLabel: {
-    width: 70,
-    fontSize: 10,
+    width: 65,
+    fontSize: 9.5,
   },
   metaColon: {
     width: 12,
-    fontSize: 10,
+    fontSize: 9.5,
   },
   metaValue: {
     flex: 1,
-    fontSize: 10,
+    fontSize: 9.5,
   },
 
   // Recipient (Yth.)
   recipientContainer: {
-    marginBottom: 22,
+    marginBottom: 14,
     flexDirection: "column",
-    gap: 2,
+    gap: 1.5,
   },
   recipientText: {
-    fontSize: 10,
+    fontSize: 9.5,
   },
 
   // Salutation & Body
   greetingText: {
-    fontSize: 10,
-    marginBottom: 10,
+    fontSize: 9.5,
+    marginBottom: 6,
   },
   bodyParagraph: {
-    fontSize: 10,
-    marginBottom: 12,
+    fontSize: 9.5,
+    marginBottom: 8,
     textAlign: "justify",
-    lineHeight: 1.5,
+    lineHeight: 1.4,
   },
 
   // Bank Info Block
   bankBlock: {
-    marginTop: 4,
-    marginBottom: 16,
+    marginTop: 2,
+    marginBottom: 12,
     marginLeft: 0,
     flexDirection: "column",
-    gap: 3,
+    gap: 2.5,
   },
   bankRow: {
     flexDirection: "row",
   },
   bankLabel: {
-    width: 90,
-    fontSize: 10,
+    width: 85,
+    fontSize: 9.5,
   },
   bankColon: {
     width: 12,
-    fontSize: 10,
+    fontSize: 9.5,
   },
   bankValue: {
     flex: 1,
-    fontSize: 10,
+    fontSize: 9.5,
   },
 
   // Closing
   closingParagraph: {
-    fontSize: 10,
-    marginBottom: 35,
+    fontSize: 9.5,
+    marginBottom: 20,
     textAlign: "justify",
-    lineHeight: 1.5,
+    lineHeight: 1.4,
   },
 
   // Signature Block
@@ -178,21 +178,21 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   signatureWrapper: {
-    width: 160,
+    width: 150,
     alignItems: "center",
   },
   signatureSalutation: {
-    fontSize: 10,
-    marginBottom: 55, // space for signature
+    fontSize: 9.5,
+    marginBottom: 38, // space for signature
   },
   signerName: {
-    fontSize: 10.5,
+    fontSize: 10,
     fontWeight: "bold",
-    marginBottom: 2,
+    marginBottom: 1.5,
     textAlign: "center",
   },
   signerTitle: {
-    fontSize: 10,
+    fontSize: 9.5,
     textAlign: "center",
   },
 });
