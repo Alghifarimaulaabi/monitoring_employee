@@ -8,6 +8,9 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import { InvoiceData, formatRupiah } from "@/lib/constants/invoice";
+import { registerAppFonts } from "@/lib/pdf/font";
+
+registerAppFonts();
 
 const styles = StyleSheet.create({
   page: {
@@ -16,7 +19,7 @@ const styles = StyleSheet.create({
     paddingTop: 45,
     paddingBottom: 50,
     paddingHorizontal: 54,
-    fontFamily: "Helvetica",
+    fontFamily: "LiberationSans",
     fontSize: 10,
     color: "#000000",
     backgroundColor: "#ffffff",
@@ -50,12 +53,12 @@ const styles = StyleSheet.create({
   },
   logoFallbackText: {
     fontSize: 18,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     color: "#e11d48",
   },
   logoSubtext: {
     fontSize: 7.5,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     marginTop: 2,
     textAlign: "center",
   },
@@ -66,18 +69,16 @@ const styles = StyleSheet.create({
   },
   companyName: {
     fontSize: 16,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     letterSpacing: 0.5,
     marginBottom: 3,
   },
   companyAddress: {
     fontSize: 9,
-    fontFamily: "Helvetica",
     marginBottom: 2,
   },
   companyContact: {
     fontSize: 8.5,
-    fontFamily: "Helvetica",
   },
   headerDivider: {
     borderBottomWidth: 2,
@@ -93,7 +94,6 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 10,
-    fontFamily: "Helvetica",
   },
 
   // Metadata Surat (Nomor, Perihal, Lampiran)
@@ -108,17 +108,14 @@ const styles = StyleSheet.create({
   metaLabel: {
     width: 70,
     fontSize: 10,
-    fontFamily: "Helvetica",
   },
   metaColon: {
     width: 12,
     fontSize: 10,
-    fontFamily: "Helvetica",
   },
   metaValue: {
     flex: 1,
     fontSize: 10,
-    fontFamily: "Helvetica",
   },
 
   // Recipient (Yth.)
@@ -129,18 +126,15 @@ const styles = StyleSheet.create({
   },
   recipientText: {
     fontSize: 10,
-    fontFamily: "Helvetica",
   },
 
   // Salutation & Body
   greetingText: {
     fontSize: 10,
-    fontFamily: "Helvetica",
     marginBottom: 10,
   },
   bodyParagraph: {
     fontSize: 10,
-    fontFamily: "Helvetica",
     marginBottom: 12,
     textAlign: "justify",
     lineHeight: 1.5,
@@ -160,23 +154,19 @@ const styles = StyleSheet.create({
   bankLabel: {
     width: 90,
     fontSize: 10,
-    fontFamily: "Helvetica",
   },
   bankColon: {
     width: 12,
     fontSize: 10,
-    fontFamily: "Helvetica",
   },
   bankValue: {
     flex: 1,
     fontSize: 10,
-    fontFamily: "Helvetica",
   },
 
   // Closing
   closingParagraph: {
     fontSize: 10,
-    fontFamily: "Helvetica",
     marginBottom: 35,
     textAlign: "justify",
     lineHeight: 1.5,
@@ -193,18 +183,16 @@ const styles = StyleSheet.create({
   },
   signatureSalutation: {
     fontSize: 10,
-    fontFamily: "Helvetica",
     marginBottom: 55, // space for signature
   },
   signerName: {
     fontSize: 10.5,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     marginBottom: 2,
     textAlign: "center",
   },
   signerTitle: {
     fontSize: 10,
-    fontFamily: "Helvetica",
     textAlign: "center",
   },
 });

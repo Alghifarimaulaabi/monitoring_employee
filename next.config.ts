@@ -13,7 +13,7 @@ if (!fs.existsSync("./app/generated/prisma/client.ts")) {
 }
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: ["@react-pdf/renderer"],
 };
 
 export default nextConfig;

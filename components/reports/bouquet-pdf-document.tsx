@@ -7,6 +7,9 @@ import {
   Image,
   StyleSheet,
 } from "@react-pdf/renderer";
+import { registerAppFonts } from "@/lib/pdf/font";
+
+registerAppFonts();
 
 const styles = StyleSheet.create({
   page: {
@@ -15,7 +18,7 @@ const styles = StyleSheet.create({
     paddingTop: 32,
     paddingBottom: 40,
     paddingHorizontal: 36,
-    fontFamily: "Helvetica",
+    fontFamily: "LiberationSans",
     backgroundColor: "#ffffff",
     display: "flex",
     flexDirection: "column",
@@ -34,7 +37,7 @@ const styles = StyleSheet.create({
   },
   brandTitle: {
     fontSize: 16,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     color: "#e11d48",
     letterSpacing: 0.5,
   },
@@ -55,13 +58,13 @@ const styles = StyleSheet.create({
   periodLabel: {
     fontSize: 7,
     color: "#9f1239",
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     textTransform: "uppercase",
   },
   periodValue: {
     fontSize: 11,
     color: "#e11d48",
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     marginTop: 1,
   },
   summaryRow: {
@@ -83,7 +86,7 @@ const styles = StyleSheet.create({
   },
   summaryValue: {
     fontSize: 9,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     color: "#111827",
     marginTop: 1,
   },
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
   noImagePlaceholder: {
     fontSize: 9,
     color: "#9ca3af",
-    fontFamily: "Helvetica",
+    fontWeight: "normal",
     textAlign: "center",
     padding: 8,
   },
@@ -140,12 +143,12 @@ const styles = StyleSheet.create({
   },
   dateBadge: {
     fontSize: 9,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     color: "#e11d48",
   },
   itemIndexBadge: {
     fontSize: 8,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     color: "#6b7280",
     backgroundColor: "#f3f4f6",
     paddingVertical: 2,
@@ -162,18 +165,18 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontSize: 7,
     color: "#6b7280",
-    fontFamily: "Helvetica",
+    fontWeight: "normal",
     textTransform: "uppercase",
   },
   fieldValueLocation: {
     fontSize: 10,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     color: "#1f2937",
     marginTop: 1,
   },
   fieldValueStaff: {
     fontSize: 9,
-    fontFamily: "Helvetica",
+    fontWeight: "normal",
     color: "#374151",
     marginTop: 1,
   },
@@ -189,7 +192,7 @@ const styles = StyleSheet.create({
   },
   countText: {
     fontSize: 9,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     color: "#065f46",
   },
   cardFooter: {
@@ -207,7 +210,7 @@ const styles = StyleSheet.create({
   archivedNotice: {
     fontSize: 7,
     color: "#d97706",
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
   },
   // Footer
   footer: {
@@ -228,7 +231,7 @@ const styles = StyleSheet.create({
   },
   footerPageNum: {
     fontSize: 7,
-    fontFamily: "Helvetica-Bold",
+    fontWeight: "bold",
     color: "#6b7280",
   },
 });

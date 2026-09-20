@@ -21,12 +21,12 @@ export default async function OwnerLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col print:bg-white print:min-h-0">
       <OwnerHeader
         userName={session.user.name}
         userEmail={session.user.email}
       />
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 print:p-0 print:max-w-none">
         {children}
       </main>
     </div>
