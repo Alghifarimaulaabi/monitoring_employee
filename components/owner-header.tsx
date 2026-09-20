@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { Users, Flower2, CheckSquare, LogOut } from "lucide-react";
+import { Users, Flower2, CheckSquare, LogOut, ReceiptText } from "lucide-react";
 
 interface OwnerHeaderProps {
   userName: string;
@@ -24,6 +24,7 @@ export default function OwnerHeader({ userName, userEmail }: OwnerHeaderProps) {
   const navItems = [
     { href: "/owner/employees", label: "Karyawan", icon: Users },
     { href: "/owner/bouquets", label: "Galeri Buket", icon: Flower2 },
+    { href: "/owner/invoices", label: "Tagihan", icon: ReceiptText },
     { href: "/owner/tasks", label: "Tugas Harian", icon: CheckSquare },
   ];
 

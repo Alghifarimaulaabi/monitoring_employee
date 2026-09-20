@@ -8,10 +8,13 @@ import { uploadBouquetPhoto, deleteBouquetPhoto, deleteBouquetPhotosBatch } from
 import { revalidatePath } from "next/cache";
 import crypto from "node:crypto";
 
+import { getBouquetPackagePrice } from "@/lib/constants/bouquet";
+
 const bouquetSchema = z.object({
   install_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal harus YYYY-MM-DD"),
   location_name: z.string().min(3, "Nama lokasi minimal 3 karakter"),
   flower_count: z.number().int().positive("Jumlah bunga harus lebih dari 0"),
+  package_type: z.enum(["REGULER", "VIP", "MEDIUM_PHOTO_TAKING"]).default("REGULER"),
 });
 
 export interface CreateBouquetResult {
@@ -37,6 +40,7 @@ export async function createBouquetPostAction(formData: FormData): Promise<Creat
     const installDateStr = formData.get("install_date") as string | null;
     const locationName = formData.get("location_name") as string | null;
     const flowerCountRaw = formData.get("flower_count") as string | null;
+    const packageTypeRaw = formData.get("package_type") as string | null;
 
     if (!file || !(file instanceof Blob) || file.size === 0) {
       return { success: false, error: "File foto bukti pemasangan wajib dilampirkan." };
@@ -48,6 +52,7 @@ export async function createBouquetPostAction(formData: FormData): Promise<Creat
       install_date: installDateStr,
       location_name: locationName,
       flower_count: parsedCount,
+      package_type: packageTypeRaw || "REGULER",
     });
 
     if (!validation.success) {
@@ -57,7 +62,8 @@ export async function createBouquetPostAction(formData: FormData): Promise<Creat
       };
     }
 
-    const { install_date, location_name, flower_count } = validation.data;
+    const { install_date, location_name, flower_count, package_type } = validation.data;
+    const packagePrice = getBouquetPackagePrice(package_type);
 
     // Generate deterministic storage path: bouquet-photos/YYYY-MM/UUID.webp
     const dateObj = new Date(install_date);
@@ -89,6 +95,8 @@ export async function createBouquetPostAction(formData: FormData): Promise<Creat
         installDate: dateObj,
         locationName: location_name,
         flowerCount: flower_count,
+        packageType: package_type,
+        packagePrice,
       },
     });
 
@@ -151,6 +159,8 @@ export interface OwnerMonthlyBouquetsResult {
     installDate: string; // ISO string for client serialization
     locationName: string;
     flowerCount: number;
+    packageType?: string;
+    packagePrice?: number;
     isArchived: boolean;
     createdAt: string;
   }>;
@@ -224,6 +234,8 @@ const cachedOwnerMonthlyBouquets = cache(
           installDate: p.installDate.toISOString().split("T")[0],
           locationName: p.locationName,
           flowerCount: p.flowerCount,
+          packageType: p.packageType,
+          packagePrice: p.packagePrice,
           isArchived: p.isArchived,
           createdAt: p.createdAt.toISOString(),
         };
@@ -472,6 +484,8 @@ export interface SerializedBouquetPeriod {
     imageUrl: string;
     locationName: string;
     flowerCount: number;
+    packageType?: string;
+    packagePrice?: number;
     installDate: string;
     staffName: string;
     isArchived: boolean;
@@ -627,6 +641,8 @@ const cachedGetBouquetPeriodDetail = cache(async (periodId: string): Promise<{
         imageUrl: post.imageUrl,
         locationName: post.locationName,
         flowerCount: post.flowerCount,
+        packageType: post.packageType,
+        packagePrice: post.packagePrice,
         installDate: post.installDate.toISOString().split("T")[0],
         staffName: post.user.name,
         isArchived: post.isArchived,

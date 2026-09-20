@@ -28,10 +28,12 @@ export type AggregateBouquetPost = {
 
 export type BouquetPostAvgAggregateOutputType = {
   flowerCount: number | null
+  packagePrice: number | null
 }
 
 export type BouquetPostSumAggregateOutputType = {
   flowerCount: number | null
+  packagePrice: number | null
 }
 
 export type BouquetPostMinAggregateOutputType = {
@@ -43,6 +45,8 @@ export type BouquetPostMinAggregateOutputType = {
   installDate: Date | null
   locationName: string | null
   flowerCount: number | null
+  packageType: string | null
+  packagePrice: number | null
   isArchived: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -57,6 +61,8 @@ export type BouquetPostMaxAggregateOutputType = {
   installDate: Date | null
   locationName: string | null
   flowerCount: number | null
+  packageType: string | null
+  packagePrice: number | null
   isArchived: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -71,6 +77,8 @@ export type BouquetPostCountAggregateOutputType = {
   installDate: number
   locationName: number
   flowerCount: number
+  packageType: number
+  packagePrice: number
   isArchived: number
   createdAt: number
   updatedAt: number
@@ -80,10 +88,12 @@ export type BouquetPostCountAggregateOutputType = {
 
 export type BouquetPostAvgAggregateInputType = {
   flowerCount?: true
+  packagePrice?: true
 }
 
 export type BouquetPostSumAggregateInputType = {
   flowerCount?: true
+  packagePrice?: true
 }
 
 export type BouquetPostMinAggregateInputType = {
@@ -95,6 +105,8 @@ export type BouquetPostMinAggregateInputType = {
   installDate?: true
   locationName?: true
   flowerCount?: true
+  packageType?: true
+  packagePrice?: true
   isArchived?: true
   createdAt?: true
   updatedAt?: true
@@ -109,6 +121,8 @@ export type BouquetPostMaxAggregateInputType = {
   installDate?: true
   locationName?: true
   flowerCount?: true
+  packageType?: true
+  packagePrice?: true
   isArchived?: true
   createdAt?: true
   updatedAt?: true
@@ -123,6 +137,8 @@ export type BouquetPostCountAggregateInputType = {
   installDate?: true
   locationName?: true
   flowerCount?: true
+  packageType?: true
+  packagePrice?: true
   isArchived?: true
   createdAt?: true
   updatedAt?: true
@@ -224,6 +240,8 @@ export type BouquetPostGroupByOutputType = {
   installDate: Date
   locationName: string
   flowerCount: number
+  packageType: string
+  packagePrice: number
   isArchived: boolean
   createdAt: Date
   updatedAt: Date
@@ -261,6 +279,8 @@ export type BouquetPostWhereInput = {
   installDate?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
   locationName?: Prisma.StringFilter<"BouquetPost"> | string
   flowerCount?: Prisma.IntFilter<"BouquetPost"> | number
+  packageType?: Prisma.StringFilter<"BouquetPost"> | string
+  packagePrice?: Prisma.IntFilter<"BouquetPost"> | number
   isArchived?: Prisma.BoolFilter<"BouquetPost"> | boolean
   createdAt?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
@@ -277,6 +297,8 @@ export type BouquetPostOrderByWithRelationInput = {
   installDate?: Prisma.SortOrder
   locationName?: Prisma.SortOrder
   flowerCount?: Prisma.SortOrder
+  packageType?: Prisma.SortOrder
+  packagePrice?: Prisma.SortOrder
   isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -296,6 +318,8 @@ export type BouquetPostWhereUniqueInput = Prisma.AtLeast<{
   installDate?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
   locationName?: Prisma.StringFilter<"BouquetPost"> | string
   flowerCount?: Prisma.IntFilter<"BouquetPost"> | number
+  packageType?: Prisma.StringFilter<"BouquetPost"> | string
+  packagePrice?: Prisma.IntFilter<"BouquetPost"> | number
   isArchived?: Prisma.BoolFilter<"BouquetPost"> | boolean
   createdAt?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
@@ -312,6 +336,8 @@ export type BouquetPostOrderByWithAggregationInput = {
   installDate?: Prisma.SortOrder
   locationName?: Prisma.SortOrder
   flowerCount?: Prisma.SortOrder
+  packageType?: Prisma.SortOrder
+  packagePrice?: Prisma.SortOrder
   isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -334,6 +360,8 @@ export type BouquetPostScalarWhereWithAggregatesInput = {
   installDate?: Prisma.DateTimeWithAggregatesFilter<"BouquetPost"> | Date | string
   locationName?: Prisma.StringWithAggregatesFilter<"BouquetPost"> | string
   flowerCount?: Prisma.IntWithAggregatesFilter<"BouquetPost"> | number
+  packageType?: Prisma.StringWithAggregatesFilter<"BouquetPost"> | string
+  packagePrice?: Prisma.IntWithAggregatesFilter<"BouquetPost"> | number
   isArchived?: Prisma.BoolWithAggregatesFilter<"BouquetPost"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"BouquetPost"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"BouquetPost"> | Date | string
@@ -346,6 +374,8 @@ export type BouquetPostCreateInput = {
   installDate: Date | string
   locationName: string
   flowerCount: number
+  packageType?: string
+  packagePrice?: number
   isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -362,6 +392,8 @@ export type BouquetPostUncheckedCreateInput = {
   installDate: Date | string
   locationName: string
   flowerCount: number
+  packageType?: string
+  packagePrice?: number
   isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -374,6 +406,8 @@ export type BouquetPostUpdateInput = {
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationName?: Prisma.StringFieldUpdateOperationsInput | string
   flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  packageType?: Prisma.StringFieldUpdateOperationsInput | string
+  packagePrice?: Prisma.IntFieldUpdateOperationsInput | number
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -390,6 +424,8 @@ export type BouquetPostUncheckedUpdateInput = {
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationName?: Prisma.StringFieldUpdateOperationsInput | string
   flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  packageType?: Prisma.StringFieldUpdateOperationsInput | string
+  packagePrice?: Prisma.IntFieldUpdateOperationsInput | number
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -404,6 +440,8 @@ export type BouquetPostCreateManyInput = {
   installDate: Date | string
   locationName: string
   flowerCount: number
+  packageType?: string
+  packagePrice?: number
   isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -416,6 +454,8 @@ export type BouquetPostUpdateManyMutationInput = {
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationName?: Prisma.StringFieldUpdateOperationsInput | string
   flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  packageType?: Prisma.StringFieldUpdateOperationsInput | string
+  packagePrice?: Prisma.IntFieldUpdateOperationsInput | number
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -430,6 +470,8 @@ export type BouquetPostUncheckedUpdateManyInput = {
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationName?: Prisma.StringFieldUpdateOperationsInput | string
   flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  packageType?: Prisma.StringFieldUpdateOperationsInput | string
+  packagePrice?: Prisma.IntFieldUpdateOperationsInput | number
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -454,6 +496,8 @@ export type BouquetPostCountOrderByAggregateInput = {
   installDate?: Prisma.SortOrder
   locationName?: Prisma.SortOrder
   flowerCount?: Prisma.SortOrder
+  packageType?: Prisma.SortOrder
+  packagePrice?: Prisma.SortOrder
   isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -461,6 +505,7 @@ export type BouquetPostCountOrderByAggregateInput = {
 
 export type BouquetPostAvgOrderByAggregateInput = {
   flowerCount?: Prisma.SortOrder
+  packagePrice?: Prisma.SortOrder
 }
 
 export type BouquetPostMaxOrderByAggregateInput = {
@@ -472,6 +517,8 @@ export type BouquetPostMaxOrderByAggregateInput = {
   installDate?: Prisma.SortOrder
   locationName?: Prisma.SortOrder
   flowerCount?: Prisma.SortOrder
+  packageType?: Prisma.SortOrder
+  packagePrice?: Prisma.SortOrder
   isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -486,6 +533,8 @@ export type BouquetPostMinOrderByAggregateInput = {
   installDate?: Prisma.SortOrder
   locationName?: Prisma.SortOrder
   flowerCount?: Prisma.SortOrder
+  packageType?: Prisma.SortOrder
+  packagePrice?: Prisma.SortOrder
   isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -493,6 +542,7 @@ export type BouquetPostMinOrderByAggregateInput = {
 
 export type BouquetPostSumOrderByAggregateInput = {
   flowerCount?: Prisma.SortOrder
+  packagePrice?: Prisma.SortOrder
 }
 
 export type BouquetPostCreateNestedManyWithoutUserInput = {
@@ -594,6 +644,8 @@ export type BouquetPostCreateWithoutUserInput = {
   installDate: Date | string
   locationName: string
   flowerCount: number
+  packageType?: string
+  packagePrice?: number
   isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -608,6 +660,8 @@ export type BouquetPostUncheckedCreateWithoutUserInput = {
   installDate: Date | string
   locationName: string
   flowerCount: number
+  packageType?: string
+  packagePrice?: number
   isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -651,6 +705,8 @@ export type BouquetPostScalarWhereInput = {
   installDate?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
   locationName?: Prisma.StringFilter<"BouquetPost"> | string
   flowerCount?: Prisma.IntFilter<"BouquetPost"> | number
+  packageType?: Prisma.StringFilter<"BouquetPost"> | string
+  packagePrice?: Prisma.IntFilter<"BouquetPost"> | number
   isArchived?: Prisma.BoolFilter<"BouquetPost"> | boolean
   createdAt?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BouquetPost"> | Date | string
@@ -663,6 +719,8 @@ export type BouquetPostCreateWithoutPeriodInput = {
   installDate: Date | string
   locationName: string
   flowerCount: number
+  packageType?: string
+  packagePrice?: number
   isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -677,6 +735,8 @@ export type BouquetPostUncheckedCreateWithoutPeriodInput = {
   installDate: Date | string
   locationName: string
   flowerCount: number
+  packageType?: string
+  packagePrice?: number
   isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -716,6 +776,8 @@ export type BouquetPostCreateManyUserInput = {
   installDate: Date | string
   locationName: string
   flowerCount: number
+  packageType?: string
+  packagePrice?: number
   isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -728,6 +790,8 @@ export type BouquetPostUpdateWithoutUserInput = {
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationName?: Prisma.StringFieldUpdateOperationsInput | string
   flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  packageType?: Prisma.StringFieldUpdateOperationsInput | string
+  packagePrice?: Prisma.IntFieldUpdateOperationsInput | number
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -742,6 +806,8 @@ export type BouquetPostUncheckedUpdateWithoutUserInput = {
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationName?: Prisma.StringFieldUpdateOperationsInput | string
   flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  packageType?: Prisma.StringFieldUpdateOperationsInput | string
+  packagePrice?: Prisma.IntFieldUpdateOperationsInput | number
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -755,6 +821,8 @@ export type BouquetPostUncheckedUpdateManyWithoutUserInput = {
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationName?: Prisma.StringFieldUpdateOperationsInput | string
   flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  packageType?: Prisma.StringFieldUpdateOperationsInput | string
+  packagePrice?: Prisma.IntFieldUpdateOperationsInput | number
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -768,6 +836,8 @@ export type BouquetPostCreateManyPeriodInput = {
   installDate: Date | string
   locationName: string
   flowerCount: number
+  packageType?: string
+  packagePrice?: number
   isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -780,6 +850,8 @@ export type BouquetPostUpdateWithoutPeriodInput = {
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationName?: Prisma.StringFieldUpdateOperationsInput | string
   flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  packageType?: Prisma.StringFieldUpdateOperationsInput | string
+  packagePrice?: Prisma.IntFieldUpdateOperationsInput | number
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -794,6 +866,8 @@ export type BouquetPostUncheckedUpdateWithoutPeriodInput = {
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationName?: Prisma.StringFieldUpdateOperationsInput | string
   flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  packageType?: Prisma.StringFieldUpdateOperationsInput | string
+  packagePrice?: Prisma.IntFieldUpdateOperationsInput | number
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -807,6 +881,8 @@ export type BouquetPostUncheckedUpdateManyWithoutPeriodInput = {
   installDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationName?: Prisma.StringFieldUpdateOperationsInput | string
   flowerCount?: Prisma.IntFieldUpdateOperationsInput | number
+  packageType?: Prisma.StringFieldUpdateOperationsInput | string
+  packagePrice?: Prisma.IntFieldUpdateOperationsInput | number
   isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -823,6 +899,8 @@ export type BouquetPostSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   installDate?: boolean
   locationName?: boolean
   flowerCount?: boolean
+  packageType?: boolean
+  packagePrice?: boolean
   isArchived?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -839,6 +917,8 @@ export type BouquetPostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   installDate?: boolean
   locationName?: boolean
   flowerCount?: boolean
+  packageType?: boolean
+  packagePrice?: boolean
   isArchived?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -855,6 +935,8 @@ export type BouquetPostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   installDate?: boolean
   locationName?: boolean
   flowerCount?: boolean
+  packageType?: boolean
+  packagePrice?: boolean
   isArchived?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -871,12 +953,14 @@ export type BouquetPostSelectScalar = {
   installDate?: boolean
   locationName?: boolean
   flowerCount?: boolean
+  packageType?: boolean
+  packagePrice?: boolean
   isArchived?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type BouquetPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "periodId" | "imageUrl" | "storagePath" | "installDate" | "locationName" | "flowerCount" | "isArchived" | "createdAt" | "updatedAt", ExtArgs["result"]["bouquetPost"]>
+export type BouquetPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "periodId" | "imageUrl" | "storagePath" | "installDate" | "locationName" | "flowerCount" | "packageType" | "packagePrice" | "isArchived" | "createdAt" | "updatedAt", ExtArgs["result"]["bouquetPost"]>
 export type BouquetPostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   period?: boolean | Prisma.BouquetPost$periodArgs<ExtArgs>
@@ -905,6 +989,8 @@ export type $BouquetPostPayload<ExtArgs extends runtime.Types.Extensions.Interna
     installDate: Date
     locationName: string
     flowerCount: number
+    packageType: string
+    packagePrice: number
     isArchived: boolean
     createdAt: Date
     updatedAt: Date
@@ -1341,6 +1427,8 @@ export interface BouquetPostFieldRefs {
   readonly installDate: Prisma.FieldRef<"BouquetPost", 'DateTime'>
   readonly locationName: Prisma.FieldRef<"BouquetPost", 'String'>
   readonly flowerCount: Prisma.FieldRef<"BouquetPost", 'Int'>
+  readonly packageType: Prisma.FieldRef<"BouquetPost", 'String'>
+  readonly packagePrice: Prisma.FieldRef<"BouquetPost", 'Int'>
   readonly isArchived: Prisma.FieldRef<"BouquetPost", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"BouquetPost", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"BouquetPost", 'DateTime'>

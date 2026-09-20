@@ -86,6 +86,8 @@ model BouquetPost {
   installDate  DateTime       @db.Date
   locationName String
   flowerCount  Int
+  packageType  String         @default("REGULER")
+  packagePrice Int            @default(10000)
   isArchived   Boolean        @default(false)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt

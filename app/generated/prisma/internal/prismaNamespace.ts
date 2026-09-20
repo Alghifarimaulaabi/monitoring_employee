@@ -1052,6 +1052,8 @@ export const BouquetPostScalarFieldEnum = {
   installDate: 'installDate',
   locationName: 'locationName',
   flowerCount: 'flowerCount',
+  packageType: 'packageType',
+  packagePrice: 'packagePrice',
   isArchived: 'isArchived',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

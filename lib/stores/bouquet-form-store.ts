@@ -10,6 +10,7 @@ interface BouquetFormState {
   installDate: string;
   locationName: string;
   flowerCount: string;
+  packageType: string;
 
   isSubmitting: boolean;
   error: string | null;
@@ -24,6 +25,7 @@ interface BouquetFormState {
   setInstallDate: (installDate: string) => void;
   setLocationName: (locationName: string) => void;
   setFlowerCount: (flowerCount: string) => void;
+  setPackageType: (packageType: string) => void;
   setIsSubmitting: (isSubmitting: boolean) => void;
   setError: (error: string | null) => void;
   setSuccess: (success: boolean) => void;
@@ -41,6 +43,7 @@ export const useBouquetFormStore = create<BouquetFormState>((set, get) => ({
   installDate: getTodayString(),
   locationName: "",
   flowerCount: "",
+  packageType: "REGULER",
 
   isSubmitting: false,
   error: null,
@@ -58,6 +61,7 @@ export const useBouquetFormStore = create<BouquetFormState>((set, get) => ({
   setInstallDate: (installDate) => set({ installDate }),
   setLocationName: (locationName) => set({ locationName }),
   setFlowerCount: (flowerCount) => set({ flowerCount }),
+  setPackageType: (packageType) => set({ packageType }),
   setIsSubmitting: (isSubmitting) => set({ isSubmitting }),
   setError: (error) => set({ error }),
   setSuccess: (success) => set({ success }),
@@ -75,6 +79,7 @@ export const useBouquetFormStore = create<BouquetFormState>((set, get) => ({
       installDate: getTodayString(),
       locationName: "",
       flowerCount: "",
+      packageType: "REGULER",
       isSubmitting: false,
       error: null,
       success: false,

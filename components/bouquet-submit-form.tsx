@@ -18,8 +18,11 @@ import {
   Sparkles,
   ArrowRight,
   ChevronLeft,
+  Tag,
+  ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
+import { CLIENT_BOUQUET_PACKAGE_OPTIONS } from "@/lib/constants/bouquet";
 
 interface BouquetSubmitFormProps {
   periodId?: string;
@@ -43,6 +46,7 @@ export default function BouquetSubmitForm({
     installDate,
     locationName,
     flowerCount,
+    packageType,
     isSubmitting,
     error,
     success,
@@ -51,6 +55,7 @@ export default function BouquetSubmitForm({
     setInstallDate,
     setLocationName,
     setFlowerCount,
+    setPackageType,
     setIsSubmitting,
     setError,
     setSuccess,
@@ -113,6 +118,7 @@ export default function BouquetSubmitForm({
       formData.append("install_date", installDate);
       formData.append("location_name", locationName.trim());
       formData.append("flower_count", countNum.toString());
+      formData.append("package_type", packageType);
       if (periodId) {
         formData.append("period_id", periodId);
       }
@@ -324,6 +330,33 @@ export default function BouquetSubmitForm({
               placeholder="Contoh: Ballroom Hotel Mulia, Meja Utama"
               className="block w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition-all"
             />
+          </div>
+        </div>
+
+        {/* Form Field: Package Type */}
+        <div>
+          <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+            Tipe Buket
+          </label>
+          <div className="relative rounded-xl shadow-2xs">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+              <Tag className="w-4 h-4" />
+            </div>
+            <select
+              required
+              value={packageType}
+              onChange={(e) => setPackageType(e.target.value)}
+              className="block w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition-all cursor-pointer appearance-none"
+            >
+              {CLIENT_BOUQUET_PACKAGE_OPTIONS.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-gray-400">
+              <ChevronDown className="w-4 h-4" />
+            </div>
           </div>
         </div>
 
