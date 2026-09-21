@@ -14,12 +14,6 @@ if (!fs.existsSync("./app/generated/prisma/client.ts")) {
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["@react-pdf/renderer"],
-  outputFileTracingIncludes: {
-    "/api/**/*": [
-      "./node_modules/**/pdfkit/js/standard-fonts/**/*",
-      "./node_modules/.pnpm/pdfkit@*/**/js/standard-fonts/**/*",
-    ],
-  },
 };
 
 export default nextConfig;
