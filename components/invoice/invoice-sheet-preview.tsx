@@ -41,7 +41,7 @@ export default function InvoiceSheetPreview({
     : "";
 
   return (
-    <div className="bg-white text-black w-full max-w-[210mm] min-h-[297mm] mx-auto p-10 sm:p-14 md:p-16 shadow-xl border border-gray-200 rounded-sm font-sans text-xs sm:text-sm leading-relaxed flex flex-col justify-between select-text transition-all print:shadow-none print:border-none print:p-8 print:max-w-none print:min-h-0">
+    <div className="invoice-sheet-print bg-white text-black w-full max-w-[210mm] min-h-[297mm] mx-auto p-8 sm:p-12 md:p-14 shadow-xl border border-gray-200 rounded-sm font-sans text-xs sm:text-sm leading-normal sm:leading-relaxed flex flex-col justify-between select-text transition-all print:shadow-none print:border-none print:m-0 print:p-0">
       <div>
         {/* Header / Kop Surat */}
         <div className="flex items-center gap-4 sm:gap-6 pb-2">
@@ -121,10 +121,10 @@ export default function InvoiceSheetPreview({
         </div>
 
         {/* Divider line */}
-        <div className="border-b-2 sm:border-b-[2.5px] border-black mt-2 mb-6" />
+        <div className="border-b-2 sm:border-b-[2.5px] border-black mt-2 mb-4 print:mt-1 print:mb-2" />
 
         {/* Tanggal Surat (Kanan Atas) */}
-        <div className="flex justify-end mb-4">
+        <div className="flex justify-end mb-3 print:mb-1.5">
           {isEditing ? (
             <input
               type="text"
@@ -140,7 +140,7 @@ export default function InvoiceSheetPreview({
         </div>
 
         {/* Metadata Surat: Nomor, Perihal, Lampiran */}
-        <div className="grid grid-cols-[80px_16px_1fr] sm:grid-cols-[90px_20px_1fr] text-xs sm:text-sm gap-y-1.5 mb-6 items-center">
+        <div className="grid grid-cols-[80px_16px_1fr] sm:grid-cols-[90px_20px_1fr] text-xs sm:text-sm gap-y-1 sm:gap-y-1.5 mb-4 print:mb-2 items-center">
           <span className="text-gray-900">Nomor</span>
           <span>:</span>
           {isEditing ? (
@@ -185,7 +185,7 @@ export default function InvoiceSheetPreview({
         </div>
 
         {/* Penerima Surat (Yth.) */}
-        <div className="space-y-1 mb-6 text-xs sm:text-sm text-gray-900 max-w-md">
+        <div className="space-y-0.5 sm:space-y-1 mb-4 print:mb-2 text-xs sm:text-sm text-gray-900 max-w-md">
           {isEditing ? (
             <div className="space-y-1.5">
               <input
@@ -236,7 +236,7 @@ export default function InvoiceSheetPreview({
         </div>
 
         {/* Salam Pembuka */}
-        <div className="mb-3 text-xs sm:text-sm">
+        <div className="mb-2 print:mb-1 text-xs sm:text-sm">
           {isEditing ? (
             <input
               type="text"
@@ -251,7 +251,7 @@ export default function InvoiceSheetPreview({
         </div>
 
         {/* Paragraf 1: Pengantar Layanan & Periode */}
-        <div className="mb-3 text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
+        <div className="mb-2.5 print:mb-1.5 text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
           {isEditing ? (
             <div className="space-y-1.5 p-2 bg-rose-50/30 border border-dashed border-rose-300 rounded-lg">
               <span className="text-[10px] font-bold text-rose-600 block uppercase tracking-wider">
@@ -292,7 +292,7 @@ export default function InvoiceSheetPreview({
         </div>
 
         {/* Paragraf 2: Nilai Tagihan & Terbilang */}
-        <div className="mb-3 text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
+        <div className="mb-2.5 print:mb-1.5 text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
           {isEditing ? (
             <div className="space-y-2 p-2 bg-rose-50/30 border border-dashed border-rose-300 rounded-lg">
               <span className="text-[10px] font-bold text-rose-600 block uppercase tracking-wider">
@@ -328,7 +328,7 @@ export default function InvoiceSheetPreview({
         </div>
 
         {/* Paragraf 3: Rekening Pembayaran */}
-        <div className="mb-2 text-xs sm:text-sm text-gray-900">
+        <div className="mb-1.5 print:mb-1 text-xs sm:text-sm text-gray-900">
           {isEditing ? (
             <input
               type="text"
@@ -343,7 +343,7 @@ export default function InvoiceSheetPreview({
         </div>
 
         {/* Rincian Rekening */}
-        <div className="grid grid-cols-[100px_16px_1fr] sm:grid-cols-[110px_20px_1fr] text-xs sm:text-sm gap-y-1.5 mb-6 ml-0 text-gray-900 font-medium items-center">
+        <div className="grid grid-cols-[100px_16px_1fr] sm:grid-cols-[110px_20px_1fr] text-xs sm:text-sm gap-y-1 sm:gap-y-1.5 mb-4 print:mb-2 ml-0 text-gray-900 font-medium items-center">
           <span>Atas nama</span>
           <span>:</span>
           {isEditing ? (
@@ -388,7 +388,7 @@ export default function InvoiceSheetPreview({
         </div>
 
         {/* Paragraf Penutup */}
-        <div className="mb-12 text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
+        <div className="mb-6 print:mb-2.5 text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
           {isEditing ? (
             <textarea
               rows={2}
@@ -404,8 +404,8 @@ export default function InvoiceSheetPreview({
       </div>
 
       {/* Tanda Tangan (Kanan Bawah) */}
-      <div className="flex justify-end pt-4">
-        <div className="text-center min-w-[180px] space-y-16">
+      <div className="flex justify-end pt-2 print:pt-1">
+        <div className="text-center min-w-[180px] space-y-10 sm:space-y-12 print:space-y-7">
           {isEditing ? (
             <input
               type="text"

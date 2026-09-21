@@ -136,7 +136,7 @@ export default function InvoiceEditorView({
   };
 
   return (
-    <div className="space-y-5 pb-16 max-w-5xl mx-auto">
+    <div className="space-y-5 pb-16 max-w-5xl mx-auto print:space-y-0 print:pb-0 print:m-0 print:p-0 print:max-w-none print:w-full">
       {/* Top Header & Actions Bar */}
       <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200/80 shadow-xs flex flex-col gap-4 print:hidden">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -286,7 +286,7 @@ export default function InvoiceEditorView({
       </div>
 
       {/* Sheet Preview Card with In-Place Direct Editing */}
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center print:block print:m-0 print:p-0 print:w-full">
         {!isEditing && (
           <div className="w-full max-w-[210mm] mb-2 flex items-center justify-between text-xs text-gray-500 px-1 print:hidden">
             <span className="flex items-center gap-1.5 text-gray-600">
@@ -300,7 +300,7 @@ export default function InvoiceEditorView({
         )}
 
         {/* Render the full A4 Sheet (Directly Editable in Perbaiki Mode) */}
-        <div className="w-full overflow-x-auto pb-8">
+        <div className="w-full overflow-x-auto pb-8 print:overflow-visible print:pb-0 print:m-0 print:p-0">
           <InvoiceSheetPreview
             data={formData}
             isEditing={isEditing}

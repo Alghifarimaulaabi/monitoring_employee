@@ -16,9 +16,9 @@ const styles = StyleSheet.create({
   page: {
     size: "A4",
     orientation: "portrait",
-    paddingTop: 32,
-    paddingBottom: 28,
-    paddingHorizontal: 46,
+    paddingTop: 28,
+    paddingBottom: 24,
+    paddingHorizontal: 44,
     fontFamily: "Roboto",
     fontSize: 9.5,
     color: "#000000",
@@ -207,7 +207,7 @@ export function InvoicePdfDocument({ data, logoBase64 }: InvoicePdfDocumentProps
 
   return (
     <Document title={`Surat Tagihan - ${data.letterNumber.replace(/\//g, "-")}`}>
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={styles.page} wrap={false}>
         {/* Header / Kop Surat */}
         <View style={styles.headerContainer}>
           <View style={styles.logoWrapper}>
