@@ -23,16 +23,21 @@ function getRedirectTarget(role?: string | null, callbackUrl?: string | null): s
 function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
+  const errorParam = searchParams.get("error");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    errorParam === "account_deactivated"
+      ? "Akun Anda telah dinonaktifkan oleh administrator."
+      : null
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   const { data: session, isPending } = authClient.useSession();
 
   useEffect(() => {
-    if (!isPending && session?.user) {
+    if (!isPending && session?.user && !session.user.banned) {
       const target = getRedirectTarget(session.user.role, callbackUrl);
       window.location.href = target;
     }
@@ -50,7 +55,12 @@ function LoginForm() {
       });
 
       if (res.error) {
-        setError(res.error.message || "Email atau kata sandi tidak sesuai.");
+        const errorMsg = res.error.message?.toLowerCase() || "";
+        if (errorMsg.includes("ban") || res.error.status === 403) {
+          setError("Akun Anda telah dinonaktifkan oleh administrator dan tidak dapat digunakan untuk login.");
+        } else {
+          setError(res.error.message || "Email atau kata sandi tidak sesuai.");
+        }
         setIsLoading(false);
         return;
       }

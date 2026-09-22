@@ -9,8 +9,8 @@ export default async function EmployeeLayout({
 }) {
   const session = await getServerSession();
 
-  if (!session || !session.user) {
-    redirect("/login");
+  if (!session || !session.user || session.user.banned) {
+    redirect(session?.user?.banned ? "/login?error=account_deactivated" : "/login");
   }
 
   const isOwner =

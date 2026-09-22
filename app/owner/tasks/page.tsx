@@ -30,7 +30,10 @@ export default async function OwnerTasksPage() {
       },
     }),
     prisma.user.findMany({
-      where: { role: "EMPLOYEE" },
+      where: {
+        role: "EMPLOYEE",
+        banned: false,
+      },
       select: {
         id: true,
         name: true,

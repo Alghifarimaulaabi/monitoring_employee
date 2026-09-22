@@ -57,6 +57,13 @@ export async function createTaskAction(data: CreateTaskDTO): Promise<TaskActionR
       return { success: false, error: "Karyawan yang dipilih tidak ditemukan." };
     }
 
+    if (employee.banned) {
+      return {
+        success: false,
+        error: "Karyawan ini telah dinonaktifkan dan tidak dapat diberikan tugas baru.",
+      };
+    }
+
     // Parse dueDate safely in UTC
     const [year, month, day] = dueDate.split("-").map(Number);
     const dateObj = new Date(Date.UTC(year, month - 1, day));
