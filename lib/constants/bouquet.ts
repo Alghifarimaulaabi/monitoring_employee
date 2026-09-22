@@ -68,3 +68,21 @@ export function isValidBouquetPackageType(
 ): type is BouquetPackageType {
   return BOUQUET_PACKAGES.some((pkg) => pkg.id === type);
 }
+
+/**
+ * Calculates total price for a bouquet post based on unit price and quantity (pcs / flowerCount).
+ * Formula: unit price * count.
+ * Applicable to all categories: REGULER, VIP, MEDIUM_PHOTO_TAKING.
+ */
+export function calculateBouquetPostTotal(
+  packageType?: string | null,
+  packagePrice?: number | null,
+  flowerCount?: number | null
+): number {
+  const unitPrice =
+    packagePrice !== undefined && packagePrice !== null && packagePrice > 0
+      ? packagePrice
+      : getBouquetPackagePrice(packageType);
+  const count = flowerCount && flowerCount > 0 ? flowerCount : 1;
+  return unitPrice * count;
+}

@@ -8,6 +8,7 @@ import {
   formatDateIndoLong,
   InvoiceData,
 } from "@/lib/constants/invoice";
+import { calculateBouquetPostTotal } from "@/lib/constants/bouquet";
 
 export interface SerializedInvoicePeriod {
   id: string;
@@ -61,6 +62,7 @@ const cachedGetInvoicePeriods = cache(async (): Promise<{
             id: true,
             flowerCount: true,
             packagePrice: true,
+            packageType: true,
           },
         },
       },
@@ -74,7 +76,13 @@ const cachedGetInvoicePeriods = cache(async (): Promise<{
         0
       );
       const totalAmount = p.posts.reduce(
-        (sum, post) => sum + (post.packagePrice || 10000),
+        (sum, post) =>
+          sum +
+          calculateBouquetPostTotal(
+            post.packageType,
+            post.packagePrice,
+            post.flowerCount
+          ),
         0
       );
 
@@ -152,6 +160,7 @@ const cachedGetInvoicePeriodDetail = cache(
               id: true,
               flowerCount: true,
               packagePrice: true,
+              packageType: true,
             },
           },
         },
@@ -168,7 +177,13 @@ const cachedGetInvoicePeriodDetail = cache(
         0
       );
       const totalAmount = period.posts.reduce(
-        (sum, post) => sum + (post.packagePrice || 10000),
+        (sum, post) =>
+          sum +
+          calculateBouquetPostTotal(
+            post.packageType,
+            post.packagePrice,
+            post.flowerCount
+          ),
         0
       );
 
