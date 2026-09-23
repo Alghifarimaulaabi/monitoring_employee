@@ -403,7 +403,8 @@ export const ModelName = {
   Verification: 'Verification',
   BouquetPost: 'BouquetPost',
   BouquetPeriod: 'BouquetPeriod',
-  Task: 'Task'
+  Task: 'Task',
+  TaskCompletion: 'TaskCompletion'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -419,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "bouquetPost" | "bouquetPeriod" | "task"
+    modelProps: "user" | "session" | "account" | "verification" | "bouquetPost" | "bouquetPeriod" | "task" | "taskCompletion"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -941,6 +942,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TaskCompletion: {
+      payload: Prisma.$TaskCompletionPayload<ExtArgs>
+      fields: Prisma.TaskCompletionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TaskCompletionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TaskCompletionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionPayload>
+        }
+        findFirst: {
+          args: Prisma.TaskCompletionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TaskCompletionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionPayload>
+        }
+        findMany: {
+          args: Prisma.TaskCompletionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionPayload>[]
+        }
+        create: {
+          args: Prisma.TaskCompletionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionPayload>
+        }
+        createMany: {
+          args: Prisma.TaskCompletionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TaskCompletionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionPayload>[]
+        }
+        delete: {
+          args: Prisma.TaskCompletionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionPayload>
+        }
+        update: {
+          args: Prisma.TaskCompletionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionPayload>
+        }
+        deleteMany: {
+          args: Prisma.TaskCompletionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TaskCompletionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TaskCompletionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionPayload>[]
+        }
+        upsert: {
+          args: Prisma.TaskCompletionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskCompletionPayload>
+        }
+        aggregate: {
+          args: Prisma.TaskCompletionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTaskCompletion>
+        }
+        groupBy: {
+          args: Prisma.TaskCompletionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TaskCompletionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TaskCompletionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TaskCompletionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1090,6 +1165,18 @@ export const TaskScalarFieldEnum = {
 } as const
 
 export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
+
+
+export const TaskCompletionScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  userId: 'userId',
+  date: 'date',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type TaskCompletionScalarFieldEnum = (typeof TaskCompletionScalarFieldEnum)[keyof typeof TaskCompletionScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1342,6 +1429,7 @@ export type GlobalOmitConfig = {
   bouquetPost?: Prisma.BouquetPostOmit
   bouquetPeriod?: Prisma.BouquetPeriodOmit
   task?: Prisma.TaskOmit
+  taskCompletion?: Prisma.TaskCompletionOmit
 }
 
 /* Types for Logging */

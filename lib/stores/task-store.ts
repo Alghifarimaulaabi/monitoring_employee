@@ -1,11 +1,18 @@
 import { create } from "zustand";
 
+export interface TaskCompletionItem {
+  id: string;
+  date: Date | string;
+  completedAt: Date | string;
+  userId: string;
+}
+
 export interface TaskItem {
   id: string;
   title: string;
   description: string | null;
-  dueDate: Date | string;
-  status: string; // PENDING | COMPLETED
+  dueDate: Date | string | null;
+  status: string; // PENDING | COMPLETED (evaluated for filter date)
   completedAt: Date | string | null;
   createdAt: Date | string;
   assignedTo: {
@@ -17,13 +24,14 @@ export interface TaskItem {
     id: string;
     name: string;
   };
+  completions?: TaskCompletionItem[];
 }
 
 export interface EmployeeTaskItem {
   id: string;
   title: string;
   description: string | null;
-  dueDate: Date | string;
+  dueDate: Date | string | null;
   status: string; // PENDING | COMPLETED
   completedAt: Date | string | null;
   createdAt: Date | string;
@@ -60,8 +68,9 @@ interface TaskState {
   setError: (error: string | null) => void;
 
   // Optimistic updates
-  optimisticToggleOwnerTask: (taskId: string, nextStatus: string) => void;
+  optimisticToggleOwnerTask: (taskId: string, nextStatus: string, dateStr?: string) => void;
   optimisticToggleEmployeeTask: (taskId: string, nextStatus: string) => void;
+  updateOwnerTask: (taskId: string, updated: Partial<TaskItem>) => void;
   removeOwnerTask: (taskId: string) => void;
 }
 
@@ -111,6 +120,13 @@ export const useTaskStore = create<TaskState>((set) => ({
               completedAt: nextStatus === "COMPLETED" ? new Date().toISOString() : null,
             }
           : t
+      ),
+    })),
+
+  updateOwnerTask: (taskId, updated) =>
+    set((state) => ({
+      ownerTasks: state.ownerTasks.map((t) =>
+        t.id === taskId ? { ...t, ...updated } : t
       ),
     })),
 

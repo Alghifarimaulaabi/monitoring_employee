@@ -57,7 +57,8 @@ export const ModelName = {
   Verification: 'Verification',
   BouquetPost: 'BouquetPost',
   BouquetPeriod: 'BouquetPeriod',
-  Task: 'Task'
+  Task: 'Task',
+  TaskCompletion: 'TaskCompletion'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -186,6 +187,18 @@ export const TaskScalarFieldEnum = {
 } as const
 
 export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
+
+
+export const TaskCompletionScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  userId: 'userId',
+  date: 'date',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type TaskCompletionScalarFieldEnum = (typeof TaskCompletionScalarFieldEnum)[keyof typeof TaskCompletionScalarFieldEnum]
 
 
 export const SortOrder = {

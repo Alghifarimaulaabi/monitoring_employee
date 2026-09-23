@@ -1,9 +1,24 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toggleTaskStatusAction, deleteTaskAction } from "@/lib/actions/task";
 import { useTaskStore, TaskItem } from "@/lib/stores/task-store";
-import { CheckSquare, Calendar, User, Trash2, CheckCircle2, Clock, Search, Filter, AlertCircle, Loader2 } from "lucide-react";
+import { getAppDateString, formatShortDateJakarta, formatTimeJakarta } from "@/lib/date";
+import EditTaskModal from "@/components/edit-task-modal";
+import {
+  CheckSquare,
+  Calendar,
+  User,
+  Trash2,
+  CheckCircle2,
+  Clock,
+  Search,
+  Filter,
+  AlertCircle,
+  Loader2,
+  Pencil,
+  Repeat,
+} from "lucide-react";
 
 export type { TaskItem };
 
@@ -32,15 +47,38 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
     removeOwnerTask,
   } = useTaskStore();
 
+  const [editingTask, setEditingTask] = useState<TaskItem | null>(null);
+
   // Sync initial SSR tasks into store
   useEffect(() => {
-    useTaskStore.setState({ ownerTasks: initialTasks });
-  }, [initialTasks]);
+    setOwnerTasks(initialTasks);
+  }, [initialTasks, setOwnerTasks]);
 
-  const tasks = ownerTasks.length > 0 ? ownerTasks : initialTasks;
+  const rawTasks = ownerTasks.length > 0 ? ownerTasks : initialTasks;
+  const todayStr = getAppDateString();
+  const activeDateStr = filterDate || todayStr;
+
+  // Dynamically evaluate status for each task based on activeDateStr
+  const evaluatedTasks = rawTasks.map((task) => {
+    const matchComp = task.completions?.find((c) => {
+      if (c.userId !== task.assignedTo.id) return false;
+      const cDateStr =
+        c.date instanceof Date
+          ? c.date.toISOString().slice(0, 10)
+          : String(c.date).slice(0, 10);
+      return cDateStr === activeDateStr;
+    });
+
+    const isCompleted = Boolean(matchComp);
+    return {
+      ...task,
+      status: isCompleted ? "COMPLETED" : "PENDING",
+      completedAt: matchComp?.completedAt || null,
+    };
+  });
 
   // Filter tasks based on controls
-  const filteredTasks = tasks.filter((task) => {
+  const filteredTasks = evaluatedTasks.filter((task) => {
     // Status filter
     if (filterStatus !== "ALL" && task.status !== filterStatus) {
       return false;
@@ -49,14 +87,6 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
     // Employee filter
     if (filterEmployee !== "ALL" && task.assignedTo.id !== filterEmployee) {
       return false;
-    }
-
-    // Date filter
-    if (filterDate) {
-      const taskDateStr = new Date(task.dueDate).toISOString().split("T")[0];
-      if (taskDateStr !== filterDate) {
-        return false;
-      }
     }
 
     // Search query filter
@@ -79,31 +109,31 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
     const nextStatus = task.status === "COMPLETED" ? "PENDING" : "COMPLETED";
 
     // Optimistic toggle via store
-    optimisticToggleOwnerTask(task.id, nextStatus);
+    optimisticToggleOwnerTask(task.id, nextStatus, activeDateStr);
 
     try {
-      const res = await toggleTaskStatusAction(task.id, nextStatus);
+      const res = await toggleTaskStatusAction(task.id, nextStatus, activeDateStr);
       if (!res.success) {
         setError(res.error || "Gagal mengubah status tugas.");
         // Rollback
-        optimisticToggleOwnerTask(task.id, task.status);
+        optimisticToggleOwnerTask(task.id, task.status, activeDateStr);
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan.";
       setError(msg);
-      optimisticToggleOwnerTask(task.id, task.status);
+      optimisticToggleOwnerTask(task.id, task.status, activeDateStr);
     } finally {
       setActionLoadingId(null);
     }
   };
 
   const handleDeleteTask = async (taskId: string) => {
-    if (!window.confirm("Apakah Anda yakin ingin menghapus penugasan ini?")) {
+    if (!window.confirm("Apakah Anda yakin ingin menghapus penugasan harian ini? Seluruh riwayat checklist tugas ini juga akan terhapus.")) {
       return;
     }
 
     setError(null);
-    const taskToDelete = tasks.find((t) => t.id === taskId);
+    const taskToDelete = rawTasks.find((t) => t.id === taskId);
 
     // Hapus langsung dari UI secara optimistik (0 ms)
     removeOwnerTask(taskId);
@@ -160,7 +190,7 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
           <div className="flex bg-gray-100 p-1 rounded-xl text-xs">
             <button
               onClick={() => setFilterStatus("ALL")}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
                 filterStatus === "ALL" ? "bg-white text-gray-900 shadow-2xs" : "text-gray-500 hover:text-gray-800"
               }`}
             >
@@ -168,7 +198,7 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
             </button>
             <button
               onClick={() => setFilterStatus("PENDING")}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
                 filterStatus === "PENDING" ? "bg-white text-amber-700 shadow-2xs" : "text-gray-500 hover:text-gray-800"
               }`}
             >
@@ -176,7 +206,7 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
             </button>
             <button
               onClick={() => setFilterStatus("COMPLETED")}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
                 filterStatus === "COMPLETED" ? "bg-white text-emerald-700 shadow-2xs" : "text-gray-500 hover:text-gray-800"
               }`}
             >
@@ -188,7 +218,7 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
           <select
             value={filterEmployee}
             onChange={(e) => setFilterEmployee(e.target.value)}
-            className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-rose-500 transition-all"
+            className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-rose-500 transition-all cursor-pointer"
           >
             <option value="ALL">Semua Staf</option>
             {employees.map((emp) => (
@@ -199,22 +229,23 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
           </select>
 
           {/* Filter by Date */}
-          <input
-            type="date"
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
-            className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-rose-500 transition-all"
-            title="Filter tanggal tugas"
-          />
-
-          {filterDate && (
-            <button
-              onClick={() => setFilterDate("")}
-              className="text-xs text-rose-600 hover:underline px-1"
-            >
-              Reset Tanggal
-            </button>
-          )}
+          <div className="flex items-center gap-1.5">
+            <input
+              type="date"
+              value={filterDate}
+              onChange={(e) => setFilterDate(e.target.value)}
+              className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-rose-500 transition-all cursor-pointer"
+              title="Pilih tanggal checklist yang ingin dipantau"
+            />
+            {filterDate && (
+              <button
+                onClick={() => setFilterDate("")}
+                className="text-xs text-rose-600 hover:underline px-1 cursor-pointer"
+              >
+                Hari Ini
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -224,8 +255,14 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
           <div className="flex items-center gap-2">
             <Filter className="w-4 h-4 text-gray-400" />
             <h3 className="text-sm font-semibold text-gray-900">
-              Daftar Penugasan ({filteredTasks.length})
+              Daftar Penugasan Harian ({filteredTasks.length})
             </h3>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 px-2.5 py-1 rounded-lg border border-gray-200/60">
+            <Calendar className="w-3.5 h-3.5 text-gray-400" />
+            <span>
+              Pantauan: {activeDateStr === todayStr ? "Hari Ini" : formatShortDateJakarta(activeDateStr)} ({activeDateStr})
+            </span>
           </div>
         </div>
 
@@ -245,13 +282,6 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
               const isCompleted = task.status === "COMPLETED";
               const isLoadingThis = actionLoadingId === task.id;
 
-              const dateStr = new Intl.DateTimeFormat("id-ID", {
-                weekday: "short",
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              }).format(new Date(task.dueDate));
-
               return (
                 <div
                   key={task.id}
@@ -268,7 +298,7 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
                           ? "bg-emerald-500 border-emerald-500 text-white shadow-xs"
                           : "border-gray-300 hover:border-rose-400 bg-white"
                       }`}
-                      title={isCompleted ? "Tandai belum selesai" : "Tandai selesai"}
+                      title={isCompleted ? "Tandai belum selesai untuk tanggal ini" : "Tandai selesai untuk tanggal ini"}
                     >
                       {isLoadingThis ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin text-gray-400" />
@@ -295,6 +325,10 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
                         >
                           {isCompleted ? "Selesai" : "Pending"}
                         </span>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-rose-50 text-rose-700 border border-rose-100">
+                          <Repeat className="w-2.5 h-2.5" />
+                          <span>Harian</span>
+                        </span>
                       </div>
 
                       {task.description && (
@@ -312,19 +346,11 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
                           <User className="w-3 h-3 text-gray-400" />
                           <span className="font-medium text-gray-600">{task.assignedTo.name}</span>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3 text-gray-400" />
-                          <span>{dateStr}</span>
-                        </div>
                         {isCompleted && task.completedAt && (
                           <div className="flex items-center gap-1 text-emerald-600">
                             <Clock className="w-3 h-3" />
                             <span>
-                              Selesai:{" "}
-                              {new Intl.DateTimeFormat("id-ID", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              }).format(new Date(task.completedAt))}
+                              Selesai: {formatTimeJakarta(task.completedAt)} WIB
                             </span>
                           </div>
                         )}
@@ -336,14 +362,22 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
                     <button
                       onClick={() => handleToggleStatus(task)}
                       disabled={isLoadingThis}
-                      className="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
+                      className="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors cursor-pointer"
                     >
                       {isCompleted ? "Buka Kembali" : "Tandai Selesai"}
                     </button>
                     <button
+                      onClick={() => setEditingTask(task)}
+                      disabled={isLoadingThis}
+                      className="p-1.5 text-gray-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-gray-200 hover:border-rose-100 transition-colors cursor-pointer"
+                      title="Edit tugas"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
                       onClick={() => handleDeleteTask(task.id)}
                       disabled={isLoadingThis}
-                      className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg border border-transparent hover:border-red-100 transition-colors"
+                      className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg border border-transparent hover:border-red-100 transition-colors cursor-pointer"
                       title="Hapus tugas"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -355,6 +389,15 @@ export default function OwnerTaskList({ tasks: initialTasks, employees }: OwnerT
           </div>
         )}
       </div>
+
+      {/* Edit Task Modal */}
+      {editingTask && (
+        <EditTaskModal
+          task={editingTask}
+          employees={employees}
+          onClose={() => setEditingTask(null)}
+        />
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import CreateTaskForm from "@/components/create-task-form";
 import OwnerTaskList from "@/components/owner-task-list";
+import { getAppDateString } from "@/lib/date";
 import { CheckSquare, Clock, CheckCircle2, TrendingUp } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -10,9 +11,11 @@ export const metadata = {
 };
 
 export default async function OwnerTasksPage() {
-  const [tasks, employees] = await Promise.all([
+  const todayStr = getAppDateString();
+
+  const [rawTasks, employees] = await Promise.all([
     prisma.task.findMany({
-      orderBy: [{ dueDate: "desc" }, { createdAt: "desc" }],
+      orderBy: [{ createdAt: "desc" }],
       include: {
         assignedTo: {
           select: {
@@ -25,6 +28,14 @@ export default async function OwnerTasksPage() {
           select: {
             id: true,
             name: true,
+          },
+        },
+        completions: {
+          select: {
+            id: true,
+            date: true,
+            completedAt: true,
+            userId: true,
           },
         },
       },
@@ -43,10 +54,39 @@ export default async function OwnerTasksPage() {
     }),
   ]);
 
-  const totalTasks = tasks.length;
-  const completedTasks = tasks.filter((t) => t.status === "COMPLETED").length;
-  const pendingTasks = tasks.filter((t) => t.status === "PENDING").length;
+  // Today metrics
+  const totalTasks = rawTasks.length;
+  const completedTasks = rawTasks.filter((t) =>
+    t.completions.some((c) => {
+      if (c.userId !== t.assignedToId) return false;
+      const cDateStr = new Date(c.date).toISOString().slice(0, 10);
+      return cDateStr === todayStr;
+    })
+  ).length;
+  const pendingTasks = totalTasks - completedTasks;
   const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+  // Format initial tasks for SSR
+  const initialTasks = rawTasks.map((t) => {
+    const todayCompletion = t.completions.find((c) => {
+      if (c.userId !== t.assignedToId) return false;
+      const cDateStr = new Date(c.date).toISOString().slice(0, 10);
+      return cDateStr === todayStr;
+    });
+    const isCompleted = Boolean(todayCompletion);
+    return {
+      id: t.id,
+      title: t.title,
+      description: t.description,
+      dueDate: t.dueDate,
+      status: isCompleted ? "COMPLETED" : "PENDING",
+      completedAt: todayCompletion?.completedAt || null,
+      createdAt: t.createdAt,
+      assignedTo: t.assignedTo,
+      createdBy: t.createdBy,
+      completions: t.completions,
+    };
+  });
 
   return (
     <div className="space-y-6">
@@ -57,7 +97,7 @@ export default async function OwnerTasksPage() {
             Manajemen Penugasan Harian
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            Buat, delegasikan, dan pantau tugas harian toko (seperti menyiram tanaman, menyapu, kebersihan, & operasional toko).
+            Buat sekali, pantau setiap hari. Tugas operasional toko (seperti menyiram tanaman, menyapu, kebersihan, & operasional) otomatis berulang setiap hari.
           </p>
         </div>
 
@@ -71,7 +111,7 @@ export default async function OwnerTasksPage() {
             <CheckSquare className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs font-medium text-gray-500">Total Tugas</div>
+            <div className="text-xs font-medium text-gray-500">Total Tugas Harian</div>
             <div className="text-xl font-bold text-gray-900">{totalTasks}</div>
           </div>
         </div>
@@ -81,7 +121,7 @@ export default async function OwnerTasksPage() {
             <Clock className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs font-medium text-gray-500">Menunggu (Pending)</div>
+            <div className="text-xs font-medium text-gray-500">Pending Hari Ini</div>
             <div className="text-xl font-bold text-gray-900">{pendingTasks}</div>
           </div>
         </div>
@@ -91,7 +131,7 @@ export default async function OwnerTasksPage() {
             <CheckCircle2 className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs font-medium text-gray-500">Selesai Dikerjakan</div>
+            <div className="text-xs font-medium text-gray-500">Selesai Hari Ini</div>
             <div className="text-xl font-bold text-gray-900">{completedTasks}</div>
           </div>
         </div>
@@ -108,7 +148,7 @@ export default async function OwnerTasksPage() {
       </div>
 
       {/* Task List Component with Filters */}
-      <OwnerTaskList tasks={tasks} employees={employees} />
+      <OwnerTaskList tasks={initialTasks} employees={employees} />
     </div>
   );
 }

@@ -4,15 +4,34 @@ import { z } from "zod";
 import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { getAppDateString, parseDateToUtc } from "@/lib/date";
 
 const createTaskSchema = z.object({
-  title: z.string().min(2, "Judul tugas minimal 2 karakter").max(120, "Judul tugas maksimal 120 karakter"),
+  title: z
+    .string()
+    .min(2, "Judul tugas minimal 2 karakter")
+    .max(120, "Judul tugas maksimal 120 karakter"),
   description: z.string().max(500, "Deskripsi maksimal 500 karakter").optional(),
   assignedToId: z.string().min(1, "Karyawan wajib dipilih"),
-  dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal harus YYYY-MM-DD"),
+  dueDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal harus YYYY-MM-DD")
+    .optional(),
 });
 
 export type CreateTaskDTO = z.infer<typeof createTaskSchema>;
+
+const updateTaskSchema = z.object({
+  taskId: z.string().min(1, "ID tugas wajib diisi"),
+  title: z
+    .string()
+    .min(2, "Judul tugas minimal 2 karakter")
+    .max(120, "Judul tugas maksimal 120 karakter"),
+  description: z.string().max(500, "Deskripsi maksimal 500 karakter").optional(),
+  assignedToId: z.string().min(1, "Karyawan wajib dipilih"),
+});
+
+export type UpdateTaskDTO = z.infer<typeof updateTaskSchema>;
 
 export interface TaskActionResult {
   success: boolean;
@@ -21,7 +40,8 @@ export interface TaskActionResult {
 }
 
 /**
- * Server Action for Owner to assign a daily task to an employee.
+ * Server Action for Owner to assign a recurring daily task to an employee.
+ * The task is created once and automatically available every day.
  */
 export async function createTaskAction(data: CreateTaskDTO): Promise<TaskActionResult> {
   try {
@@ -64,9 +84,9 @@ export async function createTaskAction(data: CreateTaskDTO): Promise<TaskActionR
       };
     }
 
-    // Parse dueDate safely in UTC
-    const [year, month, day] = dueDate.split("-").map(Number);
-    const dateObj = new Date(Date.UTC(year, month - 1, day));
+    // Determine start date (Asia/Jakarta)
+    const effectiveDateStr = dueDate || getAppDateString();
+    const dateObj = parseDateToUtc(effectiveDateStr);
 
     const task = await prisma.task.create({
       data: {
@@ -94,12 +114,85 @@ export async function createTaskAction(data: CreateTaskDTO): Promise<TaskActionR
 }
 
 /**
- * Server Action to toggle task status between PENDING and COMPLETED.
- * Can be invoked by the assigned employee or an Owner.
+ * Server Action for Owner to update an existing recurring task.
+ */
+export async function updateTaskAction(data: UpdateTaskDTO): Promise<TaskActionResult> {
+  try {
+    const session = await getServerSession();
+
+    if (!session || !session.user) {
+      return { success: false, error: "Silakan login terlebih dahulu." };
+    }
+
+    const isOwner =
+      session.user.role === "OWNER" || session.user.role === "admin";
+
+    if (!isOwner) {
+      return { success: false, error: "Akses ditolak: Hanya Owner yang dapat mengedit tugas." };
+    }
+
+    const parsed = updateTaskSchema.safeParse(data);
+    if (!parsed.success) {
+      return {
+        success: false,
+        error: parsed.error.issues[0]?.message || "Input update tugas tidak valid.",
+      };
+    }
+
+    const { taskId, title, description, assignedToId } = parsed.data;
+
+    const existingTask = await prisma.task.findUnique({
+      where: { id: taskId },
+    });
+
+    if (!existingTask) {
+      return { success: false, error: "Tugas tidak ditemukan." };
+    }
+
+    // Verify employee
+    const employee = await prisma.user.findUnique({
+      where: { id: assignedToId },
+    });
+
+    if (!employee) {
+      return { success: false, error: "Karyawan yang dipilih tidak ditemukan." };
+    }
+
+    if (employee.banned) {
+      return {
+        success: false,
+        error: "Karyawan ini telah dinonaktifkan dan tidak dapat diberikan tugas.",
+      };
+    }
+
+    await prisma.task.update({
+      where: { id: taskId },
+      data: {
+        title: title.trim(),
+        description: description?.trim() || null,
+        assignedToId,
+      },
+    });
+
+    revalidatePath("/owner/tasks");
+    revalidatePath("/employee/tasks");
+
+    return { success: true, taskId };
+  } catch (err: unknown) {
+    console.error("[updateTaskAction] Error:", err);
+    const msg = err instanceof Error ? err.message : "Gagal memperbarui tugas.";
+    return { success: false, error: msg };
+  }
+}
+
+/**
+ * Server Action to toggle task status between PENDING and COMPLETED for a specific date.
+ * Strictly verifies authorization on the server and prevents duplicate completions.
  */
 export async function toggleTaskStatusAction(
   taskId: string,
-  newStatus: "PENDING" | "COMPLETED"
+  newStatus: "PENDING" | "COMPLETED",
+  date?: string
 ): Promise<TaskActionResult> {
   try {
     const session = await getServerSession();
@@ -124,13 +217,43 @@ export async function toggleTaskStatusAction(
       return { success: false, error: "Akses ditolak: Anda tidak berhak mengubah tugas ini." };
     }
 
-    await prisma.task.update({
-      where: { id: taskId },
-      data: {
-        status: newStatus,
-        completedAt: newStatus === "COMPLETED" ? new Date() : null,
-      },
-    });
+    // Determine target user id (never trust client-supplied userId)
+    const targetUserId = isOwner ? task.assignedToId : session.user.id;
+
+    // Determine target date in Asia/Jakarta timezone
+    const targetDateStr = date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : getAppDateString();
+    const targetDateObj = parseDateToUtc(targetDateStr);
+
+    if (newStatus === "COMPLETED") {
+      // Upsert to ensure no duplicate completion
+      await prisma.taskCompletion.upsert({
+        where: {
+          taskId_userId_date: {
+            taskId,
+            userId: targetUserId,
+            date: targetDateObj,
+          },
+        },
+        create: {
+          taskId,
+          userId: targetUserId,
+          date: targetDateObj,
+          completedAt: new Date(),
+        },
+        update: {
+          completedAt: new Date(),
+        },
+      });
+    } else {
+      // Remove completion record for this date
+      await prisma.taskCompletion.deleteMany({
+        where: {
+          taskId,
+          userId: targetUserId,
+          date: targetDateObj,
+        },
+      });
+    }
 
     revalidatePath("/employee/tasks");
     revalidatePath("/owner/tasks");
@@ -145,6 +268,7 @@ export async function toggleTaskStatusAction(
 
 /**
  * Server Action for Owner to delete a task.
+ * Cascades to delete all historical task completions.
  */
 export async function deleteTaskAction(taskId: string): Promise<TaskActionResult> {
   try {
@@ -177,7 +301,7 @@ export async function deleteTaskAction(taskId: string): Promise<TaskActionResult
 }
 
 /**
- * Query tasks for Owner dashboard with optional filters.
+ * Query recurring tasks for Owner dashboard evaluated against a target date.
  */
 export async function getTasksForOwnerAction(filters?: {
   date?: string;
@@ -193,25 +317,21 @@ export async function getTasksForOwnerAction(filters?: {
     throw new Error("Unauthorized");
   }
 
+  const targetDateStr = filters?.date || getAppDateString();
+  const targetDateObj = parseDateToUtc(targetDateStr);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: any = {};
+  const where: any = {
+    OR: [{ dueDate: null }, { dueDate: { lte: targetDateObj } }],
+  };
 
   if (filters?.employeeId && filters.employeeId !== "all") {
     where.assignedToId = filters.employeeId;
   }
 
-  if (filters?.status && filters.status !== "all") {
-    where.status = filters.status;
-  }
-
-  if (filters?.date) {
-    const [year, month, day] = filters.date.split("-").map(Number);
-    where.dueDate = new Date(Date.UTC(year, month - 1, day));
-  }
-
-  return await prisma.task.findMany({
+  const rawTasks = await prisma.task.findMany({
     where,
-    orderBy: [{ dueDate: "desc" }, { createdAt: "desc" }],
+    orderBy: [{ createdAt: "desc" }],
     include: {
       assignedTo: {
         select: {
@@ -226,12 +346,46 @@ export async function getTasksForOwnerAction(filters?: {
           name: true,
         },
       },
+      completions: {
+        where: {
+          date: targetDateObj,
+        },
+        select: {
+          id: true,
+          date: true,
+          completedAt: true,
+          userId: true,
+        },
+      },
     },
   });
+
+  const evaluatedTasks = rawTasks.map((task) => {
+    const completion = task.completions.find((c) => c.userId === task.assignedToId);
+    const isCompleted = Boolean(completion);
+    return {
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      dueDate: task.dueDate,
+      status: isCompleted ? "COMPLETED" : "PENDING",
+      completedAt: completion?.completedAt || null,
+      createdAt: task.createdAt,
+      assignedTo: task.assignedTo,
+      createdBy: task.createdBy,
+      completions: task.completions,
+    };
+  });
+
+  if (filters?.status && filters.status !== "all") {
+    return evaluatedTasks.filter((t) => t.status === filters.status);
+  }
+
+  return evaluatedTasks;
 }
 
 /**
- * Query tasks for Employee for a specific date (defaults to today).
+ * Query recurring tasks for Employee for a specific date (defaults to today in Asia/Jakarta).
  */
 export async function getTodayTasksForEmployeeAction(targetDate?: string) {
   const session = await getServerSession();
@@ -240,24 +394,35 @@ export async function getTodayTasksForEmployeeAction(targetDate?: string) {
     throw new Error("Unauthorized");
   }
 
-  let dateObj: Date;
-  if (targetDate) {
-    const [year, month, day] = targetDate.split("-").map(Number);
-    dateObj = new Date(Date.UTC(year, month - 1, day));
-  } else {
-    // Current UTC date
-    const now = new Date();
-    dateObj = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
-  }
+  const dateStr = targetDate || getAppDateString();
+  const dateObj = parseDateToUtc(dateStr);
 
-  return await prisma.task.findMany({
+  const tasks = await prisma.task.findMany({
     where: {
       assignedToId: session.user.id,
-      dueDate: dateObj,
+      OR: [{ dueDate: null }, { dueDate: { lte: dateObj } }],
     },
-    orderBy: [
-      { status: "asc" }, // PENDING comes before COMPLETED
-      { createdAt: "asc" },
-    ],
+    include: {
+      completions: {
+        where: {
+          userId: session.user.id,
+          date: dateObj,
+        },
+      },
+    },
+    orderBy: [{ createdAt: "asc" }],
+  });
+
+  return tasks.map((task) => {
+    const isCompleted = task.completions.length > 0;
+    return {
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      dueDate: task.dueDate || task.createdAt,
+      status: isCompleted ? "COMPLETED" : "PENDING",
+      completedAt: isCompleted ? task.completions[0].completedAt : null,
+      createdAt: task.createdAt,
+    };
   });
 }

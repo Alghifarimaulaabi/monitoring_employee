@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { toggleTaskStatusAction } from "@/lib/actions/task";
 import { useTaskStore, EmployeeTaskItem } from "@/lib/stores/task-store";
+import { formatTimeJakarta } from "@/lib/date";
 import { CheckCircle2, Circle, AlertCircle, Sparkles, CheckSquare } from "lucide-react";
 
 export type { EmployeeTaskItem };
@@ -234,11 +235,7 @@ export default function EmployeeTaskChecklist({ tasks: initialTasks }: EmployeeT
 
                     {isCompleted && task.completedAt && (
                       <span className="text-[10px] text-emerald-600 font-medium block mt-1.5">
-                        ✓ Diselesaikan{" "}
-                        {new Intl.DateTimeFormat("id-ID", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }).format(new Date(task.completedAt))}
+                        ✓ Diselesaikan {formatTimeJakarta(task.completedAt)} WIB
                       </span>
                     )}
                   </div>

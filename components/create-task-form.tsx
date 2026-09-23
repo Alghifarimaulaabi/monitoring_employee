@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { createTaskAction } from "@/lib/actions/task";
-import { Plus, CheckSquare, Calendar, User, AlignLeft, AlertCircle, CheckCircle2, Loader2, X } from "lucide-react";
+import { getAppDateString } from "@/lib/date";
+import { Plus, CheckSquare, Calendar, User, AlignLeft, AlertCircle, CheckCircle2, Loader2, X, Repeat } from "lucide-react";
 
 interface EmployeeOption {
   id: string;
@@ -19,13 +20,7 @@ export default function CreateTaskForm({ employees }: CreateTaskFormProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [assignedToId, setAssignedToId] = useState(employees[0]?.id || "");
-  const [dueDate, setDueDate] = useState(() => {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
-  });
+  const [dueDate, setDueDate] = useState(() => getAppDateString());
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -163,7 +158,7 @@ export default function CreateTaskForm({ employees }: CreateTaskFormProps) {
 
               <div>
                 <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-                  Tanggal Pelaksanaan <span className="text-rose-500">*</span>
+                  Mulai Berlaku Pada <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
@@ -177,6 +172,7 @@ export default function CreateTaskForm({ employees }: CreateTaskFormProps) {
                     className="w-full pl-9 pr-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
                   />
                 </div>
+                <p className="text-[11px] text-gray-400 mt-1">Otomatis muncul setiap hari setelah tanggal ini.</p>
               </div>
             </div>
 

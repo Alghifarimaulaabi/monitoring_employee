@@ -236,6 +236,7 @@ export type UserWhereInput = {
   bouquetPeriods?: Prisma.BouquetPeriodListRelationFilter
   assignedTasks?: Prisma.TaskListRelationFilter
   createdTasks?: Prisma.TaskListRelationFilter
+  taskCompletions?: Prisma.TaskCompletionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -256,6 +257,7 @@ export type UserOrderByWithRelationInput = {
   bouquetPeriods?: Prisma.BouquetPeriodOrderByRelationAggregateInput
   assignedTasks?: Prisma.TaskOrderByRelationAggregateInput
   createdTasks?: Prisma.TaskOrderByRelationAggregateInput
+  taskCompletions?: Prisma.TaskCompletionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -279,6 +281,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   bouquetPeriods?: Prisma.BouquetPeriodListRelationFilter
   assignedTasks?: Prisma.TaskListRelationFilter
   createdTasks?: Prisma.TaskListRelationFilter
+  taskCompletions?: Prisma.TaskCompletionListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -333,6 +336,7 @@ export type UserCreateInput = {
   bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  taskCompletions?: Prisma.TaskCompletionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -353,6 +357,7 @@ export type UserUncheckedCreateInput = {
   bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -373,6 +378,7 @@ export type UserUpdateInput = {
   bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  taskCompletions?: Prisma.TaskCompletionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -393,6 +399,7 @@ export type UserUncheckedUpdateInput = {
   bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -592,6 +599,20 @@ export type UserUpdateOneRequiredWithoutCreatedTasksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedTasksInput, Prisma.UserUpdateWithoutCreatedTasksInput>, Prisma.UserUncheckedUpdateWithoutCreatedTasksInput>
 }
 
+export type UserCreateNestedOneWithoutTaskCompletionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTaskCompletionsInput, Prisma.UserUncheckedCreateWithoutTaskCompletionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTaskCompletionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutTaskCompletionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTaskCompletionsInput, Prisma.UserUncheckedCreateWithoutTaskCompletionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTaskCompletionsInput
+  upsert?: Prisma.UserUpsertWithoutTaskCompletionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTaskCompletionsInput, Prisma.UserUpdateWithoutTaskCompletionsInput>, Prisma.UserUncheckedUpdateWithoutTaskCompletionsInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   name: string
@@ -609,6 +630,7 @@ export type UserCreateWithoutSessionsInput = {
   bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  taskCompletions?: Prisma.TaskCompletionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -628,6 +650,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -663,6 +686,7 @@ export type UserUpdateWithoutSessionsInput = {
   bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  taskCompletions?: Prisma.TaskCompletionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -682,6 +706,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -701,6 +726,7 @@ export type UserCreateWithoutAccountsInput = {
   bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  taskCompletions?: Prisma.TaskCompletionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -720,6 +746,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -755,6 +782,7 @@ export type UserUpdateWithoutAccountsInput = {
   bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  taskCompletions?: Prisma.TaskCompletionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -774,6 +802,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBouquetPostsInput = {
@@ -793,6 +822,7 @@ export type UserCreateWithoutBouquetPostsInput = {
   bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  taskCompletions?: Prisma.TaskCompletionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBouquetPostsInput = {
@@ -812,6 +842,7 @@ export type UserUncheckedCreateWithoutBouquetPostsInput = {
   bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBouquetPostsInput = {
@@ -847,6 +878,7 @@ export type UserUpdateWithoutBouquetPostsInput = {
   bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  taskCompletions?: Prisma.TaskCompletionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBouquetPostsInput = {
@@ -866,6 +898,7 @@ export type UserUncheckedUpdateWithoutBouquetPostsInput = {
   bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBouquetPeriodsInput = {
@@ -885,6 +918,7 @@ export type UserCreateWithoutBouquetPeriodsInput = {
   bouquetPosts?: Prisma.BouquetPostCreateNestedManyWithoutUserInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  taskCompletions?: Prisma.TaskCompletionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBouquetPeriodsInput = {
@@ -904,6 +938,7 @@ export type UserUncheckedCreateWithoutBouquetPeriodsInput = {
   bouquetPosts?: Prisma.BouquetPostUncheckedCreateNestedManyWithoutUserInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBouquetPeriodsInput = {
@@ -939,6 +974,7 @@ export type UserUpdateWithoutBouquetPeriodsInput = {
   bouquetPosts?: Prisma.BouquetPostUpdateManyWithoutUserNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  taskCompletions?: Prisma.TaskCompletionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBouquetPeriodsInput = {
@@ -958,6 +994,7 @@ export type UserUncheckedUpdateWithoutBouquetPeriodsInput = {
   bouquetPosts?: Prisma.BouquetPostUncheckedUpdateManyWithoutUserNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAssignedTasksInput = {
@@ -977,6 +1014,7 @@ export type UserCreateWithoutAssignedTasksInput = {
   bouquetPosts?: Prisma.BouquetPostCreateNestedManyWithoutUserInput
   bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  taskCompletions?: Prisma.TaskCompletionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAssignedTasksInput = {
@@ -996,6 +1034,7 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   bouquetPosts?: Prisma.BouquetPostUncheckedCreateNestedManyWithoutUserInput
   bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAssignedTasksInput = {
@@ -1020,6 +1059,7 @@ export type UserCreateWithoutCreatedTasksInput = {
   bouquetPosts?: Prisma.BouquetPostCreateNestedManyWithoutUserInput
   bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  taskCompletions?: Prisma.TaskCompletionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedTasksInput = {
@@ -1039,6 +1079,7 @@ export type UserUncheckedCreateWithoutCreatedTasksInput = {
   bouquetPosts?: Prisma.BouquetPostUncheckedCreateNestedManyWithoutUserInput
   bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedTasksInput = {
@@ -1074,6 +1115,7 @@ export type UserUpdateWithoutAssignedTasksInput = {
   bouquetPosts?: Prisma.BouquetPostUpdateManyWithoutUserNestedInput
   bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  taskCompletions?: Prisma.TaskCompletionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedTasksInput = {
@@ -1093,6 +1135,7 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   bouquetPosts?: Prisma.BouquetPostUncheckedUpdateManyWithoutUserNestedInput
   bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutCreatedTasksInput = {
@@ -1123,6 +1166,7 @@ export type UserUpdateWithoutCreatedTasksInput = {
   bouquetPosts?: Prisma.BouquetPostUpdateManyWithoutUserNestedInput
   bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  taskCompletions?: Prisma.TaskCompletionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedTasksInput = {
@@ -1142,6 +1186,103 @@ export type UserUncheckedUpdateWithoutCreatedTasksInput = {
   bouquetPosts?: Prisma.BouquetPostUncheckedUpdateManyWithoutUserNestedInput
   bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  taskCompletions?: Prisma.TaskCompletionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutTaskCompletionsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  bouquetPosts?: Prisma.BouquetPostCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodCreateNestedManyWithoutCreatedByInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutTaskCompletionsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  bouquetPosts?: Prisma.BouquetPostUncheckedCreateNestedManyWithoutUserInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutTaskCompletionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTaskCompletionsInput, Prisma.UserUncheckedCreateWithoutTaskCompletionsInput>
+}
+
+export type UserUpsertWithoutTaskCompletionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTaskCompletionsInput, Prisma.UserUncheckedUpdateWithoutTaskCompletionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTaskCompletionsInput, Prisma.UserUncheckedCreateWithoutTaskCompletionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTaskCompletionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTaskCompletionsInput, Prisma.UserUncheckedUpdateWithoutTaskCompletionsInput>
+}
+
+export type UserUpdateWithoutTaskCompletionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  bouquetPosts?: Prisma.BouquetPostUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUpdateManyWithoutCreatedByNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTaskCompletionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  bouquetPosts?: Prisma.BouquetPostUncheckedUpdateManyWithoutUserNestedInput
+  bouquetPeriods?: Prisma.BouquetPeriodUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 
@@ -1156,6 +1297,7 @@ export type UserCountOutputType = {
   bouquetPeriods: number
   assignedTasks: number
   createdTasks: number
+  taskCompletions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1165,6 +1307,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   bouquetPeriods?: boolean | UserCountOutputTypeCountBouquetPeriodsArgs
   assignedTasks?: boolean | UserCountOutputTypeCountAssignedTasksArgs
   createdTasks?: boolean | UserCountOutputTypeCountCreatedTasksArgs
+  taskCompletions?: boolean | UserCountOutputTypeCountTaskCompletionsArgs
 }
 
 /**
@@ -1219,6 +1362,13 @@ export type UserCountOutputTypeCountCreatedTasksArgs<ExtArgs extends runtime.Typ
   where?: Prisma.TaskWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTaskCompletionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskCompletionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1238,6 +1388,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   bouquetPeriods?: boolean | Prisma.User$bouquetPeriodsArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.User$assignedTasksArgs<ExtArgs>
   createdTasks?: boolean | Prisma.User$createdTasksArgs<ExtArgs>
+  taskCompletions?: boolean | Prisma.User$taskCompletionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1291,6 +1442,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   bouquetPeriods?: boolean | Prisma.User$bouquetPeriodsArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.User$assignedTasksArgs<ExtArgs>
   createdTasks?: boolean | Prisma.User$createdTasksArgs<ExtArgs>
+  taskCompletions?: boolean | Prisma.User$taskCompletionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1305,6 +1457,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     bouquetPeriods: Prisma.$BouquetPeriodPayload<ExtArgs>[]
     assignedTasks: Prisma.$TaskPayload<ExtArgs>[]
     createdTasks: Prisma.$TaskPayload<ExtArgs>[]
+    taskCompletions: Prisma.$TaskCompletionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1718,6 +1871,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   bouquetPeriods<T extends Prisma.User$bouquetPeriodsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bouquetPeriodsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BouquetPeriodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedTasks<T extends Prisma.User$assignedTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdTasks<T extends Prisma.User$createdTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  taskCompletions<T extends Prisma.User$taskCompletionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskCompletionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2292,6 +2446,30 @@ export type User$createdTasksArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
+}
+
+/**
+ * User.taskCompletions
+ */
+export type User$taskCompletionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaskCompletion
+   */
+  select?: Prisma.TaskCompletionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaskCompletion
+   */
+  omit?: Prisma.TaskCompletionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskCompletionInclude<ExtArgs> | null
+  where?: Prisma.TaskCompletionWhereInput
+  orderBy?: Prisma.TaskCompletionOrderByWithRelationInput | Prisma.TaskCompletionOrderByWithRelationInput[]
+  cursor?: Prisma.TaskCompletionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskCompletionScalarFieldEnum | Prisma.TaskCompletionScalarFieldEnum[]
 }
 
 /**

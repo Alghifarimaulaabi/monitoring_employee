@@ -52,3 +52,8 @@ export type BouquetPeriod = Prisma.BouquetPeriodModel
  * 
  */
 export type Task = Prisma.TaskModel
+/**
+ * Model TaskCompletion
+ * 
+ */
+export type TaskCompletion = Prisma.TaskCompletionModel
