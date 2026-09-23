@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -51,6 +51,22 @@ export default function BouquetPeriodDetailView({
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { toastMessage, showToast, isExportingPdf, setIsExportingPdf } = useUIStore();
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (activePreview) {
+          setActivePreview(null);
+        } else if (showDeleteModal && !isDeleting) {
+          setShowDeleteModal(false);
+        }
+      }
+    };
+    if (activePreview || showDeleteModal) {
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [activePreview, showDeleteModal, isDeleting]);
 
   const isOwner = role === "OWNER";
   const backUrl = isOwner ? "/owner/bouquets" : "/employee/submit";
@@ -367,6 +383,9 @@ export default function BouquetPeriodDetailView({
       {/* Lightbox / High-Resolution Photo Preview Modal */}
       {activePreview && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="bouquet-detail-preview-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200"
           onClick={() => setActivePreview(null)}
         >
@@ -376,7 +395,7 @@ export default function BouquetPeriodDetailView({
           >
             <div className="p-4 border-b border-gray-100 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-gray-900 leading-tight">
+                <h3 id="bouquet-detail-preview-title" className="text-base font-bold text-gray-900 leading-tight">
                   {activePreview.location}
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
@@ -385,6 +404,7 @@ export default function BouquetPeriodDetailView({
               </div>
               <button
                 onClick={() => setActivePreview(null)}
+                aria-label="Tutup pratinjau foto"
                 className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
@@ -427,14 +447,19 @@ export default function BouquetPeriodDetailView({
 
       {/* Delete Period Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-detail-period-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
+        >
           <div className="bg-white w-full max-w-md rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
             <div className="p-5 pb-4 border-b border-gray-100 flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
                 <Trash2 className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-gray-900 leading-tight">
+                <h3 id="delete-detail-period-title" className="text-base font-bold text-gray-900 leading-tight">
                   Hapus Semua Foto Kartu Ini?
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">

@@ -94,6 +94,22 @@ export default function OwnerBouquetGallery({
     refreshAll,
   } = useBouquetStore();
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (activePreview) {
+          setActivePreview(null);
+        } else if (periodToDelete && !isDeletingPeriod) {
+          setPeriodToDelete(null);
+        }
+      }
+    };
+    if (activePreview || periodToDelete) {
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [activePreview, periodToDelete, isDeletingPeriod, setActivePreview, setPeriodToDelete]);
+
   const { toastMessage, showToast, isExportingPdf, setIsExportingPdf } = useUIStore();
 
   // Sync initial SSR props into store on mount or prop change
@@ -668,14 +684,19 @@ export default function OwnerBouquetGallery({
 
       {/* DIALOG KONFIRMASI HAPUS PADA KARTU OWNER */}
       {periodToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-owner-period-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
+        >
           <div className="bg-white w-full max-w-md rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
             <div className="p-5 pb-4 border-b border-gray-100 flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
                 <Trash2 className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-gray-900 leading-tight">
+                <h3 id="delete-owner-period-title" className="text-base font-bold text-gray-900 leading-tight">
                   Hapus Semua Foto Pada Kartu Ini?
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
@@ -730,6 +751,9 @@ export default function OwnerBouquetGallery({
       {/* Lightbox / High-Resolution Photo Preview Modal */}
       {activePreview && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="preview-owner-bouquet-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200"
           onClick={() => setActivePreview(null)}
         >
@@ -739,7 +763,7 @@ export default function OwnerBouquetGallery({
           >
             <div className="p-4 border-b border-gray-100 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-gray-900 leading-tight">
+                <h3 id="preview-owner-bouquet-title" className="text-base font-bold text-gray-900 leading-tight">
                   {activePreview.location}
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
@@ -749,6 +773,7 @@ export default function OwnerBouquetGallery({
               </div>
               <button
                 onClick={() => setActivePreview(null)}
+                aria-label="Tutup pratinjau foto"
                 className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />

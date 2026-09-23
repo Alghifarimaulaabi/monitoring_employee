@@ -69,8 +69,27 @@ export default function PurgePhotosDialog({
     onClose();
   };
 
+  // Close dialog on Escape key press
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !loading) {
+        handleCancel();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, loading]);
+
+  if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="purge-dialog-title"
+    >
       <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
         {/* Header */}
         <div className="p-6 pb-4 border-b border-gray-100 flex items-start justify-between">
@@ -79,7 +98,7 @@ export default function PurgePhotosDialog({
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-gray-900 leading-tight">
+              <h3 id="purge-dialog-title" className="text-lg font-bold text-gray-900 leading-tight">
                 Pembersihan Foto Penyimpanan Cloud
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">
@@ -88,9 +107,11 @@ export default function PurgePhotosDialog({
             </div>
           </div>
           <button
+            type="button"
             onClick={handleCancel}
             disabled={loading}
-            className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+            aria-label="Tutup dialog"
+            className="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar, MapPin, Flower2, X, ExternalLink } from "lucide-react";
 import LazyImage from "@/components/lazy-image";
 import BouquetPackageBadge from "@/components/bouquet-package-badge";
@@ -20,6 +20,17 @@ interface BouquetHistoryCardProps {
 export default function BouquetHistoryCard({ post }: BouquetHistoryCardProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+
   const formattedDate = new Intl.DateTimeFormat("id-ID", {
     weekday: "short",
     day: "numeric",
@@ -30,8 +41,16 @@ export default function BouquetHistoryCard({ post }: BouquetHistoryCardProps) {
   return (
     <>
       <div
+        role="button"
+        tabIndex={0}
         onClick={() => setIsOpen(true)}
-        className="bg-white rounded-2xl border border-gray-200/80 shadow-2xs overflow-hidden hover:shadow-md transition-all cursor-pointer group flex flex-col"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setIsOpen(true);
+          }
+        }}
+        className="bg-white rounded-2xl border border-gray-200/80 shadow-2xs overflow-hidden hover:shadow-md transition-all cursor-pointer group flex flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"
       >
         {/* Thumbnail Preview */}
         <div className="relative aspect-4/3 bg-gray-100 overflow-hidden">
@@ -77,6 +96,9 @@ export default function BouquetHistoryCard({ post }: BouquetHistoryCardProps) {
       {/* Full Photo Modal */}
       {isOpen && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={`photo-modal-${post.id}`}
           onClick={() => setIsOpen(false)}
           className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4"
         >
@@ -87,7 +109,9 @@ export default function BouquetHistoryCard({ post }: BouquetHistoryCardProps) {
             {/* Modal Header */}
             <div className="p-4 border-b border-gray-100 flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-gray-900">{post.locationName}</h3>
+                <h3 id={`photo-modal-${post.id}`} className="text-sm font-bold text-gray-900">
+                  {post.locationName}
+                </h3>
                 <div className="flex items-center gap-2 mt-1">
                   <p className="text-xs text-gray-500">
                     {formattedDate} • {post.flowerCount} tangkai
@@ -97,7 +121,8 @@ export default function BouquetHistoryCard({ post }: BouquetHistoryCardProps) {
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+                aria-label="Tutup foto"
+                className="p-1.5 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>

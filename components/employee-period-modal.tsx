@@ -33,6 +33,18 @@ export default function EmployeePeriodModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Close modal on Escape key press
+  React.useEffect(() => {
+    if (!showModal) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !loading) {
+        handleClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showModal, loading, handleClose]);
+
   if (!showModal) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -77,7 +89,12 @@ export default function EmployeePeriodModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="period-modal-title"
+    >
       <div className="bg-white w-full max-w-md rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
         {/* Header */}
         <div className="p-5 pb-4 border-b border-gray-100 flex items-center justify-between">
@@ -86,7 +103,7 @@ export default function EmployeePeriodModal({
               <Calendar className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-gray-900 leading-tight">
+              <h3 id="period-modal-title" className="text-base font-bold text-gray-900 leading-tight">
                 Tambahkan Buket Bulan Ini
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">
@@ -95,9 +112,11 @@ export default function EmployeePeriodModal({
             </div>
           </div>
           <button
+            type="button"
             onClick={handleClose}
             disabled={loading}
-            className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50 cursor-pointer"
+            aria-label="Tutup dialog"
+            className="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -114,11 +133,12 @@ export default function EmployeePeriodModal({
           <div className="space-y-3">
             {/* Input Mulai Pada Tanggal Berapa */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+              <label htmlFor="period-start-date" className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
                 Mulai Pada Tanggal Berapa:
               </label>
               <div className="relative">
                 <input
+                  id="period-start-date"
                   type="date"
                   required
                   value={startDate}
@@ -131,11 +151,12 @@ export default function EmployeePeriodModal({
 
             {/* Input Selesai Pada Tanggal Berapa */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+              <label htmlFor="period-end-date" className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
                 Selesai Pada Tanggal Berapa:
               </label>
               <div className="relative">
                 <input
+                  id="period-end-date"
                   type="date"
                   required
                   value={endDate}

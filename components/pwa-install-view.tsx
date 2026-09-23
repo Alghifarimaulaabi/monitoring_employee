@@ -77,6 +77,17 @@ export default function PwaInstallView({ userSession }: PwaInstallViewProps) {
   }, [isStandalone, dashboardLink]);
 
   useEffect(() => {
+    if (!showIosGuide) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowIosGuide(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showIosGuide]);
+
+  useEffect(() => {
     // Listen for beforeinstallprompt (Chrome, Chromium, Android)
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
@@ -259,16 +270,22 @@ export default function PwaInstallView({ userSession }: PwaInstallViewProps) {
 
       {/* iOS Install Instruction Modal */}
       {showIosGuide && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="ios-guide-title"
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
+        >
           <div className="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl border border-rose-100 animate-in fade-in slide-in-from-bottom duration-200">
             <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-              <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <h3 id="ios-guide-title" className="text-base font-bold text-gray-900 flex items-center gap-2">
                 <Smartphone className="w-5 h-5 text-rose-600" />
                 Cara Pasang di iOS (Safari)
               </h3>
               <button
                 onClick={() => setShowIosGuide(false)}
-                className="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100"
+                aria-label="Tutup panduan pemasangan"
+                className="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>

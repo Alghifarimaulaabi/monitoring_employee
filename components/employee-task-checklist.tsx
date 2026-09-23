@@ -112,27 +112,36 @@ export default function EmployeeTaskChecklist({ tasks: initialTasks }: EmployeeT
 
       {/* Filter Tabs */}
       {totalCount > 0 && (
-        <div className="flex bg-gray-100/80 p-1 rounded-2xl text-xs">
+        <div role="tablist" aria-label="Filter status tugas" className="flex bg-gray-100/80 p-1 rounded-2xl text-xs">
           <button
+            type="button"
+            role="tab"
+            aria-selected={filter === "ALL"}
             onClick={() => setFilter("ALL")}
-            className={`flex-1 py-1.5 rounded-xl font-medium transition-all ${
-              filter === "ALL" ? "bg-white text-gray-900 shadow-2xs" : "text-gray-500"
+            className={`flex-1 min-h-[38px] py-2 px-3 rounded-xl font-medium transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 ${
+              filter === "ALL" ? "bg-white text-gray-900 shadow-2xs" : "text-gray-600 hover:text-gray-900"
             }`}
           >
             Semua ({totalCount})
           </button>
           <button
+            type="button"
+            role="tab"
+            aria-selected={filter === "PENDING"}
             onClick={() => setFilter("PENDING")}
-            className={`flex-1 py-1.5 rounded-xl font-medium transition-all ${
-              filter === "PENDING" ? "bg-white text-amber-700 shadow-2xs" : "text-gray-500"
+            className={`flex-1 min-h-[38px] py-2 px-3 rounded-xl font-medium transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 ${
+              filter === "PENDING" ? "bg-white text-amber-700 shadow-2xs" : "text-gray-600 hover:text-gray-900"
             }`}
           >
             Belum ({totalCount - completedCount})
           </button>
           <button
+            type="button"
+            role="tab"
+            aria-selected={filter === "COMPLETED"}
             onClick={() => setFilter("COMPLETED")}
-            className={`flex-1 py-1.5 rounded-xl font-medium transition-all ${
-              filter === "COMPLETED" ? "bg-white text-emerald-700 shadow-2xs" : "text-gray-500"
+            className={`flex-1 min-h-[38px] py-2 px-3 rounded-xl font-medium transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 ${
+              filter === "COMPLETED" ? "bg-white text-emerald-700 shadow-2xs" : "text-gray-600 hover:text-gray-900"
             }`}
           >
             Selesai ({completedCount})
@@ -163,15 +172,25 @@ export default function EmployeeTaskChecklist({ tasks: initialTasks }: EmployeeT
             return (
               <div
                 key={task.id}
+                role="checkbox"
+                tabIndex={0}
+                aria-checked={isCompleted}
+                aria-label={`Tugas: ${task.title}. Status: ${isCompleted ? "Selesai" : "Pending"}`}
                 onClick={() => handleToggle(task)}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer select-none ${
+                onKeyDown={(e) => {
+                  if (e.key === " " || e.key === "Enter") {
+                    e.preventDefault();
+                    handleToggle(task);
+                  }
+                }}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 ${
                   isCompleted
                     ? "bg-gray-50/80 border-gray-200/60 shadow-2xs"
                     : "bg-white border-gray-200/90 hover:border-rose-300 shadow-xs hover:shadow-sm"
                 }`}
               >
                 <div className="flex items-start gap-3.5">
-                  <div className="mt-0.5 flex-shrink-0">
+                  <div className="mt-0.5 flex-shrink-0" aria-hidden="true">
                     {isCompleted ? (
                       <div className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-xs">
                         <CheckCircle2 className="w-4 h-4" />

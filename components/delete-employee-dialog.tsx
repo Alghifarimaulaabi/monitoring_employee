@@ -28,13 +28,8 @@ export default function DeleteEmployeeDialog({
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  if (!isOpen || !employee) return null;
-
-  const pendingCount = employee.pendingTasksCount ?? 0;
-  const bouquetCount = employee.bouquetPostsCount ?? 0;
-
   const handleConfirm = async () => {
-    if (loading) return;
+    if (loading || !employee) return;
 
     setLoading(true);
     setErrorMessage(null);
@@ -67,12 +62,30 @@ export default function DeleteEmployeeDialog({
     onClose();
   };
 
+  // Close dialog on Escape key press
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !loading) {
+        handleCancel();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, loading]);
+
+  if (!isOpen || !employee) return null;
+
+  const pendingCount = employee.pendingTasksCount ?? 0;
+  const bouquetCount = employee.bouquetPostsCount ?? 0;
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
       onClick={handleCancel}
       role="dialog"
       aria-modal="true"
+      aria-labelledby="delete-employee-title"
     >
       <div
         className="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
@@ -85,7 +98,7 @@ export default function DeleteEmployeeDialog({
               <UserX className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-gray-900 leading-tight">
+              <h3 id="delete-employee-title" className="text-base font-bold text-gray-900 leading-tight">
                 Hapus Akun Karyawan?
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">{employee.email}</p>
@@ -95,6 +108,7 @@ export default function DeleteEmployeeDialog({
             type="button"
             disabled={loading}
             onClick={handleCancel}
+            aria-label="Tutup dialog"
             className="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50 cursor-pointer"
           >
             <X className="w-4 h-4" />
