@@ -86,3 +86,67 @@ export function calculateBouquetPostTotal(
   const count = flowerCount && flowerCount > 0 ? flowerCount : 1;
   return unitPrice * count;
 }
+
+/**
+ * Resolves the display label for a bouquet package.
+ * Options:
+ * - short: If true, formats "MEDIUM_PHOTO_TAKING" as "Medium". Defaults to true.
+ */
+export function getBouquetPackageLabel(
+  packageType?: string | null,
+  options?: { short?: boolean }
+): string {
+  if (!packageType) return "Reguler";
+  const upper = packageType.toUpperCase();
+  if (upper === "VIP") return "VIP";
+  if (upper === "MEDIUM_PHOTO_TAKING" || upper === "MEDIUM") {
+    return options?.short !== false ? "Medium" : "Medium (photo taking)";
+  }
+  if (upper === "REGULER" || upper === "REGULAR") return "Reguler";
+  const found = BOUQUET_PACKAGES.find((pkg) => pkg.id === packageType);
+  return found ? found.label : packageType;
+}
+
+export interface BouquetBadgeStyle {
+  label: string;
+  shortLabel: string;
+  floatingBadgeClass: string;
+  inlineBadgeClass: string;
+}
+
+/**
+ * Returns Tailwind styling and metadata for package type badges across gallery views.
+ */
+export function getBouquetPackageBadgeStyle(
+  packageType?: string | null
+): BouquetBadgeStyle {
+  const upper = (packageType || "REGULER").toUpperCase();
+
+  if (upper === "VIP") {
+    return {
+      label: "VIP",
+      shortLabel: "VIP",
+      floatingBadgeClass:
+        "bg-amber-500/90 text-white border border-amber-400/40 shadow-xs",
+      inlineBadgeClass: "bg-amber-50 text-amber-700 border-amber-200",
+    };
+  }
+
+  if (upper === "MEDIUM" || upper === "MEDIUM_PHOTO_TAKING") {
+    return {
+      label: "Medium (photo taking)",
+      shortLabel: "Medium",
+      floatingBadgeClass:
+        "bg-purple-600/90 text-white border border-purple-400/40 shadow-xs",
+      inlineBadgeClass: "bg-purple-50 text-purple-700 border-purple-200",
+    };
+  }
+
+  return {
+    label: "Reguler",
+    shortLabel: "Reguler",
+    floatingBadgeClass:
+      "bg-gray-900/85 text-white border border-gray-700/50 shadow-xs",
+    inlineBadgeClass: "bg-slate-100 text-slate-700 border-slate-200",
+  };
+}

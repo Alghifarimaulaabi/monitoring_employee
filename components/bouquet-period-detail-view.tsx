@@ -26,6 +26,7 @@ import {
 } from "@/lib/actions/bouquet";
 import { useUIStore } from "@/lib/stores/ui-store";
 import LazyImage from "@/components/lazy-image";
+import BouquetPackageBadge from "@/components/bouquet-package-badge";
 
 interface BouquetPeriodDetailViewProps {
   period: SerializedBouquetPeriod;
@@ -44,6 +45,7 @@ export default function BouquetPeriodDetailView({
     date: string;
     flowerCount: number;
     staffName: string;
+    packageType?: string;
   } | null>(null);
 
   const [isDeleting, setIsDeleting] = useState(false);
@@ -300,6 +302,7 @@ export default function BouquetPeriodDetailView({
                             date: post.installDate,
                             flowerCount: post.flowerCount,
                             staffName: post.staffName,
+                            packageType: post.packageType,
                           })
                         }
                         className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white"
@@ -318,6 +321,11 @@ export default function BouquetPeriodDetailView({
                     </div>
                   )}
 
+                  {/* Bouquet Package Type Badge (Floating Top-Left) */}
+                  <div className="absolute top-2.5 left-2.5 z-10">
+                    <BouquetPackageBadge packageType={post.packageType} variant="floating" />
+                  </div>
+
                   {/* Flower Count Badge */}
                   <div className="absolute top-2.5 right-2.5 bg-gray-900/85 backdrop-blur-xs text-white text-xs font-bold px-2 py-0.5 rounded-lg shadow-xs flex items-center gap-1">
                     <Flower2 className="w-3 h-3 text-rose-400" />
@@ -328,9 +336,12 @@ export default function BouquetPeriodDetailView({
                 {/* Details */}
                 <div className="p-3.5 flex-1 flex flex-col justify-between space-y-2">
                   <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-600">
-                      <Calendar className="w-3.5 h-3.5" />
-                      <span>{post.installDate}</span>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-600">
+                        <Calendar className="w-3.5 h-3.5" />
+                        <span>{post.installDate}</span>
+                      </div>
+                      <BouquetPackageBadge packageType={post.packageType} variant="inline" />
                     </div>
 
                     <h4 className="font-bold text-gray-900 text-sm leading-snug line-clamp-2">
@@ -389,12 +400,18 @@ export default function BouquetPeriodDetailView({
               />
             </div>
 
-            <div className="p-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-xs text-gray-600">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-gray-800">Total Rangkaian:</span>
-                <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-md font-bold">
-                  {activePreview.flowerCount} pcs
-                </span>
+            <div className="p-4 bg-gray-50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 text-xs text-gray-600">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-gray-800">Total Rangkaian:</span>
+                  <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-md font-bold">
+                    {activePreview.flowerCount} pcs
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-gray-800">Jenis Buket:</span>
+                  <BouquetPackageBadge packageType={activePreview.packageType} variant="inline" />
+                </div>
               </div>
               <button
                 type="button"

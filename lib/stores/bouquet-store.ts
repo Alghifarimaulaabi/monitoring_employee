@@ -12,6 +12,7 @@ export interface ActiveBouquetPreview {
   date: string;
   flowerCount: number;
   staffName: string;
+  packageType?: string;
 }
 
 interface BouquetState {

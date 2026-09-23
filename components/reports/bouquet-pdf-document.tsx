@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import { registerAppFonts } from "@/lib/pdf/font";
+import { getBouquetPackageLabel } from "@/lib/constants/bouquet";
 
 registerAppFonts();
 
@@ -195,6 +196,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#065f46",
   },
+  packageBadge: {
+    backgroundColor: "#fff1f2",
+    borderWidth: 1,
+    borderColor: "#fecdd3",
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+    alignSelf: "flex-start",
+    marginTop: 2,
+  },
+  packageText: {
+    fontSize: 9,
+    fontWeight: "bold",
+    color: "#be123c",
+  },
   cardFooter: {
     borderTopWidth: 1,
     borderTopColor: "#f3f4f6",
@@ -241,6 +257,7 @@ export interface PdfBouquetItem {
   installDate: string;
   locationName: string;
   flowerCount: number;
+  packageType?: string;
   staffName: string;
   imageSrc?: string | null;
   isArchived: boolean;
@@ -350,12 +367,23 @@ export function BouquetReportDocument({
                         </Text>
                       </View>
 
-                      <View style={styles.metaFieldGroup}>
-                        <Text style={styles.fieldLabel}>Jumlah Bunga</Text>
-                        <View style={styles.countBadge}>
-                          <Text style={styles.countText}>
-                            {item.flowerCount} Pcs
-                          </Text>
+                      <View style={{ flexDirection: "row", gap: 12 }}>
+                        <View style={styles.metaFieldGroup}>
+                          <Text style={styles.fieldLabel}>Jumlah Bunga</Text>
+                          <View style={styles.countBadge}>
+                            <Text style={styles.countText}>
+                              {item.flowerCount} Pcs
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.metaFieldGroup}>
+                          <Text style={styles.fieldLabel}>Tipe Buket</Text>
+                          <View style={styles.packageBadge}>
+                            <Text style={styles.packageText}>
+                              {getBouquetPackageLabel(item.packageType)}
+                            </Text>
+                          </View>
                         </View>
                       </View>
 

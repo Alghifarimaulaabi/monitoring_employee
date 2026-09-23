@@ -271,6 +271,7 @@ export async function GET(request: NextRequest) {
           installDate: formattedDate,
           locationName: post.locationName,
           flowerCount: post.flowerCount,
+          packageType: post.packageType,
           staffName: post.user.name,
           imageSrc,
           isArchived: post.isArchived,

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Calendar, MapPin, Flower2, X, ExternalLink } from "lucide-react";
 import LazyImage from "@/components/lazy-image";
+import BouquetPackageBadge from "@/components/bouquet-package-badge";
 
 interface BouquetHistoryCardProps {
   post: {
@@ -11,6 +12,7 @@ interface BouquetHistoryCardProps {
     installDate: Date | string;
     locationName: string;
     flowerCount: number;
+    packageType?: string;
     createdAt: Date | string;
   };
 }
@@ -38,6 +40,10 @@ export default function BouquetHistoryCard({ post }: BouquetHistoryCardProps) {
             alt={post.locationName}
             className="group-hover:scale-105 transition-transform duration-300"
           />
+          {/* Bouquet Package Type Badge */}
+          <div className="absolute top-2.5 left-2.5 z-10">
+            <BouquetPackageBadge packageType={post.packageType} variant="floating" />
+          </div>
           <div className="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
             <Flower2 className="w-3 h-3 text-pink-300" />
             <span>{post.flowerCount} pcs</span>
@@ -47,9 +53,12 @@ export default function BouquetHistoryCard({ post }: BouquetHistoryCardProps) {
         {/* Card Body */}
         <div className="p-3.5 flex-1 flex flex-col justify-between">
           <div>
-            <div className="flex items-center gap-1.5 text-[11px] font-medium text-rose-600 mb-1">
-              <Calendar className="w-3 h-3" />
-              <span>{formattedDate}</span>
+            <div className="flex items-center justify-between gap-1.5 mb-1">
+              <div className="flex items-center gap-1.5 text-[11px] font-medium text-rose-600">
+                <Calendar className="w-3 h-3" />
+                <span>{formattedDate}</span>
+              </div>
+              <BouquetPackageBadge packageType={post.packageType} variant="inline" />
             </div>
             <h3 className="text-xs font-semibold text-gray-900 line-clamp-2 leading-snug">
               {post.locationName}
@@ -79,9 +88,12 @@ export default function BouquetHistoryCard({ post }: BouquetHistoryCardProps) {
             <div className="p-4 border-b border-gray-100 flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-gray-900">{post.locationName}</h3>
-                <p className="text-xs text-gray-500">
-                  {formattedDate} • {post.flowerCount} tangkai
-                </p>
+                <div className="flex items-center gap-2 mt-1">
+                  <p className="text-xs text-gray-500">
+                    {formattedDate} • {post.flowerCount} tangkai
+                  </p>
+                  <BouquetPackageBadge packageType={post.packageType} variant="inline" />
+                </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
